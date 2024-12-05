@@ -1,11 +1,13 @@
 #include "Core.h"
 
 #include <iostream>
+#include "Vulkan/Initializer.h"
 
 namespace Core {
 
 	void PrintHelloWorld()
 	{
+		Initializer::Init();
 #ifdef DEBUG
 		std::cout << "Running in Debug Configuration!\n";
 #endif

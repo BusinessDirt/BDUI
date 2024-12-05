@@ -2,7 +2,7 @@
 include "./vendor/premake/customizations/solution_items.lua"
 include "Dependencies.lua"
 
-workspace "New Project"
+workspace "BDUI"
    architecture "x64"
    configurations { "Debug", "Release", "Dist" }
    startproject "App"
@@ -19,6 +19,7 @@ group "Dependencies"
 group ""
 
 group "Core"
+   include "Vulkan/premake5.lua"
 	include "Core/premake5.lua"
 group ""
 

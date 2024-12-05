@@ -1,4 +1,4 @@
-project "Core"
+project "Vulkan"
     kind "StaticLib"
     language "C++"
     cppdialect "C++20"
@@ -7,13 +7,7 @@ project "Core"
 
     files { "src/**.h", "src/**.cpp" }
 
-    includedirs { 
-        "src",
-
-        -- Include Vulkan here
-        -- This is so it is "invisible" to the App (might need to change this)
-        "../Vulkan/src"
-    }
+    includedirs { "src" }
 
     targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
     objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
