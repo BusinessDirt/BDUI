@@ -12,14 +12,15 @@ project "App"
     }
 
     externalincludedirs {
+        "../Opal/include",
         "../Mixture/include",
 
         "%{IncludeDir.spdlog}"
     }
 
     links {
-        "Mixture",
-        "Onyx"
+        "Opal",
+        "Mixture"
     }
 
     targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
@@ -41,3 +42,22 @@ project "App"
         runtime "Release"
         optimize "On"
         symbols "Off"
+
+    -- mac specific settings
+    filter "action:xcode4"
+    links {
+        "Cocoa.framework",
+        "Foundation.framework",
+        "IOKit.framework",
+        "QuartzCore.framework",
+        "AppKit.framework"
+    }
+
+    frameworkdirs { "/System/Library/Frameworks" }
+
+    xcodebuildsettings {
+        ["LD_RUNPATH_SEARCH_PATHS"] = "@executable_path/../Frameworks @loader_path/../Frameworks"
+    }
+
+    filter "files:**.mm"
+        compileas "Objective-C++"

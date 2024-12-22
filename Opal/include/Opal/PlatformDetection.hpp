@@ -3,7 +3,7 @@
 // Platform detection using predefined macros
 #ifdef _WIN32
     #ifdef _WIN64 // Windows x64/x86
-        #define MX_PLATFORM_WINDOWS // Windows x64
+        #define OPAL_PLATFORM_WINDOWS // Windows x64
     #else
         #error "x86 Builds are not supported!" // Windows x86
     #endif
@@ -16,10 +16,10 @@
     #if TARGET_IPHONE_SIMULATOR == 1
         #error "IOS simulator is not supported!"
     #elif TARGET_OS_IPHONE == 1
-        #define MX_PLATFORM_IOS
+        #define OPAL_PLATFORM_IOS
         #error "IOS is not supported!"
     #elif TARGET_OS_MAC == 1
-        #define MX_PLATFORM_MACOSX
+        #define OPAL_PLATFORM_DARWIN
     #else
         #error "Unknown Apple platform!"
     #endif
@@ -27,10 +27,10 @@
      * since android is based on the linux kernel
      * it has __linux__ defined */
     #elif defined(__ANDROID__)
-        #define MX_PLATFORM_ANDROID
+        #define OPAL_PLATFORM_ANDROID
         #error "Android is not supported!"
     #elif defined(__linux__)
-        #define MX_PLATFORM_LINUX
+        #define OPAL_PLATFORM_LINUX
         #error "Linux is not supported!"
     #else
         /* Unknown compiler/platform */

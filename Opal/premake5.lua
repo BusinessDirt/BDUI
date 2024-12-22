@@ -1,4 +1,4 @@
-project "Onyx"
+project "Opal"
     kind "StaticLib"
     language "C++"
     cppdialect "C++20"

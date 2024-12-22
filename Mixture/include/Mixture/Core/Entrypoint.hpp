@@ -7,7 +7,7 @@ extern Mixture::Application* Mixture::CreateApplication(Mixture::ApplicationComm
 
 int Entrypoint(int argc, char** argv)
 {
-    Mixture::Log::Init();
+    Opal::Log::Init();
     
     Mixture::Application* app = Mixture::CreateApplication({ argc, argv });
     app->Run();

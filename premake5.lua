@@ -19,7 +19,7 @@ group "Dependencies"
 group ""
 
 group "Core"
-   include "Onyx/premake5.lua"
+   include "Opal/premake5.lua"
 	include "Mixture/premake5.lua"
 group ""
 

@@ -1,5 +1,4 @@
-#include "mxpch.hpp"
-#include "Mixture/Core/Log.hpp"
+#include "Opal/Log.hpp"
 
 #include <filesystem>
 
@@ -7,11 +6,12 @@
 #include <spdlog/sinks/basic_file_sink.h>
 
 
-namespace Mixture
+namespace Opal
 {
-    Ref<spdlog::logger> Log::s_CoreLogger;
-    Ref<spdlog::logger> Log::s_ClientLogger;
+    std::shared_ptr<spdlog::logger> Log::s_CoreLogger;
+    std::shared_ptr<spdlog::logger> Log::s_ClientLogger;
 
+    // TODO: some kind of "factory" but idk
     void Log::Init()
     {
         std::vector<spdlog::sink_ptr> logSinks;
@@ -21,7 +21,7 @@ namespace Mixture
         logSinks[0]->set_pattern("%^[%T] %n: %v%$");
         logSinks[1]->set_pattern("[%T] [%l] %n: %v");
 
-        s_CoreLogger = std::make_shared<spdlog::logger>("MIXTURE", begin(logSinks), end(logSinks));
+        s_CoreLogger = std::make_shared<spdlog::logger>("CORE", begin(logSinks), end(logSinks));
         spdlog::register_logger(s_CoreLogger);
         s_CoreLogger->set_level(spdlog::level::trace);
         s_CoreLogger->flush_on(spdlog::level::trace);
@@ -31,6 +31,6 @@ namespace Mixture
         s_ClientLogger->set_level(spdlog::level::trace);
         s_ClientLogger->flush_on(spdlog::level::trace);
         
-        MX_CORE_INFO("Initialized Log");
+        OPAL_CORE_INFO("Initialized Log");
     }
 }
