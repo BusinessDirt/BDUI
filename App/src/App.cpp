@@ -1,6 +1,19 @@
-#include "Core/Core.h"
+#include "App.hpp"
 
-int main()
+#include <Mixture/Core/Entrypoint.hpp>
+
+using namespace Mixture;
+
+ExampleApp::ExampleApp(ApplicationCommandLineArgs args)
 {
-	Core::PrintHelloWorld();
+    
+}
+
+namespace Mixture
+{
+    Application* CreateApplication(ApplicationCommandLineArgs args)
+    {
+        ExampleApp* app = new ExampleApp(args);
+        return app;
+    }
 }

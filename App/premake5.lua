@@ -5,34 +5,25 @@ project "App"
     targetdir "Binaries/%{cfg.buildcfg}"
     staticruntime "off"
 
-    files { "src/**.h", "src/**.cpp" }
+    files { "include/**.hpp", "src/**.cpp" }
 
     includedirs { 
-        "src",
+        "include"
+    }
 
-        -- Include Core
-        "../Core/src"
+    externalincludedirs {
+        "../Mixture/include",
+
+        "%{IncludeDir.spdlog}"
     }
 
     links {
-        "Core",
-        "Vulkan"
+        "Mixture",
+        "Onyx"
     }
 
     targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
     objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
-
-    filter "system:windows"
-        systemversion "latest"
-        defines { "WINDOWS" }
-
-    filter "system:linux"
-        systemversion "latest"
-        defines { "LINUX" }
-
-    filter "system:macosx"
-        systemversion "latest"
-        defines { "MACOSX" }
 
     filter "configurations:Debug"
         defines { "DEBUG" }

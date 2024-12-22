@@ -1,28 +1,27 @@
-project "Vulkan"
+project "Mixture"
     kind "StaticLib"
     language "C++"
     cppdialect "C++20"
     targetdir "Binaries/%{cfg.buildcfg}"
     staticruntime "off"
 
-    files { "src/**.h", "src/**.cpp" }
+    pchheader "include/mxpch.hpp"
+    pchsource "src/mxpch.cpp"
 
-    includedirs { "src" }
+    files { "include/**.hpp", "src/**.cpp" }
+
+    includedirs { 
+        "include"
+    }
+
+    externalincludedirs {
+        "../Onyx/include",
+
+        "%{IncludeDir.spdlog}"
+    }
 
     targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
     objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
-
-    filter "system:windows"
-        systemversion "latest"
-        defines { "WINDOWS" }
-
-    filter "system:linux"
-        systemversion "latest"
-        defines { "LINUX" }
-
-    filter "system:macosx"
-        systemversion "latest"
-        defines { "MACOSX" }
 
     filter "configurations:Debug"
         defines { "DEBUG" }

@@ -1,34 +1,22 @@
-project "Core"
+project "Onyx"
     kind "StaticLib"
     language "C++"
     cppdialect "C++20"
     targetdir "Binaries/%{cfg.buildcfg}"
     staticruntime "off"
 
-    files { "src/**.h", "src/**.cpp" }
+    files { "include/**.hpp", "src/**.cpp" }
 
     includedirs { 
-        "src",
+        "include"
+    }
 
-        -- Include Vulkan here
-        -- This is so it is "invisible" to the App (might need to change this)
-        "../Vulkan/src"
+    externalincludedirs {
+        "%{IncludeDir.spdlog}"
     }
 
     targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
     objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
-
-    filter "system:windows"
-        systemversion "latest"
-        defines { "WINDOWS" }
-
-    filter "system:linux"
-        systemversion "latest"
-        defines { "LINUX" }
-
-    filter "system:macosx"
-        systemversion "latest"
-        defines { "MACOSX" }
 
     filter "configurations:Debug"
         defines { "DEBUG" }
