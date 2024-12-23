@@ -17,7 +17,10 @@ project "Mixture"
     externalincludedirs {
         "../Opal/include",
 
-        "%{IncludeDir.spdlog}"
+        "%{IncludeDir.spdlog}",
+        "%{IncludeDir.Vulkan}",
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.stb_image}"
     }
 
     targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
@@ -41,15 +44,6 @@ project "Mixture"
         symbols "Off"
 
     filter "action:xcode4"
-        links {
-            "Cocoa.framework",          -- Cocoa framework (includes AppKit)
-            "AppKit.framework",         -- Explicitly link AppKit for NSWindow
-            "Foundation.framework",     -- Foundation framework for NSString
-            "IOKit.framework",
-            "QuartzCore.framework"
-        }
-
-        frameworkdirs { "/System/Library/Frameworks" }
         
         filter "files:**.mm"
             compileas "Objective-C++"  -- Compile .mm files as Objective-C++

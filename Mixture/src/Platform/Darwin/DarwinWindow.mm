@@ -61,14 +61,8 @@ namespace Mixture
         m_Data.Height = props.Height;
 
         NSRect frame = NSMakeRect(0, 0, m_Data.Width, m_Data.Height);
-        NSUInteger style = NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable;
-
-        m_WindowHandle = [[NSWindow alloc] initWithContentRect:frame
-                                                     styleMask:(NSWindowStyleMaskTitled |
-                                                                NSWindowStyleMaskClosable |
-                                                                NSWindowStyleMaskResizable)
-                                                       backing:NSBackingStoreBuffered
-                                                         defer:NO];
+        NSUInteger style = NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable | NSWindowStyleMaskMiniaturizable;
+        m_WindowHandle = [[NSWindow alloc] initWithContentRect:frame styleMask:style backing:NSBackingStoreBuffered defer:NO];
         
         OPAL_CORE_ASSERT(m_WindowHandle, "Failed to create NSWindow!");
 

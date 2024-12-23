@@ -44,16 +44,6 @@ namespace Mixture
 
         // Handle window close event
         dispatcher.Dispatch<WindowCloseEvent>([this](WindowCloseEvent& e) { return OnWindowClose(e); });
-
-        // Handle other application-specific events here
-
-        // Propagate the event to layers (or other subsystems)
-        //for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
-        //{
-        //    (*it)->OnEvent(event);
-        //    if (event.Handled)
-        //        break;
-        //}
     }
 
     bool Application::OnWindowClose(WindowCloseEvent& e)

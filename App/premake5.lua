@@ -43,21 +43,23 @@ project "App"
         optimize "On"
         symbols "Off"
 
+    -- windows specific settings
+    filter "system:windows"
+        links { "%{Library.Vulkan}" }
+
     -- mac specific settings
     filter "action:xcode4"
-    links {
-        "Cocoa.framework",
-        "Foundation.framework",
-        "IOKit.framework",
-        "QuartzCore.framework",
-        "AppKit.framework"
-    }
+        links {
+            "Cocoa.framework",
+            "Foundation.framework",
+            "IOKit.framework",
+            "QuartzCore.framework",
+            "AppKit.framework",
+            "%{Library.MoltenVK}"
+        }
 
-    frameworkdirs { "/System/Library/Frameworks" }
+        frameworkdirs { "/System/Library/Frameworks" }
 
-    xcodebuildsettings {
-        ["LD_RUNPATH_SEARCH_PATHS"] = "@executable_path/../Frameworks @loader_path/../Frameworks"
-    }
-
-    filter "files:**.mm"
-        compileas "Objective-C++"
+        xcodebuildsettings {
+            ["LD_RUNPATH_SEARCH_PATHS"] = "@executable_path/../Frameworks @loader_path/../Frameworks"
+        }
