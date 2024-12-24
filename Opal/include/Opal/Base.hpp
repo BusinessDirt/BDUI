@@ -12,7 +12,7 @@
     #elif defined(OPAL_PLATFORM_LINUX)
         #include <signal.h>
         #define OPAL_DEBUGBREAK() raise(SIGTRAP)
-    #elif defined(OPAL_PLATFORM_MACOSX)
+    #elif defined(OPAL_PLATFORM_DARWIN)
         #define OPAL_DEBUGBREAK() __builtin_debugtrap()
     #else
         #error "Platform doesn't support debugbreak yet!"

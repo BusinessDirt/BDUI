@@ -1,3 +1,4 @@
+#include "mxpch.hpp"
 #import "Platform/Darwin/DarwinWindow.h"
 #ifdef OPAL_PLATFORM_DARWIN
 

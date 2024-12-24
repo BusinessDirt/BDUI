@@ -15,7 +15,10 @@ project "App"
         "../Opal/include",
         "../Mixture/include",
 
-        "%{IncludeDir.spdlog}"
+        "%{IncludeDir.spdlog}",
+        "%{IncludeDir.Vulkan}",
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.stb_image}"
     }
 
     links {
@@ -27,18 +30,18 @@ project "App"
     objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
 
     filter "configurations:Debug"
-        defines { "DEBUG" }
+        defines { "OPAL_DEBUG" }
         runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
-        defines { "RELEASE" }
+        defines { "OPAL_RELEASE" }
         runtime "Release"
         optimize "On"
         symbols "On"
 
     filter "configurations:Dist"
-        defines { "DIST" }
+        defines { "OPAL_DIST" }
         runtime "Release"
         optimize "On"
         symbols "Off"
@@ -49,17 +52,23 @@ project "App"
 
     -- mac specific settings
     filter "action:xcode4"
+        local vulkanFW = os.getenv("VULKAN_SDK") .. "/Frameworks"
         links {
+            "vulkan.framework",
             "Cocoa.framework",
             "Foundation.framework",
             "IOKit.framework",
             "QuartzCore.framework",
-            "AppKit.framework",
-            "%{Library.MoltenVK}"
+            "AppKit.framework"
         }
 
-        frameworkdirs { "/System/Library/Frameworks" }
+        libdirs { "%{LibraryDir.Vulkan}" }
+
+        frameworkdirs { 
+            vulkanFW,
+            "/System/Library/Frameworks" 
+        }
 
         xcodebuildsettings {
-            ["LD_RUNPATH_SEARCH_PATHS"] = "@executable_path/../Frameworks @loader_path/../Frameworks"
+            ["LD_RUNPATH_SEARCH_PATHS"] = "@executable_path/../Frameworks @loader_path/../Frameworks " .. vulkanFW
         }

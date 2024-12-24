@@ -1,3 +1,4 @@
+#include "mxpch.hpp"
 #include "Platform/Windows/WindowsWindow.hpp"
 #ifdef OPAL_PLATFORM_WINDOWS
 

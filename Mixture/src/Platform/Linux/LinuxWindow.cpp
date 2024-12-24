@@ -1,3 +1,4 @@
+#include "mxpch.hpp"
 #include "Platform/Linux/LinuxWindow.hpp"
 #ifdef OPAL_PLATFORM_LINUX
 #include <stdexcept>

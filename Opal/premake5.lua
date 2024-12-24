@@ -19,18 +19,18 @@ project "Opal"
     objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
 
     filter "configurations:Debug"
-        defines { "DEBUG" }
+        defines { "OPAL_DEBUG" }
         runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
-        defines { "RELEASE" }
+        defines { "OPAL_RELEASE" }
         runtime "Release"
         optimize "On"
         symbols "On"
 
     filter "configurations:Dist"
-        defines { "DIST" }
+        defines { "OPAL_DIST" }
         runtime "Release"
         optimize "On"
         symbols "Off"

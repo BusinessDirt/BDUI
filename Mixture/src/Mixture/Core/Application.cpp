@@ -13,14 +13,19 @@ namespace Mixture
         
         WindowProps props = WindowProps();
         props.Title = name;
+        
         m_Window = Window::Create(props);
         m_Window->SetEventCallback([this](Event& event) { OnEvent(event); });
+        
+        m_VulkanContext = CreateScope<Vulkan::Context>();
+        m_VulkanContext->Initialize(name);
         
         s_Instance = this;
     }
 
     Application::~Application()
     {
+        m_VulkanContext.reset();
         m_Window.reset();
     }
 
