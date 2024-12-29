@@ -3,6 +3,8 @@
 #include "Platform/Vulkan/Base.hpp"
 #include "Platform/Vulkan/Instance.hpp"
 #include "Platform/Vulkan/DebugMessenger.hpp"
+#include "Platform/Vulkan/PhysicalDevice.hpp"
+#include "Platform/Vulkan/Device.hpp"
 
 namespace Vulkan
 {
@@ -17,5 +19,7 @@ namespace Vulkan
     private:
         std::unique_ptr<Instance> m_Instance = nullptr;
         std::unique_ptr<DebugMessenger> m_DebugMessenger = nullptr;
+        std::unique_ptr<PhysicalDevice> m_PhysicalDevice = nullptr;
+        std::unique_ptr<Device> m_Device = nullptr;
     };
 }

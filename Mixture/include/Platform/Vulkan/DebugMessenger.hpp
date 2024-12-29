@@ -3,6 +3,8 @@
 #include "Platform/Vulkan/Base.hpp"
 #include "Platform/Vulkan/Instance.hpp"
 
+#include <Opal/Base.hpp>
+
 namespace Vulkan
 {
     class DebugMessenger
@@ -10,6 +12,8 @@ namespace Vulkan
     public:
         DebugMessenger(const VkInstance instance);
         ~DebugMessenger();
+        
+        OPAL_NON_COPIABLE(DebugMessenger);
 
         static void PopulateCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo);
 

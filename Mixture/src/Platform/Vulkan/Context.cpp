@@ -19,7 +19,7 @@ namespace Vulkan
             return requiredLayers;
         }
 
-        static std::vector<const char*> GetRequiredExtensions()
+        static std::vector<const char*> GetRequiredInstanceExtensions()
         {
             std::vector<const char*> requiredExtensions;
 
@@ -43,23 +43,40 @@ namespace Vulkan
 
             return requiredExtensions;
         }
+    
+        static std::vector<const char*> GetRequiredDeviceExtensions()
+        {
+            std::vector<const char*> requiredExtensions;
+            
+            // Swapchain
+            requiredExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+            
+        #ifdef OPAL_PLATFORM_DARWIN
+            // Required for MoltenVK
+            requiredExtensions.push_back("VK_KHR_portability_subset");
+        #endif
+
+            return requiredExtensions;
+        }
     }
 
     Context::~Context()
     {
-        m_DebugMessenger = nullptr;
-        m_Instance = nullptr;
+        m_Device.reset();
+        m_PhysicalDevice.reset();
+        m_DebugMessenger.reset();
+        m_Instance.reset();
     }
 
     void Context::Initialize(const std::string& applicationName)
     {
-        // Create Instance
-        std::vector<const char*> requiredLayers = Util::GetRequiredLayers();
-        std::vector<const char*> requiredExtensions = Util::GetRequiredExtensions();
-        m_Instance.reset(new Instance(applicationName, requiredLayers, requiredExtensions));
+        m_Instance.reset(new Instance(applicationName, Util::GetRequiredLayers(), Util::GetRequiredInstanceExtensions()));
         
     #ifndef OPAL_DIST
         m_DebugMessenger.reset(new DebugMessenger(m_Instance->GetHandle()));
     #endif
+        
+        m_PhysicalDevice.reset(new PhysicalDevice(m_Instance->GetHandle()));
+        m_Device.reset(new Device(*m_PhysicalDevice, Util::GetRequiredLayers(), Util::GetRequiredDeviceExtensions()));
     }
 }

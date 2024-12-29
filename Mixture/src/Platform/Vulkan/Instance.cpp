@@ -5,11 +5,6 @@
 
 #include <Opal/Base.hpp>
 
-#define ANSI_GREEN "\033[32m"
-#define ANSI_YELLOW "\033[33m"
-#define ANSI_RED "\033[31m"
-#define ANSI_RESET "\033[0m"
-
 namespace Vulkan
 {
     namespace Util
@@ -52,11 +47,11 @@ namespace Vulkan
         std::vector<VkLayerProperties> availableLayers = Util::GetAvailableLayers();
         std::vector<VkExtensionProperties> availableExtensions = Util::GetAvailableExtensions();
         
-        OPAL_CORE_INFO("Layer Properties:");
+        VULKAN_INFO_BEGIN("Layer Properties");
         for (const auto& layer : availableLayers)
         {
             // Print with the appropriate color: Green if required, Yellow if not required
-            OPAL_CORE_INFO(" - {}{}{}", Util::IsRequired(layer.layerName, requiredLayers) ? ANSI_GREEN : ANSI_YELLOW,
+            OPAL_CORE_INFO("{}{}{}", Util::IsRequired(layer.layerName, requiredLayers) ? AVAILABLE_AND_REQUIRED : AVAILABLE_NOT_REQUIRED,
                 layer.layerName, ANSI_RESET);
         }
 
@@ -70,16 +65,15 @@ namespace Vulkan
                 });
 
             // Red for required but not available
-            if (!isAvailable) OPAL_CORE_INFO(" - {}{}{}", ANSI_RED, requiredLayer, ANSI_RESET);
+            if (!isAvailable) OPAL_CORE_INFO("{}{}{}", NOT_AVAILABLE_REQUIRED, requiredLayer, ANSI_RESET);
         }
-
-        OPAL_CORE_INFO("");
-
-        OPAL_CORE_INFO("Extension Properties:");
+        VULKAN_INFO_END();
+        
+        VULKAN_INFO_BEGIN("Instance Extension Properties");
         for (const auto& extension : availableExtensions)
         {
             // Print with the appropriate color: Green if required, Yellow if not required
-            OPAL_CORE_INFO(" - {}{}{}", Util::IsRequired(extension.extensionName, requiredExtensions) ? ANSI_GREEN : ANSI_YELLOW,
+            OPAL_CORE_INFO("{}{}{}", Util::IsRequired(extension.extensionName, requiredExtensions) ? AVAILABLE_AND_REQUIRED : AVAILABLE_NOT_REQUIRED,
                 extension.extensionName, ANSI_RESET);
         }
 
@@ -93,8 +87,10 @@ namespace Vulkan
                 });
 
             // Red for required but not available
-            if (!isAvailable) OPAL_CORE_INFO(" - {}{}{}", ANSI_RED, requiredExtension, ANSI_RESET);
+            if (!isAvailable) OPAL_CORE_INFO("{}{}{}", NOT_AVAILABLE_REQUIRED, requiredExtension, ANSI_RESET);
         }
+        
+        VULKAN_INFO_END();
         
         VkApplicationInfo appInfo{};
         appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -138,22 +134,5 @@ namespace Vulkan
             vkDestroyInstance(m_Instance, nullptr);
             m_Instance = VK_NULL_HANDLE;
         }
-    }
-
-    Instance::Instance(Instance&& other) noexcept
-    {
-        m_Instance = other.m_Instance;
-        other.m_Instance = VK_NULL_HANDLE;
-    }
-
-    Instance& Instance::operator=(Instance&& other) noexcept
-    {
-        if (this != &other)
-        {
-            m_Instance = other.m_Instance;
-            other.m_Instance = VK_NULL_HANDLE;
-        }
-
-        return *this;
     }
 }
