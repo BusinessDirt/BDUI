@@ -3,6 +3,10 @@
 
 #include <Opal/Base.hpp>
 
+#ifdef OPAL_PLATFORM_DARWIN
+#include <vulkan/vulkan_metal.h>
+#endif
+
 namespace Vulkan
 {
     namespace Util
@@ -30,11 +34,9 @@ namespace Vulkan
             requiredExtensions.push_back(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
         #elif defined(OPAL_PLATFORM_DARWIN)
             requiredExtensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
-            requiredExtensions.push_back("VK_EXT_metal_surface");
+            requiredExtensions.push_back(VK_EXT_METAL_SURFACE_EXTENSION_NAME);
         #elif defined(OPAL_PLATFORM_LINUX)
-            requiredExtensions.push_back(VK_KHR_XCB_SURFACE_EXTENSION_NAME);
             requiredExtensions.push_back(VK_KHR_XLIB_SURFACE_EXTENSION_NAME);
-            requiredExtensions.push_back(VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME);
         #endif
 
         #ifndef OPAL_DIST
@@ -64,6 +66,7 @@ namespace Vulkan
     {
         m_Device.reset();
         m_PhysicalDevice.reset();
+        m_WindowSurface.reset();
         m_DebugMessenger.reset();
         m_Instance.reset();
     }
@@ -76,6 +79,7 @@ namespace Vulkan
         m_DebugMessenger.reset(new DebugMessenger(m_Instance->GetHandle()));
     #endif
         
+        m_WindowSurface.reset(new WindowSurface(m_Instance->GetHandle()));
         m_PhysicalDevice.reset(new PhysicalDevice(m_Instance->GetHandle()));
         m_Device.reset(new Device(*m_PhysicalDevice, Util::GetRequiredLayers(), Util::GetRequiredDeviceExtensions()));
     }

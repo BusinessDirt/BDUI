@@ -9,6 +9,9 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Foundation/Foundation.h>
+#import <QuartzCore/CAMetalLayer.h>
+
+#include <vulkan/vulkan_metal.h>
 
 // Define the delegate interface within the .mm file
 @interface DarwinWindowDelegate : NSObject <NSWindowDelegate>
@@ -74,6 +77,21 @@ namespace Mixture
         // Assign the delegate
         DarwinWindowDelegate* delegate = [[DarwinWindowDelegate alloc] initWithOwner:this];
         [(NSWindow*)m_WindowHandle setDelegate:delegate];
+        
+        // Retrieve the NSView from the Window
+        NSView* contentView = [(NSWindow*)m_WindowHandle contentView];
+        OPAL_CORE_ASSERT(contentView, "Failed to get NSView from NSWindow!");
+
+        // Ensure the view supports layer-backed rendering
+        [contentView setWantsLayer:YES];
+
+        // Create and set a CAMetalLayer as the backing layer
+        CAMetalLayer* metalLayer = [CAMetalLayer layer];
+        [contentView setLayer:(CALayer*)metalLayer];
+        [contentView setNeedsDisplay:YES];
+        
+        m_NSView = contentView;
+        m_MetalLayer = metalLayer;
     }
 
     void DarwinWindow::Shutdown() 
@@ -184,6 +202,26 @@ namespace Mixture
             WindowCloseEvent event;
             m_EventCallback(event);
         }
+    }
+
+    VkSurfaceKHR DarwinWindow::CreateVulkanSurface(VkInstance instance) const
+    {
+        // Retrieve the NSView from the NSWindow
+        NSView* contentView = [(NSWindow*)m_WindowHandle contentView];
+        OPAL_CORE_ASSERT(contentView, "Failed to get NSView from NSWindow!");
+
+        // Create the Vulkan surface
+        VkMetalSurfaceCreateInfoEXT createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT;
+        createInfo.pLayer = (CAMetalLayer*)m_MetalLayer;
+
+        VkSurfaceKHR surface;
+        if (vkCreateMetalSurfaceEXT(instance, &createInfo, nullptr, &surface) != VK_SUCCESS) 
+        {
+            OPAL_CORE_ERROR("Failed to create Darwin Vulkan surface!");
+        }
+
+        return surface;
     }
 }
 

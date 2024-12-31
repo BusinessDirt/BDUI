@@ -37,6 +37,7 @@ namespace Mixture
         bool OnWindowClose(WindowCloseEvent& e);
 
         static Application& Get() { return *s_Instance; }
+        const Window& GetWindow() const { return *m_Window; }
 
     private:
         void Run();

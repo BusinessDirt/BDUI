@@ -3,8 +3,6 @@
 
 #include "Platform/Vulkan/DebugMessenger.hpp"
 
-#include <Opal/Base.hpp>
-
 namespace Vulkan
 {
     namespace Util

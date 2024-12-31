@@ -65,6 +65,22 @@ namespace Mixture
         }
     }
 
+    VkSurfaceKHR WindowsWindow::CreateVulkanSurface(VkInstance instance) const
+    {
+        VkWin32SurfaceCreateInfoKHR createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+        createInfo.hwnd = m_Hwnd;
+        createInfo.hinstance = m_HInstance;
+
+        VkSurfaceKHR surface;
+        if (vkCreateWin32SurfaceKHR(instance, &createInfo, nullptr, &surface) != VK_SUCCESS) 
+        {
+            OPAL_CORE_ERROR("Failed to create Vulkan surface for Windows!");
+        }
+
+        return surface;
+    }
+
 }
 
 #endif

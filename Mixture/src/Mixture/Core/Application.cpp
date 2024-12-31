@@ -11,6 +11,8 @@ namespace Mixture
     {
         OPAL_CORE_ASSERT(!s_Instance, "Application already exisits!");
         
+        s_Instance = this;
+        
         WindowProps props = WindowProps();
         props.Title = name;
         
@@ -19,8 +21,6 @@ namespace Mixture
         
         m_VulkanContext = CreateScope<Vulkan::Context>();
         m_VulkanContext->Initialize(name);
-        
-        s_Instance = this;
     }
 
     Application::~Application()

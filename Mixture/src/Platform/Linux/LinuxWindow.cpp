@@ -56,6 +56,21 @@ namespace Mixture
         }
     }
 
+    VkSurfaceKHR LinuxWindow::CreateVulkanSurface(VkInstance instance) const override
+    {
+        VkXlibSurfaceCreateInfoKHR createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;
+        createInfo.dpy = m_Display;
+        createInfo.window = m_Window;
+
+        VkSurfaceKHR surface;
+        if (vkCreateXlibSurfaceKHR(instance, &createInfo, nullptr, &surface) != VK_SUCCESS) 
+        {
+            OPAL_CORE_ERROR("Failed to create Vulkan surface for Linux!");
+        }
+
+        return surface;
+    }
 }
 
 #endif

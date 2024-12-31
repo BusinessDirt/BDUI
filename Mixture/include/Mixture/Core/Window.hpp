@@ -4,6 +4,7 @@
 #include "Mixture/Events/Event.hpp"
 
 #include <string>
+#include <vulkan/vulkan.h>
 
 namespace Mixture 
 {
@@ -27,7 +28,9 @@ namespace Mixture
         virtual void OnUpdate() = 0;               // Called each frame to process events and update the window
         virtual int GetWidth() const = 0;         // Returns the width of the window
         virtual int GetHeight() const = 0;        // Returns the height of the window
+        
         virtual void* GetNativeWindow() const = 0; // Returns a platform-specific window handle
+        virtual VkSurfaceKHR CreateVulkanSurface(VkInstance instance) const = 0;
         
         // Event callback setter
         void SetEventCallback(const std::function<void(Event&)>& callback);

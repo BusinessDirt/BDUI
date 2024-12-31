@@ -16,7 +16,9 @@ namespace Mixture
         void OnUpdate() override;
         int GetWidth() const override { return m_Data.Width; }
         int GetHeight() const override { return m_Data.Height; }
+        
         void* GetNativeWindow() const override { return m_WindowHandle; }
+        VkSurfaceKHR CreateVulkanSurface(VkInstance instance) const override;
         
         void OnResize(int width, int height);
         void OnClose();
@@ -28,6 +30,8 @@ namespace Mixture
 
     private:
         void* m_WindowHandle;
+        void* m_NSView;
+        void* m_MetalLayer;
 
         struct WindowData
         {

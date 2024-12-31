@@ -2,6 +2,8 @@
 
 #include "Mixture/Core/Base.hpp"
 
+#include <Opal/Base.hpp>
+
 #include <vulkan/vulkan.h>
 #include <iostream>
 #include <vector>

@@ -16,7 +16,9 @@ namespace Mixture {
         void OnUpdate() override;
         int GetWidth() const override { return m_Data.Width; }
         int GetHeight() const override { return m_Data.Height; }
+        
         void* GetNativeWindow() const override { return m_WindowHandle; }
+        VkSurfaceKHR CreateVulkanSurface(VkInstance instance) const override;
 
     private:
         void Init(const WindowProps& props);
