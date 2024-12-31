@@ -37,4 +37,4 @@ xcuserdata/
 
 # Directories
 Scripts/**/__pycache__
-Scripts/generated
+Scripts/python/generated
