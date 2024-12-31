@@ -30,6 +30,7 @@ namespace Mixture
         virtual int GetHeight() const = 0;        // Returns the height of the window
         
         virtual void* GetNativeWindow() const = 0; // Returns a platform-specific window handle
+        virtual void GetFramebufferSize(int* width, int* height) const = 0;
         virtual VkSurfaceKHR CreateVulkanSurface(VkInstance instance) const = 0;
         
         // Event callback setter

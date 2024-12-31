@@ -65,6 +65,12 @@ namespace Mixture
         }
     }
 
+    void WindowsWindow::GetFramebufferSize(int* width, int* height) const
+    {
+        *width = GetWidth();
+        *height = GetHeight();
+    }
+
     VkSurfaceKHR WindowsWindow::CreateVulkanSurface(VkInstance instance) const
     {
         VkWin32SurfaceCreateInfoKHR createInfo{};

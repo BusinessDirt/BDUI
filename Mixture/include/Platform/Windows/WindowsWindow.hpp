@@ -18,6 +18,7 @@ namespace Mixture {
         int GetHeight() const override { return m_Data.Height; }
         
         void* GetNativeWindow() const override { return m_WindowHandle; }
+        void GetFramebufferSize(int* width, int* height) const override;
         VkSurfaceKHR CreateVulkanSurface(VkInstance instance) const override;
 
     private:

@@ -204,6 +204,19 @@ namespace Mixture
         }
     }
 
+    void DarwinWindow::GetFramebufferSize(int* width, int* height) const
+    {
+        // Get the bounds of the NSView
+        NSSize drawableSize = [(NSView*)m_NSView bounds].size;
+
+        // Get the screen's scale factor
+        NSScreen* screen = [(NSView*)m_NSView window].screen;
+        CGFloat scale = [screen backingScaleFactor];
+
+        *width = static_cast<int>(drawableSize.width * scale);
+        *height = static_cast<int>(drawableSize.height * scale);
+    }
+
     VkSurfaceKHR DarwinWindow::CreateVulkanSurface(VkInstance instance) const
     {
         // Retrieve the NSView from the NSWindow

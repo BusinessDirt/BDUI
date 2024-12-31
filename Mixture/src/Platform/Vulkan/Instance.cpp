@@ -28,16 +28,6 @@ namespace Vulkan
             
             return availableExtensions;
         }
-    
-        static bool IsRequired(const char* name, const std::vector<const char*>& required)
-        {
-            for (const auto& prop : required)
-            {
-                if (strcmp(name, prop) == 0) return true;
-            }
-            
-            return false;
-        }
     }
     
     Instance::Instance(const std::string& applicationName, const std::vector<const char*>& requiredLayers, const std::vector<const char*>& requiredExtensions)
@@ -45,50 +35,11 @@ namespace Vulkan
         std::vector<VkLayerProperties> availableLayers = Util::GetAvailableLayers();
         std::vector<VkExtensionProperties> availableExtensions = Util::GetAvailableExtensions();
         
-        VULKAN_INFO_BEGIN("Layer Properties");
-        for (const auto& layer : availableLayers)
-        {
-            // Print with the appropriate color: Green if required, Yellow if not required
-            OPAL_CORE_INFO("{}{}{}", Util::IsRequired(layer.layerName, requiredLayers) ? AVAILABLE_AND_REQUIRED : AVAILABLE_NOT_REQUIRED,
-                layer.layerName, ANSI_RESET);
-        }
+        // Print Layer Information
+        Util::PrintDebugAvailability(availableLayers, requiredLayers, [](const VkLayerProperties& layer) { return layer.layerName; }, "Layers");
 
-        // Check for required layer that are not available
-        for (const auto& requiredLayer : requiredLayers)
-        {
-            bool isAvailable = std::any_of(availableLayers.begin(), availableLayers.end(),
-                [&requiredLayer](const VkLayerProperties& layer)
-                {
-                    return strcmp(layer.layerName, requiredLayer) == 0;
-                });
-
-            // Red for required but not available
-            if (!isAvailable) OPAL_CORE_INFO("{}{}{}", NOT_AVAILABLE_REQUIRED, requiredLayer, ANSI_RESET);
-        }
-        VULKAN_INFO_END();
-        
-        VULKAN_INFO_BEGIN("Instance Extension Properties");
-        for (const auto& extension : availableExtensions)
-        {
-            // Print with the appropriate color: Green if required, Yellow if not required
-            OPAL_CORE_INFO("{}{}{}", Util::IsRequired(extension.extensionName, requiredExtensions) ? AVAILABLE_AND_REQUIRED : AVAILABLE_NOT_REQUIRED,
-                extension.extensionName, ANSI_RESET);
-        }
-
-        // Check for required extensions that are not available
-        for (const auto& requiredExtension : requiredExtensions)
-        {
-            bool isAvailable = std::any_of(availableExtensions.begin(), availableExtensions.end(),
-                [&requiredExtension](const VkExtensionProperties& ext) 
-                {
-                    return strcmp(ext.extensionName, requiredExtension) == 0;
-                });
-
-            // Red for required but not available
-            if (!isAvailable) OPAL_CORE_INFO("{}{}{}", NOT_AVAILABLE_REQUIRED, requiredExtension, ANSI_RESET);
-        }
-        
-        VULKAN_INFO_END();
+        // Print Instance Extension Information
+        Util::PrintDebugAvailability(availableExtensions, requiredExtensions, [](const VkExtensionProperties& extension) { return extension.extensionName; }, "Instance Extensions");
         
         VkApplicationInfo appInfo{};
         appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;

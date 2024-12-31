@@ -6,11 +6,10 @@
 #include "Platform/Vulkan/WindowSurface.hpp"
 #include "Platform/Vulkan/PhysicalDevice.hpp"
 #include "Platform/Vulkan/Device.hpp"
+#include "Platform/Vulkan/Swapchain.hpp"
 
 namespace Vulkan
 {
-    
-
     class Context
     {
     public:
@@ -25,5 +24,6 @@ namespace Vulkan
         std::unique_ptr<WindowSurface> m_WindowSurface = nullptr;
         std::unique_ptr<PhysicalDevice> m_PhysicalDevice = nullptr;
         std::unique_ptr<Device> m_Device = nullptr;
+        std::unique_ptr<Swapchain> m_Swapchain = nullptr;
     };
 }

@@ -56,6 +56,12 @@ namespace Mixture
         }
     }
 
+    void LinuxWindow::GetFramebufferSize(int* width, int* height) const
+    {
+        *width = GetWidth();
+        *height = GetHeight();
+    }
+
     VkSurfaceKHR LinuxWindow::CreateVulkanSurface(VkInstance instance) const override
     {
         VkXlibSurfaceCreateInfoKHR createInfo{};
