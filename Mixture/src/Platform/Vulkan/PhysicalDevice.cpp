@@ -5,8 +5,8 @@
 
 namespace Vulkan
 {
-    PhysicalDevice::PhysicalDevice(VkInstance instance)
-        : m_Instance(instance)
+    PhysicalDevice::PhysicalDevice(VkInstance instance, const VkSurfaceKHR surface)
+        : m_Instance(instance), m_Surface(surface)
     {
         uint32_t deviceCount = 0;
         vkEnumeratePhysicalDevices(m_Instance, &deviceCount, nullptr);
@@ -83,6 +83,9 @@ namespace Vulkan
         score += deviceProperties.limits.maxImageDimension2D;
         
         // These features need to be supported for the application to work
+        // ===============================================================
+        
+        // Graphics and Present Queue
         QueueFamilyIndices indices = FindQueueFamilyIndices(device);
         if (!indices.IsComplete()) score = 0;
 
@@ -102,7 +105,13 @@ namespace Vulkan
         int i = 0;
         for (const auto& queueFamily : queueFamilies) 
         {
+            // Graphics Queue
             if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) indices.Graphics = i;
+            
+            // Present Queue
+            VkBool32 presentSupport = false;
+            vkGetPhysicalDeviceSurfaceSupportKHR(device, i, m_Surface, &presentSupport);
+            if (presentSupport) indices.Present = i;
 
             // break early if all indices have been found
             if (indices.IsComplete()) break;

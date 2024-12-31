@@ -1,6 +1,7 @@
 #pragma once
-
 #include "Platform/Vulkan/Base.hpp"
+
+#include "Platform/Vulkan/WindowSurface.hpp"
 
 #include <Opal/Base.hpp>
 
@@ -9,17 +10,18 @@ namespace Vulkan
     struct QueueFamilyIndices
     {
         std::optional<uint32_t> Graphics;
+        std::optional<uint32_t> Present;
         
         bool IsComplete()
         {
-            return Graphics.has_value();
+            return Graphics.has_value() && Present.has_value();
         }
     };
 
     class PhysicalDevice
     {
     public:
-        PhysicalDevice(const VkInstance instance);
+        PhysicalDevice(const VkInstance instance, const VkSurfaceKHR surface);
         ~PhysicalDevice() = default;
         
         OPAL_NON_COPIABLE(PhysicalDevice);
@@ -40,5 +42,6 @@ namespace Vulkan
         QueueFamilyIndices m_QueueFamilyIndices;
         
         const VkInstance m_Instance;
+        const VkSurfaceKHR m_Surface;
     };
 }

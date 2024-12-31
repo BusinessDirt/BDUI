@@ -17,10 +17,12 @@ namespace Vulkan
         OPAL_NON_COPIABLE(Device);
         
         const VkQueue& GetGraphicsQueue() const { return m_GraphicsQueue; }
+        const VkQueue& GetPresentQueue() const { return m_PresentQueue; }
         
     private:
         VULKAN_HANDLE(VkDevice, m_Device);
         VkQueue m_GraphicsQueue;
+        VkQueue m_PresentQueue;
         
         const PhysicalDevice& m_PhysicalDevice;
     };
