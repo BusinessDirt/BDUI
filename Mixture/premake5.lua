@@ -5,7 +5,6 @@ project "Mixture"
     targetdir "Binaries/%{cfg.buildcfg}"
     staticruntime "off"
 
-    pchheader "include/mxpch.hpp"
     pchsource "src/mxpch.cpp"
 
     files { "include/**.hpp", "src/**.cpp", "include/**.h", "src/**.mm" }
@@ -44,6 +43,11 @@ project "Mixture"
         symbols "Off"
 
     filter "action:xcode4"
-        
+        pchheader "include/mxpch.hpp"
         filter "files:**.mm"
             compileas "Objective-C++"  -- Compile .mm files as Objective-C++
+
+    -- Add the /utf-8 flag
+    filter "action:vs2022" -- Only apply for MSVC toolset
+        buildoptions { "/utf-8" }
+        pchheader "mxpch.hpp"

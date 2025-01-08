@@ -1,5 +1,5 @@
 #include "mxpch.hpp"
-#import "Platform/Darwin/DarwinWindow.h"
+#include "Platform/Darwin/DarwinWindow.h"
 #ifdef OPAL_PLATFORM_DARWIN
 
 #include "Mixture/Events/Event.hpp"

@@ -4,7 +4,11 @@
 #include <Opal/Base.hpp>
 
 #ifdef OPAL_PLATFORM_DARWIN
-#include <vulkan/vulkan_metal.h>
+    #include <vulkan/vulkan_metal.h>
+#endif
+
+#ifdef OPAL_PLATFORM_WINDOWS
+    #include <vulkan/vulkan_win32.h>
 #endif
 
 namespace Vulkan

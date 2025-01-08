@@ -1,3 +1,4 @@
+#include "mxpch.hpp"
 #include "Mixture/Core/Window.hpp"
 
 #include "Mixture/Core/Base.hpp"
