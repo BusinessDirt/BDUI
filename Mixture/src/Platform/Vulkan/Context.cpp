@@ -64,6 +64,7 @@ namespace Vulkan
 
     Context::~Context()
     {
+        m_GraphicsPipeline.reset();
         m_Swapchain.reset();
         m_Device.reset();
         m_PhysicalDevice.reset();
@@ -84,5 +85,6 @@ namespace Vulkan
         m_PhysicalDevice.reset(new PhysicalDevice(m_Instance->GetHandle(), m_WindowSurface->GetHandle(), Util::GetRequiredDeviceExtensions()));
         m_Device.reset(new Device(*m_PhysicalDevice, Util::GetRequiredLayers(), Util::GetRequiredDeviceExtensions()));
         m_Swapchain.reset(new Swapchain(*m_PhysicalDevice, m_Device->GetHandle(), m_WindowSurface->GetHandle()));
+        m_GraphicsPipeline.reset(new GraphicsPipeline());
     }
 }

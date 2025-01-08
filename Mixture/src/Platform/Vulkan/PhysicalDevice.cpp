@@ -60,16 +60,16 @@ namespace Vulkan
         vkGetPhysicalDeviceFeatures(m_PhysicalDevice, &m_Features);
 
         VULKAN_INFO_BEGIN("Selected GPU Information");
-        OPAL_CORE_INFO(" - Device Name: {}", m_Properties.deviceName);
-        OPAL_CORE_INFO(" - Device Type: {}", ToString::PhysicalDeviceType(m_Properties.deviceType));
-        OPAL_CORE_INFO(" - API Version: {}", ToString::Version(m_Properties.apiVersion));
-        OPAL_CORE_INFO(" - Driver Version: {}", ToString::Version(m_Properties.driverVersion));
-        OPAL_CORE_INFO(" - Vendor ID: 0x{:X}", m_Properties.vendorID);
-        OPAL_CORE_INFO(" - Device ID: 0x{:X}", m_Properties.deviceID);
-        OPAL_CORE_INFO(" - Limits:");
-        OPAL_CORE_INFO(" -   Max Image Dimension 2D: {}", m_Properties.limits.maxImageDimension2D);
-        OPAL_CORE_INFO(" -   Max Uniform Buffer Range: {}", m_Properties.limits.maxUniformBufferRange);
-        OPAL_CORE_INFO(" -   Max Viewports: {}", m_Properties.limits.maxViewports);
+        VULKAN_INFO_LIST("Device Name: {}", 0, m_Properties.deviceName);
+        VULKAN_INFO_LIST("Device Type: {}", 0, ToString::PhysicalDeviceType(m_Properties.deviceType));
+        VULKAN_INFO_LIST("API Version: {}", 0, ToString::Version(m_Properties.apiVersion));
+        VULKAN_INFO_LIST("Driver Version: {}", 0, ToString::Version(m_Properties.driverVersion));
+        VULKAN_INFO_LIST("Vendor ID: 0x{:X}", 0, m_Properties.vendorID);
+        VULKAN_INFO_LIST("Device ID: 0x{:X}", 0, m_Properties.deviceID);
+        VULKAN_INFO_LIST_HEADER("Limits:", 0);
+        VULKAN_INFO_LIST("Max Image Dimension 2D: {}", 1, m_Properties.limits.maxImageDimension2D);
+        VULKAN_INFO_LIST("Max Uniform Buffer Range: {}", 1, m_Properties.limits.maxUniformBufferRange);
+        VULKAN_INFO_LIST("Max Viewports: {}", 1, m_Properties.limits.maxViewports);
         VULKAN_INFO_END();
 
     }

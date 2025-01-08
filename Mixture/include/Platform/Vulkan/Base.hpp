@@ -30,12 +30,15 @@
     #define ANSI_RESET std::string("\033[0m")
 #endif
 
-#define AVAILABLE_AND_REQUIRED ANSI_GREEN + " ✓ "
-#define AVAILABLE_NOT_REQUIRED ANSI_YELLOW + " - "
-#define NOT_AVAILABLE_REQUIRED ANSI_RED + " ˟ "
+#define LIST_ITEM_CHECK ANSI_GREEN + " [✓] "
+#define LIST_ITEM ANSI_YELLOW + " [-] "
+#define LIST_ITEM_CROSS ANSI_RED + " [˟] "
+#define LIST_ITEM_BLANK " [-] "
 
 #define VULKAN_INFO_HORIZONTAL_BAR "=========================="
 #define VULKAN_INFO_BEGIN(title) OPAL_CORE_INFO(""); OPAL_CORE_INFO(std::string(title) + ":"); OPAL_CORE_INFO(VULKAN_INFO_HORIZONTAL_BAR)
+#define VULKAN_INFO_LIST(text, tabs, ...) OPAL_CORE_INFO(fmt::runtime(std::string(tabs * 2, ' ') + std::string(LIST_ITEM_BLANK) + text), __VA_ARGS__)
+#define VULKAN_INFO_LIST_HEADER(text, tabs) OPAL_CORE_INFO(fmt::runtime(std::string(tabs * 2, ' ') + std::string(LIST_ITEM_BLANK) + text))
 #define VULKAN_INFO_END() OPAL_CORE_INFO(VULKAN_INFO_HORIZONTAL_BAR)
 
 namespace Vulkan
@@ -61,7 +64,7 @@ namespace Vulkan
             for (const auto& item : availableItems)
             {
                 const char* itemName = getName(item);
-                OPAL_CORE_INFO("{}{}{}", IsRequired(itemName, requiredItems) ? AVAILABLE_AND_REQUIRED : AVAILABLE_NOT_REQUIRED, itemName, ANSI_RESET);
+                OPAL_CORE_INFO("{}{}{}", IsRequired(itemName, requiredItems) ? LIST_ITEM_CHECK : LIST_ITEM, itemName, ANSI_RESET);
             }
 
             // Check for required items that are not available
@@ -73,7 +76,7 @@ namespace Vulkan
                         return strcmp(getName(item), requiredItem) == 0;
                     });
 
-                if (!isAvailable) OPAL_CORE_INFO("{}{}{}", NOT_AVAILABLE_REQUIRED, requiredItem, ANSI_RESET);
+                if (!isAvailable) OPAL_CORE_INFO("{}{}{}", LIST_ITEM_CROSS, requiredItem, ANSI_RESET);
             }
 
             VULKAN_INFO_END();

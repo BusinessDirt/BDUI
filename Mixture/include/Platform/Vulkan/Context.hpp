@@ -7,6 +7,7 @@
 #include "Platform/Vulkan/PhysicalDevice.hpp"
 #include "Platform/Vulkan/Device.hpp"
 #include "Platform/Vulkan/Swapchain.hpp"
+#include "Platform/Vulkan/GraphicsPipeline.hpp"
 
 namespace Vulkan
 {
@@ -25,5 +26,6 @@ namespace Vulkan
         std::unique_ptr<PhysicalDevice> m_PhysicalDevice = nullptr;
         std::unique_ptr<Device> m_Device = nullptr;
         std::unique_ptr<Swapchain> m_Swapchain = nullptr;
+        std::unique_ptr<GraphicsPipeline> m_GraphicsPipeline = nullptr;
     };
 }

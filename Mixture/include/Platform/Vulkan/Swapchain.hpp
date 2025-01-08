@@ -17,6 +17,8 @@ namespace Vulkan
         void ChoosePresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
         void ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities);
         
+        void CreateImageViews();
+        
     private:
         VULKAN_HANDLE(VkSwapchainKHR, m_Swapchain);
         
@@ -24,6 +26,9 @@ namespace Vulkan
         VkPresentModeKHR m_PresentMode;
         VkExtent2D m_Extent;
         uint32_t m_ImageCount;
+        
+        std::vector<VkImage> m_Images;
+        std::vector<VkImageView> m_ImageViews;
         
         const PhysicalDevice& m_PhysicalDevice;
         const VkDevice m_Device;

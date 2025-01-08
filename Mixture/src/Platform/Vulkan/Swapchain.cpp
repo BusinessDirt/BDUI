@@ -58,18 +58,56 @@ namespace Vulkan
         VK_ASSERT(vkCreateSwapchainKHR(m_Device, &createInfo, nullptr, &m_Swapchain), "Failed to create Swapchain!");
         
         VULKAN_INFO_BEGIN("Swapchain Details");
-        OPAL_CORE_INFO(" - Surface Format: {}, {}", ToString::Format(m_SurfaceFormat.format), ToString::ColorSpace(m_SurfaceFormat.colorSpace));
-        OPAL_CORE_INFO(" - Present Mode: {}", ToString::PresentMode(m_PresentMode));
-        OPAL_CORE_INFO(" - Extent: {}x{}", m_Extent.width, m_Extent.height);
+        VULKAN_INFO_LIST("Surface Format: {}, {}", 0, ToString::Format(m_SurfaceFormat.format), ToString::ColorSpace(m_SurfaceFormat.colorSpace));
+        VULKAN_INFO_LIST("Present Mode: {}", 0, ToString::PresentMode(m_PresentMode));
+        VULKAN_INFO_LIST("Extent: {} x {}", 0, m_Extent.width, m_Extent.height);
         VULKAN_INFO_END();
+        
+        // Images
+        vkGetSwapchainImagesKHR(m_Device, m_Swapchain, &m_ImageCount, nullptr);
+        m_Images.resize(m_ImageCount);
+        vkGetSwapchainImagesKHR(m_Device, m_Swapchain, &m_ImageCount, m_Images.data());
+        
+        // Image Views
+        CreateImageViews();
     }
 
     Swapchain::~Swapchain()
     {
+        for (auto imageView : m_ImageViews)
+        {
+            vkDestroyImageView(m_Device, imageView, nullptr);
+        }
+        
         if (m_Swapchain)
         {
             vkDestroySwapchainKHR(m_Device, m_Swapchain, nullptr);
             m_Swapchain = VK_NULL_HANDLE;
+        }
+    }
+
+    void Swapchain::CreateImageViews()
+    {
+        m_ImageViews.resize(m_Images.size());
+        
+        for (size_t i = 0; i < m_ImageViews.size(); i++)
+        {
+            VkImageViewCreateInfo createInfo{};
+            createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+            createInfo.image = m_Images[i];
+            createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+            createInfo.format = m_SurfaceFormat.format;
+            createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+            createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+            createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+            createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+            createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            createInfo.subresourceRange.baseMipLevel = 0;
+            createInfo.subresourceRange.levelCount = 1;
+            createInfo.subresourceRange.baseArrayLayer = 0;
+            createInfo.subresourceRange.layerCount = 1;
+            
+            VK_ASSERT(vkCreateImageView(m_Device, &createInfo, nullptr, &m_ImageViews[i]), "Failed to create ImageView!");
         }
     }
 
