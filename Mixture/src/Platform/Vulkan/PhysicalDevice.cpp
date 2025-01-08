@@ -18,9 +18,7 @@ namespace Vulkan
             vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
             
             return availableExtensions;
-        }
-
-        
+        }  
     }
 
     PhysicalDevice::PhysicalDevice(VkInstance instance, const VkSurfaceKHR surface, const std::vector<const char*>& requiredExtensions)

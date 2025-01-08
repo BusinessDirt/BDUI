@@ -18,6 +18,8 @@ namespace Mixture
         
         m_Window = Window::Create(props);
         m_Window->SetEventCallback([this](Event& event) { OnEvent(event); });
+
+        m_AssetManager = CreateScope<AssetManager>();
         
         m_VulkanContext = CreateScope<Vulkan::Context>();
         m_VulkanContext->Initialize(name);
@@ -26,6 +28,7 @@ namespace Mixture
     Application::~Application()
     {
         m_VulkanContext.reset();
+        m_AssetManager.reset();
         m_Window.reset();
     }
 

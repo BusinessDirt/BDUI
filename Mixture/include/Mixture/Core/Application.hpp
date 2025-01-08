@@ -1,6 +1,8 @@
 #pragma once
 
+#include "Mixture/Assets/AssetManager.hpp"
 #include "Mixture/Core/Window.hpp"
+
 #include "Mixture/Events/Event.hpp"
 #include "Mixture/Events/ApplicationEvent.hpp"
 
@@ -38,6 +40,7 @@ namespace Mixture
 
         static Application& Get() { return *s_Instance; }
         const Window& GetWindow() const { return *m_Window; }
+        const AssetManager& GetAssetManager() const { return *m_AssetManager; }
 
     private:
         void Run();
@@ -45,6 +48,7 @@ namespace Mixture
     private:
         Scope<Window> m_Window;
         Scope<Vulkan::Context> m_VulkanContext;
+        Scope<AssetManager> m_AssetManager;
         
         bool m_Running = true;
     private:

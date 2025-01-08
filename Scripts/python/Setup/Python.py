@@ -11,7 +11,7 @@ class PythonConfiguration:
         
         for package_name in ["requests"]:
             if not cls.__validate_package__(package_name):
-                return False # cannot validate furter
+                return False # cannot validate further
 
         return True
 

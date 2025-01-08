@@ -35,18 +35,33 @@ project "App"
         defines { "OPAL_DEBUG" }
         runtime "Debug"
         symbols "On"
+        filter "system:windows"
+            links {
+                "%{Library.ShaderC_Debug}",
+                "%{Library.SPIRV_Cross_Debug}"
+            }
 
     filter "configurations:Release"
         defines { "OPAL_RELEASE" }
         runtime "Release"
         optimize "On"
         symbols "On"
+        filter "system:windows"
+            links {
+                "%{Library.ShaderC_Release}",
+                "%{Library.SPIRV_Cross_Release}"
+            }
 
     filter "configurations:Dist"
         defines { "OPAL_DIST" }
         runtime "Release"
         optimize "On"
         symbols "Off"
+        filter "system:windows"
+            links {
+                "%{Library.ShaderC_Release}",
+                "%{Library.SPIRV_Cross_Release}"
+            }
 
     -- windows specific settings
     filter "system:windows"
