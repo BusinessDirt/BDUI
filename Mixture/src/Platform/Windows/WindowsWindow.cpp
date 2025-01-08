@@ -4,6 +4,8 @@
 
 #include <stdexcept>
 
+#include <vulkan/vulkan_win32.h>
+
 namespace Mixture 
 {
 
@@ -75,8 +77,8 @@ namespace Mixture
     {
         VkWin32SurfaceCreateInfoKHR createInfo{};
         createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-        createInfo.hwnd = m_Hwnd;
-        createInfo.hinstance = m_HInstance;
+        createInfo.hwnd = m_WindowHandle;
+        createInfo.hinstance = GetModuleHandle(nullptr);
 
         VkSurfaceKHR surface;
         if (vkCreateWin32SurfaceKHR(instance, &createInfo, nullptr, &surface) != VK_SUCCESS) 

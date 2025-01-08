@@ -11,6 +11,8 @@ project "App"
         "include"
     }
 
+    libdirs { "%{LibraryDir.Vulkan}" }
+
     externalincludedirs {
         "../Opal/include",
         "../Mixture/include",
@@ -62,8 +64,6 @@ project "App"
             "AppKit.framework"
         }
 
-        libdirs { "%{LibraryDir.Vulkan}" }
-
         frameworkdirs { 
             vulkanFW,
             "/System/Library/Frameworks" 
@@ -72,3 +72,7 @@ project "App"
         xcodebuildsettings {
             ["LD_RUNPATH_SEARCH_PATHS"] = "@executable_path/../Frameworks @loader_path/../Frameworks " .. vulkanFW
         }
+
+    -- Add the /utf-8 flag
+    filter "action:vs2022" -- Only apply for MSVC toolset
+        buildoptions { "/utf-8" }

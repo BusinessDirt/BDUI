@@ -34,3 +34,7 @@ project "Opal"
         runtime "Release"
         optimize "On"
         symbols "Off"
+
+    -- Add the /utf-8 flag
+    filter "action:vs2022" -- Only apply for MSVC toolset
+        buildoptions { "/utf-8" }
