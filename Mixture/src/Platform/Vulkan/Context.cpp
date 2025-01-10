@@ -89,7 +89,7 @@ namespace Vulkan
         m_PhysicalDevice.reset(new PhysicalDevice(m_Instance->GetHandle(), m_WindowSurface->GetHandle(), Util::GetRequiredDeviceExtensions()));
         m_Device.reset(new Device(*m_PhysicalDevice, Util::GetRequiredLayers(), Util::GetRequiredDeviceExtensions()));
         m_Swapchain.reset(new Swapchain(*m_PhysicalDevice, m_Device->GetHandle(), m_WindowSurface->GetHandle()));
-        m_GraphicsPipeline.reset(new GraphicsPipeline());
+        m_GraphicsPipeline.reset(new GraphicsPipeline(m_Device->GetHandle()));
     }
 
     bool Context::OnWindowResize(Mixture::WindowResizeEvent& event)

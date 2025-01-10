@@ -7,9 +7,13 @@ namespace Vulkan
     class GraphicsPipeline
     {
     public:
-        GraphicsPipeline();
+        GraphicsPipeline(const VkDevice device);
         ~GraphicsPipeline();
         
         OPAL_NON_COPIABLE(GraphicsPipeline);
+
+    private:
+
+        const VkDevice m_Device;
     };
 }

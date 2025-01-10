@@ -43,5 +43,6 @@ namespace Mixture
 	namespace Util
 	{
 		ShaderStage FilePathToShaderStage(const std::filesystem::path& filePath);
+		std::string ShaderStageToString(ShaderStage stage);
 	}
 }

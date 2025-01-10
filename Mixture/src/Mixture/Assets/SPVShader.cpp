@@ -14,6 +14,13 @@ namespace Mixture
 			OPAL_CORE_ERROR("Unknown shader file extension '{0}'", filePath.string().c_str());
 			return SHADER_STAGE_VERTEX;
 		}
+
+		std::string ShaderStageToString(ShaderStage stage)
+		{
+			if (stage == SHADER_STAGE_FRAGMENT) return "Fragment Shader Stage";
+			if (stage == SHADER_STAGE_VERTEX) return "Vertex Shader Stage";
+			return "Unknown Shader Stage";
+		}
 	}
 }
 
