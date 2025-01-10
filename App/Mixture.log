@@ -1,300 +1,312 @@
-[21:07:54] [info] CORE: Initialized Log
-[21:07:54] [info] CORE: Initializing GLFW
-[21:07:55] [info] CORE: 
-[21:07:55] [info] CORE: Layers:
-[21:07:55] [info] CORE: ==========================
-[21:07:55] [info] CORE: [33m [-] VK_LAYER_NV_optimus[0m
-[21:07:55] [info] CORE: [33m [-] VK_LAYER_VALVE_steam_overlay[0m
-[21:07:55] [info] CORE: [33m [-] VK_LAYER_VALVE_steam_fossilize[0m
-[21:07:55] [info] CORE: [33m [-] VK_LAYER_EOS_Overlay[0m
-[21:07:55] [info] CORE: [33m [-] VK_LAYER_EOS_Overlay[0m
-[21:07:55] [info] CORE: [33m [-] VK_LAYER_LUNARG_api_dump[0m
-[21:07:55] [info] CORE: [33m [-] VK_LAYER_LUNARG_crash_diagnostic[0m
-[21:07:55] [info] CORE: [33m [-] VK_LAYER_LUNARG_gfxreconstruct[0m
-[21:07:55] [info] CORE: [33m [-] VK_LAYER_KHRONOS_profiles[0m
-[21:07:55] [info] CORE: [33m [-] VK_LAYER_KHRONOS_shader_object[0m
-[21:07:55] [info] CORE: [33m [-] VK_LAYER_KHRONOS_synchronization2[0m
-[21:07:55] [info] CORE: [32m [✓] VK_LAYER_KHRONOS_validation[0m
-[21:07:55] [info] CORE: [33m [-] VK_LAYER_LUNARG_monitor[0m
-[21:07:55] [info] CORE: [33m [-] VK_LAYER_LUNARG_screenshot[0m
-[21:07:55] [info] CORE: ==========================
-[21:07:55] [info] CORE: 
-[21:07:55] [info] CORE: Instance Extensions:
-[21:07:55] [info] CORE: ==========================
-[21:07:55] [info] CORE: [33m [-] VK_KHR_device_group_creation[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_display[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_external_fence_capabilities[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_external_memory_capabilities[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_external_semaphore_capabilities[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_get_display_properties2[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_get_physical_device_properties2[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_get_surface_capabilities2[0m
-[21:07:55] [info] CORE: [32m [✓] VK_KHR_surface[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_surface_protected_capabilities[0m
-[21:07:55] [info] CORE: [32m [✓] VK_KHR_win32_surface[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_debug_report[0m
-[21:07:55] [info] CORE: [32m [✓] VK_EXT_debug_utils[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_direct_mode_display[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_surface_maintenance1[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_swapchain_colorspace[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_external_memory_capabilities[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_portability_enumeration[0m
-[21:07:55] [info] CORE: [33m [-] VK_LUNARG_direct_driver_loading[0m
-[21:07:55] [info] CORE: ==========================
-[21:07:55] [info] CORE: 
-[21:07:55] [info] CORE: Device Extensions:
-[21:07:55] [info] CORE: ==========================
-[21:07:55] [info] CORE: [33m [-] VK_KHR_16bit_storage[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_8bit_storage[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_acceleration_structure[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_bind_memory2[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_buffer_device_address[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_calibrated_timestamps[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_cooperative_matrix[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_copy_commands2[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_create_renderpass2[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_dedicated_allocation[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_deferred_host_operations[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_depth_stencil_resolve[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_descriptor_update_template[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_device_group[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_draw_indirect_count[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_driver_properties[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_dynamic_rendering[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_dynamic_rendering_local_read[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_external_fence[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_external_fence_win32[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_external_memory[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_external_memory_win32[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_external_semaphore[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_external_semaphore_win32[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_format_feature_flags2[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_fragment_shader_barycentric[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_fragment_shading_rate[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_get_memory_requirements2[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_image_format_list[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_imageless_framebuffer[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_index_type_uint8[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_line_rasterization[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_load_store_op_none[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_maintenance1[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_maintenance2[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_maintenance3[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_maintenance4[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_maintenance5[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_maintenance6[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_maintenance7[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_map_memory2[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_multiview[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_pipeline_executable_properties[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_pipeline_library[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_present_id[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_present_wait[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_push_descriptor[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_ray_query[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_ray_tracing_maintenance1[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_ray_tracing_pipeline[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_ray_tracing_position_fetch[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_relaxed_block_layout[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_sampler_mirror_clamp_to_edge[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_sampler_ycbcr_conversion[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_separate_depth_stencil_layouts[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_shader_atomic_int64[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_shader_clock[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_shader_draw_parameters[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_shader_expect_assume[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_shader_float16_int8[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_shader_float_controls[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_shader_float_controls2[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_shader_integer_dot_product[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_shader_maximal_reconvergence[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_shader_non_semantic_info[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_shader_quad_control[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_shader_relaxed_extended_instruction[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_shader_subgroup_extended_types[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_shader_subgroup_rotate[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_shader_subgroup_uniform_control_flow[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_shader_terminate_invocation[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_spirv_1_4[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_storage_buffer_storage_class[0m
-[21:07:55] [info] CORE: [32m [✓] VK_KHR_swapchain[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_swapchain_mutable_format[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_synchronization2[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_timeline_semaphore[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_uniform_buffer_standard_layout[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_variable_pointers[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_vertex_attribute_divisor[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_video_decode_av1[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_video_decode_h264[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_video_decode_h265[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_video_decode_queue[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_video_encode_h264[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_video_encode_h265[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_video_encode_queue[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_video_maintenance1[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_video_queue[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_vulkan_memory_model[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_win32_keyed_mutex[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_workgroup_memory_explicit_layout[0m
-[21:07:55] [info] CORE: [33m [-] VK_KHR_zero_initialize_workgroup_memory[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_4444_formats[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_attachment_feedback_loop_dynamic_state[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_attachment_feedback_loop_layout[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_blend_operation_advanced[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_border_color_swizzle[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_buffer_device_address[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_calibrated_timestamps[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_color_write_enable[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_conditional_rendering[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_conservative_rasterization[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_custom_border_color[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_depth_bias_control[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_depth_clamp_zero_one[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_depth_clip_control[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_depth_clip_enable[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_depth_range_unrestricted[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_descriptor_buffer[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_descriptor_indexing[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_device_fault[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_discard_rectangles[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_dynamic_rendering_unused_attachments[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_extended_dynamic_state[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_extended_dynamic_state2[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_extended_dynamic_state3[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_external_memory_host[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_fragment_shader_interlock[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_full_screen_exclusive[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_graphics_pipeline_library[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_hdr_metadata[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_host_image_copy[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_host_query_reset[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_image_2d_view_of_3d[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_image_robustness[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_image_sliced_view_of_3d[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_image_view_min_lod[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_index_type_uint8[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_inline_uniform_block[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_legacy_vertex_attributes[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_line_rasterization[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_load_store_op_none[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_memory_budget[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_memory_priority[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_mesh_shader[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_multi_draw[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_mutable_descriptor_type[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_nested_command_buffer[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_non_seamless_cube_map[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_opacity_micromap[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_pageable_device_local_memory[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_pci_bus_info[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_pipeline_creation_cache_control[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_pipeline_creation_feedback[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_pipeline_library_group_handles[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_pipeline_robustness[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_post_depth_coverage[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_primitive_topology_list_restart[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_primitives_generated_query[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_private_data[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_provoking_vertex[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_queue_family_foreign[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_robustness2[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_sample_locations[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_sampler_filter_minmax[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_scalar_block_layout[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_separate_stencil_usage[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_shader_atomic_float[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_shader_demote_to_helper_invocation[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_shader_image_atomic_int64[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_shader_module_identifier[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_shader_object[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_shader_replicated_composites[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_shader_subgroup_ballot[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_shader_subgroup_vote[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_shader_viewport_index_layer[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_subgroup_size_control[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_swapchain_maintenance1[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_texel_buffer_alignment[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_tooling_info[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_transform_feedback[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_vertex_attribute_divisor[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_vertex_input_dynamic_state[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_ycbcr_2plane_444_formats[0m
-[21:07:55] [info] CORE: [33m [-] VK_EXT_ycbcr_image_arrays[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_acquire_winrt_display[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_clip_space_w_scaling[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_compute_shader_derivatives[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_cooperative_matrix[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_copy_memory_indirect[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_corner_sampled_image[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_coverage_reduction_mode[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_cuda_kernel_launch[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_dedicated_allocation[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_dedicated_allocation_image_aliasing[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_descriptor_pool_overallocation[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_device_diagnostic_checkpoints[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_device_diagnostics_config[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_device_generated_commands[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_device_generated_commands_compute[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_external_memory[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_external_memory_win32[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_fill_rectangle[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_fragment_coverage_to_color[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_fragment_shader_barycentric[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_fragment_shading_rate_enums[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_framebuffer_mixed_samples[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_geometry_shader_passthrough[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_inherited_viewport_scissor[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_linear_color_attachment[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_low_latency[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_low_latency2[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_memory_decompression[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_mesh_shader[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_optical_flow[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_raw_access_chains[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_ray_tracing[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_ray_tracing_invocation_reorder[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_ray_tracing_motion_blur[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_representative_fragment_test[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_sample_mask_override_coverage[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_scissor_exclusive[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_shader_atomic_float16_vector[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_shader_image_footprint[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_shader_sm_builtins[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_shader_subgroup_partitioned[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_shading_rate_image[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_viewport_array2[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_viewport_swizzle[0m
-[21:07:55] [info] CORE: [33m [-] VK_NV_win32_keyed_mutex[0m
-[21:07:55] [info] CORE: [33m [-] VK_NVX_binary_import[0m
-[21:07:55] [info] CORE: [33m [-] VK_NVX_image_view_handle[0m
-[21:07:55] [info] CORE: [33m [-] VK_NVX_multiview_per_view_attributes[0m
-[21:07:55] [info] CORE: [33m [-] VK_AMD_buffer_marker[0m
-[21:07:55] [info] CORE: [33m [-] VK_GOOGLE_user_type[0m
-[21:07:55] [info] CORE: ==========================
-[21:07:55] [info] CORE: 
-[21:07:55] [info] CORE: Selected GPU Information:
-[21:07:55] [info] CORE: ==========================
-[21:07:55] [info] CORE:  [-] Device Name: NVIDIA GeForce RTX 3060 Ti
-[21:07:55] [info] CORE:  [-] Device Type: Discrete GPU
-[21:07:55] [info] CORE:  [-] API Version: 1.3.289
-[21:07:55] [info] CORE:  [-] Driver Version: 566.144.0
-[21:07:55] [info] CORE:  [-] Vendor ID: 0x10DE
-[21:07:55] [info] CORE:  [-] Device ID: 0x2489
-[21:07:55] [info] CORE:  [-] Limits:
-[21:07:55] [info] CORE:    [-] Max Image Dimension 2D: 32768
-[21:07:55] [info] CORE:    [-] Max Uniform Buffer Range: 65536
-[21:07:55] [info] CORE:    [-] Max Viewports: 16
-[21:07:55] [info] CORE: ==========================
-[21:07:55] [info] CORE: 
-[21:07:55] [info] CORE: Swapchain Details:
-[21:07:55] [info] CORE: ==========================
-[21:07:55] [info] CORE:  [-] Surface Format: B8G8R8A8 SRGB, SRGB Nonlinear
-[21:07:55] [info] CORE:  [-] Present Mode: Mailbox
-[21:07:55] [info] CORE:  [-] Extent: 800 x 600
-[21:07:55] [info] CORE: ==========================
-[21:07:56] [info] CORE: 
-[21:07:56] [info] CORE: Compiled Shader:
-[21:07:56] [info] CORE: ==========================
-[21:07:56] [info] CORE:  [-] Name: shader
-[21:07:56] [info] CORE:  [-] Pipeline Type: Graphics
-[21:07:56] [info] CORE: ==========================
+[21:39:32] [info] CORE: Initialized Log
+[21:39:32] [info] CORE: Initializing GLFW
+[21:39:32] [info] CORE: 
+[21:39:32] [info] CORE: Layers:
+[21:39:32] [info] CORE: ==========================
+[21:39:32] [info] CORE: [33m [-] VK_LAYER_NV_optimus[0m
+[21:39:32] [info] CORE: [33m [-] VK_LAYER_VALVE_steam_overlay[0m
+[21:39:32] [info] CORE: [33m [-] VK_LAYER_VALVE_steam_fossilize[0m
+[21:39:32] [info] CORE: [33m [-] VK_LAYER_EOS_Overlay[0m
+[21:39:32] [info] CORE: [33m [-] VK_LAYER_EOS_Overlay[0m
+[21:39:32] [info] CORE: [33m [-] VK_LAYER_LUNARG_api_dump[0m
+[21:39:32] [info] CORE: [33m [-] VK_LAYER_LUNARG_crash_diagnostic[0m
+[21:39:32] [info] CORE: [33m [-] VK_LAYER_LUNARG_gfxreconstruct[0m
+[21:39:32] [info] CORE: [33m [-] VK_LAYER_KHRONOS_profiles[0m
+[21:39:32] [info] CORE: [33m [-] VK_LAYER_KHRONOS_shader_object[0m
+[21:39:32] [info] CORE: [33m [-] VK_LAYER_KHRONOS_synchronization2[0m
+[21:39:32] [info] CORE: [32m [✓] VK_LAYER_KHRONOS_validation[0m
+[21:39:32] [info] CORE: [33m [-] VK_LAYER_LUNARG_monitor[0m
+[21:39:32] [info] CORE: [33m [-] VK_LAYER_LUNARG_screenshot[0m
+[21:39:32] [info] CORE: ==========================
+[21:39:32] [info] CORE: 
+[21:39:32] [info] CORE: Instance Extensions:
+[21:39:32] [info] CORE: ==========================
+[21:39:32] [info] CORE: [33m [-] VK_KHR_device_group_creation[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_display[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_external_fence_capabilities[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_external_memory_capabilities[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_external_semaphore_capabilities[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_get_display_properties2[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_get_physical_device_properties2[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_get_surface_capabilities2[0m
+[21:39:32] [info] CORE: [32m [✓] VK_KHR_surface[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_surface_protected_capabilities[0m
+[21:39:32] [info] CORE: [32m [✓] VK_KHR_win32_surface[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_debug_report[0m
+[21:39:32] [info] CORE: [32m [✓] VK_EXT_debug_utils[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_direct_mode_display[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_surface_maintenance1[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_swapchain_colorspace[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_external_memory_capabilities[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_portability_enumeration[0m
+[21:39:32] [info] CORE: [33m [-] VK_LUNARG_direct_driver_loading[0m
+[21:39:32] [info] CORE: ==========================
+[21:39:32] [info] CORE: 
+[21:39:32] [info] CORE: Device Extensions:
+[21:39:32] [info] CORE: ==========================
+[21:39:32] [info] CORE: [33m [-] VK_KHR_16bit_storage[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_8bit_storage[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_acceleration_structure[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_bind_memory2[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_buffer_device_address[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_calibrated_timestamps[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_cooperative_matrix[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_copy_commands2[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_create_renderpass2[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_dedicated_allocation[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_deferred_host_operations[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_depth_stencil_resolve[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_descriptor_update_template[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_device_group[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_draw_indirect_count[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_driver_properties[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_dynamic_rendering[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_dynamic_rendering_local_read[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_external_fence[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_external_fence_win32[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_external_memory[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_external_memory_win32[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_external_semaphore[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_external_semaphore_win32[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_format_feature_flags2[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_fragment_shader_barycentric[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_fragment_shading_rate[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_get_memory_requirements2[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_image_format_list[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_imageless_framebuffer[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_index_type_uint8[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_line_rasterization[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_load_store_op_none[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_maintenance1[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_maintenance2[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_maintenance3[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_maintenance4[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_maintenance5[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_maintenance6[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_maintenance7[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_map_memory2[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_multiview[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_pipeline_executable_properties[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_pipeline_library[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_present_id[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_present_wait[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_push_descriptor[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_ray_query[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_ray_tracing_maintenance1[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_ray_tracing_pipeline[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_ray_tracing_position_fetch[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_relaxed_block_layout[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_sampler_mirror_clamp_to_edge[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_sampler_ycbcr_conversion[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_separate_depth_stencil_layouts[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_shader_atomic_int64[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_shader_clock[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_shader_draw_parameters[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_shader_expect_assume[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_shader_float16_int8[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_shader_float_controls[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_shader_float_controls2[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_shader_integer_dot_product[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_shader_maximal_reconvergence[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_shader_non_semantic_info[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_shader_quad_control[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_shader_relaxed_extended_instruction[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_shader_subgroup_extended_types[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_shader_subgroup_rotate[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_shader_subgroup_uniform_control_flow[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_shader_terminate_invocation[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_spirv_1_4[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_storage_buffer_storage_class[0m
+[21:39:32] [info] CORE: [32m [✓] VK_KHR_swapchain[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_swapchain_mutable_format[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_synchronization2[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_timeline_semaphore[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_uniform_buffer_standard_layout[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_variable_pointers[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_vertex_attribute_divisor[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_video_decode_av1[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_video_decode_h264[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_video_decode_h265[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_video_decode_queue[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_video_encode_h264[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_video_encode_h265[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_video_encode_queue[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_video_maintenance1[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_video_queue[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_vulkan_memory_model[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_win32_keyed_mutex[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_workgroup_memory_explicit_layout[0m
+[21:39:32] [info] CORE: [33m [-] VK_KHR_zero_initialize_workgroup_memory[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_4444_formats[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_attachment_feedback_loop_dynamic_state[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_attachment_feedback_loop_layout[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_blend_operation_advanced[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_border_color_swizzle[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_buffer_device_address[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_calibrated_timestamps[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_color_write_enable[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_conditional_rendering[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_conservative_rasterization[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_custom_border_color[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_depth_bias_control[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_depth_clamp_zero_one[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_depth_clip_control[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_depth_clip_enable[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_depth_range_unrestricted[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_descriptor_buffer[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_descriptor_indexing[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_device_fault[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_discard_rectangles[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_dynamic_rendering_unused_attachments[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_extended_dynamic_state[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_extended_dynamic_state2[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_extended_dynamic_state3[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_external_memory_host[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_fragment_shader_interlock[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_full_screen_exclusive[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_graphics_pipeline_library[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_hdr_metadata[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_host_image_copy[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_host_query_reset[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_image_2d_view_of_3d[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_image_robustness[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_image_sliced_view_of_3d[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_image_view_min_lod[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_index_type_uint8[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_inline_uniform_block[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_legacy_vertex_attributes[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_line_rasterization[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_load_store_op_none[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_memory_budget[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_memory_priority[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_mesh_shader[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_multi_draw[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_mutable_descriptor_type[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_nested_command_buffer[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_non_seamless_cube_map[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_opacity_micromap[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_pageable_device_local_memory[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_pci_bus_info[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_pipeline_creation_cache_control[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_pipeline_creation_feedback[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_pipeline_library_group_handles[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_pipeline_robustness[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_post_depth_coverage[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_primitive_topology_list_restart[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_primitives_generated_query[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_private_data[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_provoking_vertex[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_queue_family_foreign[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_robustness2[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_sample_locations[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_sampler_filter_minmax[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_scalar_block_layout[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_separate_stencil_usage[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_shader_atomic_float[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_shader_demote_to_helper_invocation[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_shader_image_atomic_int64[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_shader_module_identifier[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_shader_object[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_shader_replicated_composites[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_shader_subgroup_ballot[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_shader_subgroup_vote[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_shader_viewport_index_layer[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_subgroup_size_control[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_swapchain_maintenance1[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_texel_buffer_alignment[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_tooling_info[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_transform_feedback[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_vertex_attribute_divisor[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_vertex_input_dynamic_state[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_ycbcr_2plane_444_formats[0m
+[21:39:32] [info] CORE: [33m [-] VK_EXT_ycbcr_image_arrays[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_acquire_winrt_display[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_clip_space_w_scaling[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_compute_shader_derivatives[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_cooperative_matrix[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_copy_memory_indirect[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_corner_sampled_image[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_coverage_reduction_mode[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_cuda_kernel_launch[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_dedicated_allocation[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_dedicated_allocation_image_aliasing[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_descriptor_pool_overallocation[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_device_diagnostic_checkpoints[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_device_diagnostics_config[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_device_generated_commands[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_device_generated_commands_compute[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_external_memory[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_external_memory_win32[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_fill_rectangle[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_fragment_coverage_to_color[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_fragment_shader_barycentric[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_fragment_shading_rate_enums[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_framebuffer_mixed_samples[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_geometry_shader_passthrough[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_inherited_viewport_scissor[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_linear_color_attachment[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_low_latency[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_low_latency2[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_memory_decompression[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_mesh_shader[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_optical_flow[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_raw_access_chains[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_ray_tracing[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_ray_tracing_invocation_reorder[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_ray_tracing_motion_blur[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_representative_fragment_test[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_sample_mask_override_coverage[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_scissor_exclusive[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_shader_atomic_float16_vector[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_shader_image_footprint[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_shader_sm_builtins[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_shader_subgroup_partitioned[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_shading_rate_image[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_viewport_array2[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_viewport_swizzle[0m
+[21:39:32] [info] CORE: [33m [-] VK_NV_win32_keyed_mutex[0m
+[21:39:32] [info] CORE: [33m [-] VK_NVX_binary_import[0m
+[21:39:32] [info] CORE: [33m [-] VK_NVX_image_view_handle[0m
+[21:39:32] [info] CORE: [33m [-] VK_NVX_multiview_per_view_attributes[0m
+[21:39:32] [info] CORE: [33m [-] VK_AMD_buffer_marker[0m
+[21:39:32] [info] CORE: [33m [-] VK_GOOGLE_user_type[0m
+[21:39:32] [info] CORE: ==========================
+[21:39:32] [info] CORE: 
+[21:39:32] [info] CORE: Selected GPU Information:
+[21:39:32] [info] CORE: ==========================
+[21:39:32] [info] CORE:  [-] Device Name: NVIDIA GeForce RTX 3060 Ti
+[21:39:32] [info] CORE:  [-] Device Type: Discrete GPU
+[21:39:32] [info] CORE:  [-] API Version: 1.3.289
+[21:39:32] [info] CORE:  [-] Driver Version: 566.144.0
+[21:39:32] [info] CORE:  [-] Vendor ID: 0x10DE
+[21:39:32] [info] CORE:  [-] Device ID: 0x2489
+[21:39:32] [info] CORE:  [-] Limits:
+[21:39:32] [info] CORE:    [-] Max Image Dimension 2D: 32768
+[21:39:32] [info] CORE:    [-] Max Uniform Buffer Range: 65536
+[21:39:32] [info] CORE:    [-] Max Viewports: 16
+[21:39:32] [info] CORE: ==========================
+[21:39:33] [info] CORE: 
+[21:39:33] [info] CORE: Swapchain Details:
+[21:39:33] [info] CORE: ==========================
+[21:39:33] [info] CORE:  [-] Surface Format: B8G8R8A8 SRGB, SRGB Nonlinear
+[21:39:33] [info] CORE:  [-] Present Mode: Mailbox
+[21:39:33] [info] CORE:  [-] Extent: 800 x 600
+[21:39:33] [info] CORE: ==========================
+[21:39:34] [info] CORE: 
+[21:39:34] [info] CORE: Compiled Shader:
+[21:39:34] [info] CORE: ==========================
+[21:39:34] [info] CORE:  [-] Name: shader
+[21:39:34] [info] CORE:  [-] Pipeline Type: Graphics
+[21:39:34] [info] CORE:  [-] Vertex Input Bindings
+[21:39:34] [info] CORE:    [-] Binding 0:
+[21:39:34] [info] CORE:      [-] Stride: 24
+[21:39:34] [info] CORE:  [-] Vertex Attributes
+[21:39:34] [info] CORE:    [-] Location 0:
+[21:39:34] [info] CORE:      [-] Binding: 0
+[21:39:34] [info] CORE:      [-] Format: R32G32B32 SFloat
+[21:39:34] [info] CORE:      [-] Offset: 0
+[21:39:34] [info] CORE:    [-] Location 1:
+[21:39:34] [info] CORE:      [-] Binding: 0
+[21:39:34] [info] CORE:      [-] Format: R32G32B32 SFloat
+[21:39:34] [info] CORE:      [-] Offset: 12
+[21:39:34] [info] CORE: ==========================

@@ -6,7 +6,7 @@
 
 #include "Mixture/Core/FrameInfo.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     class GraphicsPipeline
     {

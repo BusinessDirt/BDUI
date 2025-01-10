@@ -6,7 +6,7 @@
 #include "Platform/Vulkan/Buffer/Depth.hpp"
 #include "Platform/Vulkan/Command/SingleTime.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     Image::Image(const VkExtent2D extent, const VkFormat format, uint32_t mipLevels)
         : Image(extent, format, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, mipLevels)

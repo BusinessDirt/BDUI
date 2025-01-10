@@ -4,12 +4,12 @@
 #include "Platform/Vulkan/Context.hpp"
 #include "Platform/Vulkan/Image.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
 	FrameBuffer::FrameBuffer(VkImageView depthAttachment, VkImage swapchainImage, VkExtent2D extent, VkFormat format, VkRenderPass renderPass)
 		: m_Image(swapchainImage), m_Format(format)
 	{
-		m_ImageView = std::make_unique<ImageView>(m_Image, m_Format, VK_IMAGE_ASPECT_COLOR_BIT);
+		m_ImageView = CreateScope<ImageView>(m_Image, m_Format, VK_IMAGE_ASPECT_COLOR_BIT);
 
 		std::vector<VkImageView> attachments = { m_ImageView->GetHandle() };
 		if (depthAttachment) attachments.push_back(depthAttachment);

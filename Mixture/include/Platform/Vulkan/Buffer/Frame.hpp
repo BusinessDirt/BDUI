@@ -3,7 +3,7 @@
 #include "Platform/Vulkan/Base.hpp"
 #include "Platform/Vulkan/Image.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
 	class ImageView;
 
@@ -24,6 +24,6 @@ namespace Vulkan
 
 		const VkFormat m_Format;
 		const VkImage m_Image;
-		std::unique_ptr<ImageView> m_ImageView; 
+		Scope<ImageView> m_ImageView; 
 	};
 }

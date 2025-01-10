@@ -3,7 +3,7 @@
 
 #include "Platform/Vulkan/Context.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
 	ShaderModule::ShaderModule(const Mixture::SPVShader& shader, Mixture::ShaderStage stage)
 		: m_Stage(stage)

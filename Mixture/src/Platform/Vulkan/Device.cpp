@@ -6,7 +6,7 @@
 
 #include <set>
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     Device::Device(const std::vector<const char*>& requiredLayers, const std::vector<const char*>& requiredExtensions)
     {

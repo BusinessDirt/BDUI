@@ -6,7 +6,7 @@
 #include "Platform/Vulkan/Context.hpp"
 #include "Platform/Vulkan/Command/Pool.hpp"
 
-namespace Vulkan::SingleTimeCommand
+namespace Mixture::Vulkan::SingleTimeCommand
 {
     static void Submit(const std::function<void(VkCommandBuffer)>& action)
     {

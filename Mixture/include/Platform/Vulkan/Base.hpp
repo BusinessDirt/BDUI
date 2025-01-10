@@ -41,7 +41,7 @@
 #define VULKAN_INFO_LIST_HEADER(text, tabs) OPAL_CORE_INFO(fmt::runtime(std::string(tabs * 2, ' ') + std::string(LIST_ITEM_BLANK) + text))
 #define VULKAN_INFO_END() OPAL_CORE_INFO(VULKAN_INFO_HORIZONTAL_BAR)
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     namespace Util
     {

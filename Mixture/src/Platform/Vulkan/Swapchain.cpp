@@ -9,7 +9,7 @@
 #include <limits> // Necessary for std::numeric_limits
 #include <algorithm> // Necessary for std::clamp
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     Swapchain::Swapchain()
         : m_OldSwapchain(nullptr)
@@ -91,15 +91,15 @@ namespace Vulkan
         vkGetSwapchainImagesKHR(Context::Get().m_Device->GetHandle(), m_Swapchain, &imageCount, images.data());
 
         m_Extent = extent;
-        m_Renderpass = std::make_unique<Renderpass>(surfaceFormat.format);
+        m_Renderpass = CreateScope<Renderpass>(surfaceFormat.format);
 
         // Depth and Frame buffers
         m_DepthBuffers.resize(imageCount);
         m_FrameBuffers.resize(imageCount);
         for (size_t i = 0; i < imageCount; i++)
         {
-            m_DepthBuffers[i] = std::make_unique<DepthBuffer>(extent);
-            m_FrameBuffers[i] = std::make_unique<FrameBuffer>(m_DepthBuffers[i]->GetImageView().GetHandle(), images[i],
+            m_DepthBuffers[i] = CreateScope<DepthBuffer>(extent);
+            m_FrameBuffers[i] = CreateScope<FrameBuffer>(m_DepthBuffers[i]->GetImageView().GetHandle(), images[i],
                 extent, surfaceFormat.format, m_Renderpass->GetHandle());
         }
 

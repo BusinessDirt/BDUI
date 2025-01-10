@@ -3,7 +3,7 @@
 
 #include "Platform/Vulkan/Context.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     Semaphore::Semaphore()
     {

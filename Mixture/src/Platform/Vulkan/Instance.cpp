@@ -3,7 +3,7 @@
 
 #include "Platform/Vulkan/DebugMessenger.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     namespace Util
     {

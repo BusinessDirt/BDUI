@@ -7,7 +7,7 @@
 
 #include <set>
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     namespace Util
     {

@@ -6,7 +6,7 @@
 #include "Platform/Vulkan/ShaderModule.hpp"
 #include "Platform/Vulkan/Context.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     GraphicsPipeline::GraphicsPipeline()
     {

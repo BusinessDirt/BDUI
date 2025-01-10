@@ -5,13 +5,36 @@ namespace Mixture
 {
     Vulkan::Context& Renderer::s_VulkanContext = Vulkan::Context::Get();
 
+    Scope<Vulkan::GraphicsPipeline> Renderer::s_GraphicsPipeline = nullptr;
+    Scope<Vulkan::IndexBuffer> Renderer::s_IndexBuffer = nullptr;
+    Scope<Vulkan::VertexBuffer> Renderer::s_VertexBuffer = nullptr;
+
     void Renderer::Init(const std::string& applicationName)
     {
         s_VulkanContext.Initialize(applicationName);
+
+        s_GraphicsPipeline = CreateScope<Vulkan::GraphicsPipeline>();
+
+        const std::vector<Vertex> vertices = {
+            {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+            {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
+            {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
+            {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}}
+        };
+
+        const std::vector<uint32_t> indices = {
+            0, 1, 2, 2, 3, 0
+        };
+
+        s_VertexBuffer = CreateScope<Vulkan::VertexBuffer>(vertices);
+        s_IndexBuffer = CreateScope<Vulkan::IndexBuffer>(indices);
     }
 
     void Renderer::Shutdown()
     {
+        s_IndexBuffer = nullptr;
+        s_VertexBuffer = nullptr;
+        s_GraphicsPipeline = nullptr;
         s_VulkanContext.Shutdown();
     }
 
@@ -32,8 +55,10 @@ namespace Mixture
 
             s_VulkanContext.BeginRenderpass(commandBuffer);
 
-            s_VulkanContext.m_GraphicsPipeline->Bind(frameInfo);
-            vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+            s_GraphicsPipeline->Bind(frameInfo);
+            s_VertexBuffer->Bind(commandBuffer);
+            s_IndexBuffer->Bind(commandBuffer);
+            vkCmdDrawIndexed(commandBuffer, s_IndexBuffer->GetIndexCount(), 1, 0, 0, 0);
 
             s_VulkanContext.EndRenderpass(commandBuffer);
             s_VulkanContext.EndFrame(commandBuffer);

@@ -11,7 +11,7 @@
     #include <vulkan/vulkan_win32.h>
 #endif
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     namespace Util
     {
@@ -66,13 +66,13 @@ namespace Vulkan
         }
     }
 
-    std::unique_ptr<Context> Context::s_Instance = nullptr;
+    Scope<Context> Context::s_Instance = nullptr;
     std::mutex Context::s_Mutex;
 
     Context& Context::Get()
     {
         std::lock_guard<std::mutex> lock(s_Mutex);
-        if (s_Instance == nullptr) s_Instance = std::make_unique<Context>();
+        if (s_Instance == nullptr) s_Instance = CreateScope<Context>();
         return *s_Instance;
     }
 
@@ -90,12 +90,10 @@ namespace Vulkan
         m_CommandPool.reset(new CommandPool());
         m_Swapchain.reset(new Swapchain());
         m_CommandBuffers.reset(new CommandBuffers(m_CommandPool->GetHandle(), Swapchain::MAX_FRAMES_IN_FLIGHT));
-        m_GraphicsPipeline.reset(new GraphicsPipeline());
     }
 
     void Context::Shutdown()
     {
-        m_GraphicsPipeline = nullptr;
         m_CommandBuffers = nullptr;
         m_Swapchain = nullptr;
         m_CommandPool = nullptr;
@@ -210,7 +208,7 @@ namespace Vulkan
         WaitForDevice();
 
         std::shared_ptr<Swapchain> oldSwapchain = std::move(Context::Get().m_Swapchain);
-        Context::Get().m_Swapchain = std::make_unique<Swapchain>(oldSwapchain);
+        Context::Get().m_Swapchain = CreateScope<Swapchain>(oldSwapchain);
 
         OPAL_CORE_ASSERT(oldSwapchain->CompareSwapFormats(*Context::Get().m_Swapchain.get()), "Swap chain image (or depth) format has changed!");
     }

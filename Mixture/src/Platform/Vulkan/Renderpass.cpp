@@ -5,7 +5,7 @@
 #include "Platform/Vulkan/Buffer/Depth.hpp"
 #include "Platform/Vulkan/Buffer/Frame.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
 	Renderpass::Renderpass(VkFormat format, bool useDepth, VkAttachmentLoadOp loadOp, VkImageLayout initialLayout, VkImageLayout finalLayout)
 	{

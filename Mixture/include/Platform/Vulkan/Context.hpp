@@ -11,9 +11,8 @@
 #include "Platform/Vulkan/Swapchain.hpp"
 #include "Platform/Vulkan/Command/Pool.hpp"
 #include "Platform/Vulkan/Command/Buffers.hpp"
-#include "Platform/Vulkan/GraphicsPipeline.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     class Context
     {
@@ -48,15 +47,14 @@ namespace Vulkan
         void RebuildSwapchain();
         
     public:
-        std::unique_ptr<Instance> m_Instance = nullptr;
-        std::unique_ptr<DebugMessenger> m_DebugMessenger = nullptr;
-        std::unique_ptr<WindowSurface> m_WindowSurface = nullptr;
-        std::unique_ptr<PhysicalDevice> m_PhysicalDevice = nullptr;
-        std::unique_ptr<Device> m_Device = nullptr;
-        std::unique_ptr<Swapchain> m_Swapchain = nullptr;
-        std::unique_ptr<CommandPool> m_CommandPool = nullptr;
-        std::unique_ptr<CommandBuffers> m_CommandBuffers = nullptr;
-        std::unique_ptr<GraphicsPipeline> m_GraphicsPipeline = nullptr;
+        Scope<Instance> m_Instance = nullptr;
+        Scope<DebugMessenger> m_DebugMessenger = nullptr;
+        Scope<WindowSurface> m_WindowSurface = nullptr;
+        Scope<PhysicalDevice> m_PhysicalDevice = nullptr;
+        Scope<Device> m_Device = nullptr;
+        Scope<Swapchain> m_Swapchain = nullptr;
+        Scope<CommandPool> m_CommandPool = nullptr;
+        Scope<CommandBuffers> m_CommandBuffers = nullptr;
 
         uint32_t m_CurrentImageIndex = 0;
 
@@ -65,7 +63,7 @@ namespace Vulkan
         bool m_WindowResized = false;
 
     private:
-        static std::unique_ptr<Context> s_Instance;
+        static Scope<Context> s_Instance;
         static std::mutex s_Mutex;
     };
 }

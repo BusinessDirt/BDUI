@@ -4,7 +4,7 @@
 #include "Platform/Vulkan/Context.hpp"
 #include "Platform/Vulkan/Command/SingleTime.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     /**
      * Returns the minimum instance size required to be compatible with devices minOffsetAlignment

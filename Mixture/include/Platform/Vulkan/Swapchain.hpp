@@ -11,7 +11,7 @@
 #include "Platform/Vulkan/Sync/Fence.hpp"
 #include "Platform/Vulkan/Sync/Semaphore.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     class Swapchain
     {
@@ -53,9 +53,9 @@ namespace Vulkan
         VkExtent2D m_Extent;
         size_t m_CurrentFrame = 0;
 
-        std::unique_ptr<Renderpass> m_Renderpass = nullptr;
-        std::vector<std::unique_ptr<FrameBuffer>> m_FrameBuffers;
-        std::vector<std::unique_ptr<DepthBuffer>> m_DepthBuffers;
+        Scope<Renderpass> m_Renderpass = nullptr;
+        std::vector<Scope<FrameBuffer>> m_FrameBuffers;
+        std::vector<Scope<DepthBuffer>> m_DepthBuffers;
 
         std::vector<Semaphore> m_ImageAvailableSemaphores;
         std::vector<Semaphore> m_RenderFinishedSemaphores;

@@ -3,6 +3,10 @@
 #include "Mixture/Core/Base.hpp"
 
 #include "Platform/Vulkan/Context.hpp"
+#include "Platform/Vulkan/GraphicsPipeline.hpp"
+
+#include "Platform/Vulkan/Buffer/Index.hpp"
+#include "Platform/Vulkan/Buffer/Vertex.hpp"
 
 namespace Mixture
 {
@@ -19,5 +23,9 @@ namespace Mixture
 
 	private:
 		static Vulkan::Context& s_VulkanContext;
+
+		static Scope<Vulkan::GraphicsPipeline> s_GraphicsPipeline;
+		static Scope<Vulkan::IndexBuffer> s_IndexBuffer;
+		static Scope<Vulkan::VertexBuffer> s_VertexBuffer;
 	};
 }

@@ -3,7 +3,7 @@
 #include "Platform/Vulkan/Base.hpp"
 #include "Mixture/Assets/SPVShader.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
 	class ShaderModule
 	{

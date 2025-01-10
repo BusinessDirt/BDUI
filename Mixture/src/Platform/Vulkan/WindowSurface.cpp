@@ -5,7 +5,7 @@
 
 #include "Mixture/Core/Application.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     WindowSurface::WindowSurface()
     {

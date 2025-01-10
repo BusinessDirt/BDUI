@@ -3,7 +3,7 @@
 #include "Platform/Vulkan/Base.hpp"
 #include "Platform/Vulkan/PhysicalDevice.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     class CommandPool
     {

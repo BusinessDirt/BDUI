@@ -5,7 +5,7 @@
 #include "Platform/Vulkan/DeviceMemory.hpp"
 #include "Platform/Vulkan/Image.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
 	namespace Util
 	{

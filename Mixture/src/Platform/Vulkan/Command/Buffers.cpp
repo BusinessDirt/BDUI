@@ -3,7 +3,7 @@
 
 #include "Platform/Vulkan/Context.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     CommandBuffers::CommandBuffers(const VkCommandPool commandPool, size_t size)
         : m_CommandPool(commandPool)

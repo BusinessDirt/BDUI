@@ -4,7 +4,7 @@
 
 #include <string>
 
-namespace Vulkan::ToString
+namespace Mixture::Vulkan::ToString
 {
 
     std::string Format(VkFormat format);

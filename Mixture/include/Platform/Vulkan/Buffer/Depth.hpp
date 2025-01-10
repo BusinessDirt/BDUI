@@ -2,7 +2,7 @@
 
 #include "Platform/Vulkan/Base.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     class DeviceMemory;
     class Image;
@@ -28,9 +28,9 @@ namespace Vulkan
 
     private:
         const VkFormat m_Format;
-        std::unique_ptr<Image> m_Image;
-        std::unique_ptr<DeviceMemory> m_ImageMemory;
-        std::unique_ptr<ImageView> m_ImageView;
+        Scope<Image> m_Image;
+        Scope<DeviceMemory> m_ImageMemory;
+        Scope<ImageView> m_ImageView;
     };
 
 }

@@ -2,7 +2,7 @@
 
 #include "Platform/Vulkan/Base.hpp"
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
 
     class DeviceMemory final

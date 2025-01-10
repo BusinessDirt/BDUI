@@ -4,7 +4,7 @@
 
 #include <Opal/Base.hpp>
 
-namespace Vulkan
+namespace Mixture::Vulkan
 {
     class PhysicalDevice;
     

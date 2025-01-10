@@ -3,7 +3,7 @@
 
 #include "Platform/Vulkan/Context.hpp"
 
-namespace Vulkan 
+namespace Mixture::Vulkan 
 {
 
     DeviceMemory::DeviceMemory(const size_t size, const uint32_t memoryTypeBits, const VkMemoryAllocateFlags allocateFLags, const VkMemoryPropertyFlags propertyFlags)

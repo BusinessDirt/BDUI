@@ -1,7 +1,7 @@
 #include "mxpch.hpp"
 #include "Mixture/Util/ToString.hpp"
 
-namespace Vulkan::ToString
+namespace Mixture::Vulkan::ToString
 {
     std::string Format(VkFormat format)
     {
