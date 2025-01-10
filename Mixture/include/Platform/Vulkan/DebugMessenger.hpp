@@ -10,7 +10,7 @@ namespace Vulkan
     class DebugMessenger
     {
     public:
-        DebugMessenger(const VkInstance instance);
+        DebugMessenger();
         ~DebugMessenger();
         
         OPAL_NON_COPIABLE(DebugMessenger);
@@ -19,7 +19,5 @@ namespace Vulkan
 
     private:
         VULKAN_HANDLE(VkDebugUtilsMessengerEXT, m_DebugMessenger);
-        
-        const VkInstance m_Instance;
     };
 }

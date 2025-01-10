@@ -1,6 +1,8 @@
 #include "mxpch.hpp"
 #include "Platform/Vulkan/DebugMessenger.hpp"
 
+#include "Platform/Vulkan/Context.hpp"
+
 #include <Opal/Base.hpp>
 
 namespace Vulkan
@@ -29,16 +31,15 @@ namespace Vulkan
         return VK_FALSE;
     }
 
-    DebugMessenger::DebugMessenger(const VkInstance instance)
-        : m_Instance(instance)
+    DebugMessenger::DebugMessenger()
     {
         VkDebugUtilsMessengerCreateInfoEXT createInfo;
         DebugMessenger::PopulateCreateInfo(createInfo);
 
-        auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(m_Instance, "vkCreateDebugUtilsMessengerEXT");
+        auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(Context::Get().m_Instance->GetHandle(), "vkCreateDebugUtilsMessengerEXT");
         if (func)
         {
-            func(m_Instance, &createInfo, nullptr, &m_DebugMessenger);
+            func(Context::Get().m_Instance->GetHandle(), &createInfo, nullptr, &m_DebugMessenger);
         }
         else
         {
@@ -48,8 +49,8 @@ namespace Vulkan
 
     DebugMessenger::~DebugMessenger()
     {
-        auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(m_Instance, "vkDestroyDebugUtilsMessengerEXT");
-        if (func) func(m_Instance, m_DebugMessenger, nullptr);
+        auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(Context::Get().m_Instance->GetHandle(), "vkDestroyDebugUtilsMessengerEXT");
+        if (func) func(Context::Get().m_Instance->GetHandle(), m_DebugMessenger, nullptr);
     }
 
     void DebugMessenger::PopulateCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)

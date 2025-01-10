@@ -1,6 +1,8 @@
 #include "mxpch.hpp"
 #include "Mixture/Core/Application.hpp"
 
+#include "Mixture/Core/Renderer.hpp"
+
 #include <Opal/Base.hpp>
 
 namespace Mixture
@@ -16,18 +18,17 @@ namespace Mixture
         WindowProps props = WindowProps();
         props.Title = name;
         
-        m_Window = Window::Create(props);
+        m_Window = CreateScope<Window>(props);
         m_Window->SetEventCallback(OPAL_BIND_EVENT_FN(OnEvent));
 
         m_AssetManager = CreateScope<AssetManager>();
         
-        m_VulkanContext = CreateScope<Vulkan::Context>();
-        m_VulkanContext->Initialize(name);
+        Renderer::Init(name);
     }
 
     Application::~Application()
     {
-        m_VulkanContext.reset();
+        Renderer::Shutdown();
         m_AssetManager.reset();
         m_Window.reset();
     }
@@ -42,6 +43,8 @@ namespace Mixture
         while (m_Running)
         {
             m_Window->OnUpdate();
+
+            Renderer::DrawFrame();
         }
     }
 
@@ -53,6 +56,8 @@ namespace Mixture
         // Handle window close and resize event
         dispatcher.Dispatch<WindowCloseEvent>(OPAL_BIND_EVENT_FN(OnWindowClose));
         dispatcher.Dispatch<WindowResizeEvent>(OPAL_BIND_EVENT_FN(OnWindowResize));
+
+        Renderer::OnEvent(event);
     }
 
     bool Application::OnWindowClose(WindowCloseEvent& e)
@@ -63,7 +68,7 @@ namespace Mixture
 
     bool Application::OnWindowResize(WindowResizeEvent& e)
     {
-        if (e.IsFinished()) OPAL_CORE_INFO("{}", e.ToString());
-        return m_VulkanContext->OnWindowResize(e);
+        Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+        return false;
     }
 }

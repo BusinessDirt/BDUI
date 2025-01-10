@@ -8,7 +8,7 @@ namespace Vulkan
 	class ShaderModule
 	{
 	public:
-		ShaderModule(const VkDevice device, const Mixture::SPVShader& shader, Mixture::ShaderStage stage);
+		ShaderModule(const Mixture::SPVShader& shader, Mixture::ShaderStage stage);
 		~ShaderModule();
 
 		VkPipelineShaderStageCreateInfo CreateInfo();
@@ -16,7 +16,5 @@ namespace Vulkan
 	private:
 		VULKAN_HANDLE(VkShaderModule, m_ShaderModule);
 		Mixture::ShaderStage m_Stage;
-
-		VkDevice m_Device;
 	};
 }

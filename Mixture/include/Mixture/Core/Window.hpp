@@ -6,9 +6,10 @@
 #include <string>
 #include <vulkan/vulkan.h>
 
+struct GLFWwindow;
+
 namespace Mixture 
 {
-
     struct WindowProps
     {
         std::string Title;
@@ -22,23 +23,35 @@ namespace Mixture
     class Window 
     {
     public:
-        virtual ~Window() = default;
+        using EventCallbackFn = std::function<void(Event&)>;
 
-        // Pure virtual methods to be implemented by platform-specific classes
-        virtual void OnUpdate() = 0;               // Called each frame to process events and update the window
-        virtual int GetWidth() const = 0;         // Returns the width of the window
-        virtual int GetHeight() const = 0;        // Returns the height of the window
-        
-        virtual void* GetNativeWindow() const = 0; // Returns a platform-specific window handle
-        virtual void GetFramebufferSize(int* width, int* height) const = 0;
-        virtual VkSurfaceKHR CreateVulkanSurface(VkInstance instance) const = 0;
+        Window(const WindowProps& props);
+        ~Window();
+
+        unsigned int GetWidth() const { return m_Data.Width; }
+        unsigned int GetHeight() const { return m_Data.Height; }
+        void* GetNativeWindow() const { return m_WindowHandle; }
+
+        void OnUpdate() const;
+        void GetFramebufferSize(int* width, int* height) const;
+        void CreateVulkanSurface(VkInstance instance, VkAllocationCallbacks* allocator, VkSurfaceKHR* surface) const;
         
         // Event callback setter
-        void SetEventCallback(const std::function<void(Event&)>& callback);
+        void SetEventCallback(const EventCallbackFn& callback) { m_Data.EventCallback = callback; }
 
-        // Factory method to create platform-specific windows
-        static Scope<Window> Create(const WindowProps& props = WindowProps());
-    protected:
+    private:
+        struct WindowData
+        {
+            std::string Title;
+            unsigned int Width = 0, Height = 0;
+            bool VSync = true;
+            bool Minimized = false;
+            EventCallbackFn EventCallback;
+        };
+
+    private:
+        GLFWwindow* m_WindowHandle;
+        WindowData m_Data;
         std::function<void(Event&)> m_EventCallback;
     };
 }

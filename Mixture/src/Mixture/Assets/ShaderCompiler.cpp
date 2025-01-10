@@ -86,24 +86,25 @@ namespace Mixture
 
 		void Reflect(SPVShader& shader)
 		{
-            spirv_cross::Compiler compiler(shader.Data.at(SHADER_STAGE_VERTEX));
-            spirv_cross::ShaderResources resources = compiler.get_shader_resources();
+            spirv_cross::Compiler vertCompiler(shader.Data.at(SHADER_STAGE_VERTEX));
+            spirv_cross::ShaderResources vertResources = vertCompiler.get_shader_resources();
 
-            // Push Constants
-            for (const spirv_cross::Resource& resource : resources.push_constant_buffers)
+            // Push
+            shader.PushConstant.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+            for (const spirv_cross::Resource& resource : vertResources.push_constant_buffers)
             {
-                const spirv_cross::SPIRType& bufferType = compiler.get_type(resource.base_type_id);
-                shader.PushConstant.Size = static_cast<uint32_t>(compiler.get_declared_struct_size(bufferType));
-                compiler.get_binary_offset_for_decoration(resource.id, spv::DecorationBinding, shader.PushConstant.Offset);
+                const spirv_cross::SPIRType& bufferType = vertCompiler.get_type(resource.base_type_id);
+                shader.PushConstant.size = static_cast<uint32_t>(vertCompiler.get_declared_struct_size(bufferType));
+                vertCompiler.get_binary_offset_for_decoration(resource.id, spv::DecorationBinding, shader.PushConstant.offset);
             }
 
             // Sort resources by location
             // this is required to calculate the offsets properly
-            std::vector<spirv_cross::Resource> stageInputs(resources.stage_inputs.begin(), resources.stage_inputs.end());
-            std::sort(stageInputs.begin(), stageInputs.end(), [&compiler](const spirv_cross::Resource& a, const spirv_cross::Resource& b)
+            std::vector<spirv_cross::Resource> stageInputs(vertResources.stage_inputs.begin(), vertResources.stage_inputs.end());
+            std::sort(stageInputs.begin(), stageInputs.end(), [&vertCompiler](const spirv_cross::Resource& a, const spirv_cross::Resource& b)
                 {
-                    uint32_t locationA = compiler.get_decoration(a.id, spv::DecorationLocation);
-                    uint32_t locationB = compiler.get_decoration(b.id, spv::DecorationLocation);
+                    uint32_t locationA = vertCompiler.get_decoration(a.id, spv::DecorationLocation);
+                    uint32_t locationB = vertCompiler.get_decoration(b.id, spv::DecorationLocation);
                     return locationA < locationB;
                 });
 
@@ -111,18 +112,18 @@ namespace Mixture
 
             for (const spirv_cross::Resource& resource : stageInputs)
             {
-                uint32_t location = compiler.get_decoration(resource.id, spv::DecorationLocation);
-                uint32_t binding = compiler.get_decoration(resource.id, spv::DecorationBinding);
-                auto type = compiler.get_type(resource.base_type_id);
+                uint32_t location = vertCompiler.get_decoration(resource.id, spv::DecorationLocation);
+                uint32_t binding = vertCompiler.get_decoration(resource.id, spv::DecorationBinding);
+                auto type = vertCompiler.get_type(resource.base_type_id);
 
                 VkFormat format = Util::GetVkFormat(type);
                 uint32_t size = type.vecsize * 4; // Assuming 4 bytes per component (float, int, uint)
 
-                VertexInputAttribute attributeDescription{};
-                attributeDescription.Location = location;
-                attributeDescription.Binding = binding;
-                attributeDescription.Format = format;
-                attributeDescription.Offset = bindingStrides[binding];
+                VkVertexInputAttributeDescription attributeDescription{};
+                attributeDescription.location = location;
+                attributeDescription.binding = binding;
+                attributeDescription.format = format;
+                attributeDescription.offset = bindingStrides[binding];
                 shader.VertexInputAttributes.emplace_back(attributeDescription);
 
                 bindingStrides[binding] += size;
@@ -130,9 +131,10 @@ namespace Mixture
 
             for (const auto& [binding, stride] : bindingStrides)
             {
-                VertexInputBinding bindingDescription{};
-                bindingDescription.Binding = binding;
-                bindingDescription.Stride = stride;
+                VkVertexInputBindingDescription bindingDescription{};
+                bindingDescription.binding = binding;
+                bindingDescription.stride = stride;
+                bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
                 shader.VertexInputBindings.emplace_back(bindingDescription);
             }
 		}
@@ -145,11 +147,11 @@ namespace Mixture
             VULKAN_INFO_LIST("Pipeline Type: {}", 0, (compileFlags.PipelineType == GRAPHICS_PIPELINE ? "Graphics" : "Unknown"));
 
             // Push Constant
-            if (shader.PushConstant.Size > 0)
+            if (shader.PushConstant.size > 0)
             {
                 VULKAN_INFO_LIST_HEADER("Push Constant", 0);
-                VULKAN_INFO_LIST("Size: {}", 1, shader.PushConstant.Size);
-                VULKAN_INFO_LIST("Offset: {}", 1, shader.PushConstant.Offset);
+                VULKAN_INFO_LIST("Size: {}", 1, shader.PushConstant.size);
+                VULKAN_INFO_LIST("Offset: {}", 1, shader.PushConstant.offset);
             }
 
             // Vertex Input Bindings
@@ -159,8 +161,8 @@ namespace Mixture
                 
                 for (const auto& binding : shader.VertexInputBindings)
                 {
-                    VULKAN_INFO_LIST("Binding {}:", 1, binding.Binding);
-                    VULKAN_INFO_LIST("Stride: {}", 2, binding.Stride);
+                    VULKAN_INFO_LIST("Binding {}:", 1, binding.binding);
+                    VULKAN_INFO_LIST("Stride: {}", 2, binding.stride);
                 }
             }
 
@@ -171,10 +173,10 @@ namespace Mixture
 
                 for (const auto& attribute : shader.VertexInputAttributes)
                 {
-                    VULKAN_INFO_LIST("Location {}:", 1, attribute.Location);
-                    VULKAN_INFO_LIST("Binding: {}", 2, attribute.Binding);
-                    VULKAN_INFO_LIST("Format: {}", 2, Vulkan::ToString::Format(attribute.Format));
-                    VULKAN_INFO_LIST("Offset: {}", 2, attribute.Offset);
+                    VULKAN_INFO_LIST("Location {}:", 1, attribute.location);
+                    VULKAN_INFO_LIST("Binding: {}", 2, attribute.binding);
+                    VULKAN_INFO_LIST("Format: {}", 2, Vulkan::ToString::Format(attribute.format));
+                    VULKAN_INFO_LIST("Offset: {}", 2, attribute.offset);
                 }
             }
 

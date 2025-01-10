@@ -6,8 +6,6 @@
 #include "Mixture/Events/Event.hpp"
 #include "Mixture/Events/ApplicationEvent.hpp"
 
-#include "Platform/Vulkan/Context.hpp"
-
 int Entrypoint(int argc, char** argv);
 
 namespace Mixture
@@ -48,7 +46,6 @@ namespace Mixture
 
     private:
         Scope<Window> m_Window;
-        Scope<Vulkan::Context> m_VulkanContext;
         Scope<AssetManager> m_AssetManager;
         
         bool m_Running = true;

@@ -1,37 +1,65 @@
 #pragma once
 
 #include "Platform/Vulkan/Base.hpp"
+#include "Platform/Vulkan/Renderpass.hpp"
+
+#include "Platform/Vulkan/Command/Buffers.hpp"
+
+#include "Platform/Vulkan/Buffer/Frame.hpp"
+#include "Platform/Vulkan/Buffer/Depth.hpp"
+
+#include "Platform/Vulkan/Sync/Fence.hpp"
+#include "Platform/Vulkan/Sync/Semaphore.hpp"
 
 namespace Vulkan
 {
-    class PhysicalDevice;
-
     class Swapchain
     {
     public:
-        Swapchain(const PhysicalDevice& physicalDevice, const VkDevice device, const VkSurfaceKHR surface);
+        static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
+
+        Swapchain();
+        Swapchain(std::shared_ptr<Swapchain> previous);
         ~Swapchain();
+
+        VkExtent2D GetExtent() const { return m_Extent; }
+        uint32_t GetWidth() const { return m_Extent.width; }
+        uint32_t GetHeight() const { return m_Extent.height; }
+
+        const VkFormat GetImageFormat() const { return m_FrameBuffers[0]->GetFormat(); }
+        const VkFormat GetDepthFormat() const { return m_DepthBuffers[0]->GetFormat(); }
+
+        const Renderpass& GetRenderpass() const { return *m_Renderpass; }
+        const FrameBuffer& GetFramebuffer(int index) const { return *m_FrameBuffers[index]; }
+
+        uint32_t GetCurrentFrameIndex() const { return static_cast<uint32_t>(m_CurrentFrame); }
+        size_t GetImageCount() const { return m_FrameBuffers.size(); }
+
+        VkResult AcquireNextImage();
+        VkResult SubmitCommandBuffers(const std::vector<VkCommandBuffer>& commandBuffers);
+
+        bool CompareSwapFormats(const Swapchain& swapChain) const;
         
     private:
-        void ChooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
-        void ChoosePresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
-        void ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities);
-        
-        void CreateImageViews();
+        void Init(bool debug);
+        VkSurfaceFormatKHR ChooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+        VkPresentModeKHR  ChoosePresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+        VkExtent2D ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities);
         
     private:
         VULKAN_HANDLE(VkSwapchainKHR, m_Swapchain);
+        std::shared_ptr<Swapchain> m_OldSwapchain;
         
-        VkSurfaceFormatKHR m_SurfaceFormat;
-        VkPresentModeKHR m_PresentMode;
         VkExtent2D m_Extent;
-        uint32_t m_ImageCount;
-        
-        std::vector<VkImage> m_Images;
-        std::vector<VkImageView> m_ImageViews;
-        
-        const PhysicalDevice& m_PhysicalDevice;
-        const VkDevice m_Device;
-        const VkSurfaceKHR m_Surface;
+        size_t m_CurrentFrame = 0;
+
+        std::unique_ptr<Renderpass> m_Renderpass = nullptr;
+        std::vector<std::unique_ptr<FrameBuffer>> m_FrameBuffers;
+        std::vector<std::unique_ptr<DepthBuffer>> m_DepthBuffers;
+
+        std::vector<Semaphore> m_ImageAvailableSemaphores;
+        std::vector<Semaphore> m_RenderFinishedSemaphores;
+        std::vector<Fence> m_InFlightFences;
+        std::vector<Fence*> m_ImagesInFlight;
     };
 }

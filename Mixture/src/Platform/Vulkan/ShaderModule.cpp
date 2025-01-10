@@ -1,12 +1,14 @@
 #include "mxpch.hpp"
 #include "Platform/Vulkan/ShaderModule.hpp"
 
+#include "Platform/Vulkan/Context.hpp"
+
 namespace Vulkan
 {
-	ShaderModule::ShaderModule(const VkDevice device, const Mixture::SPVShader& shader, Mixture::ShaderStage stage)
-		: m_Device(device), m_Stage(stage)
+	ShaderModule::ShaderModule(const Mixture::SPVShader& shader, Mixture::ShaderStage stage)
+		: m_Stage(stage)
 	{
-		if (shader.Data.contains(stage))
+		if (!shader.Data.contains(stage))
 		{
 			OPAL_CORE_ERROR("SPVShader doesn't contain code for stage '{}'", Mixture::Util::ShaderStageToString(stage));
 			OPAL_CORE_ASSERT(false);
@@ -16,17 +18,17 @@ namespace Vulkan
 
 		VkShaderModuleCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-		createInfo.codeSize = code.size();
+		createInfo.codeSize = code.size() * 4;
 		createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
-		VK_ASSERT(vkCreateShaderModule(device, &createInfo, nullptr, &m_ShaderModule), "Failed to create VkShaderModule!");
+		VK_ASSERT(vkCreateShaderModule(Context::Get().m_Device->GetHandle(), &createInfo, nullptr, &m_ShaderModule), "Failed to create VkShaderModule!");
 	}
 
 	ShaderModule::~ShaderModule()
 	{
 		if (m_ShaderModule)
 		{
-			vkDestroyShaderModule(m_Device, m_ShaderModule, nullptr);
+			vkDestroyShaderModule(Context::Get().m_Device->GetHandle(), m_ShaderModule, nullptr);
 			m_ShaderModule = nullptr;
 		}
 	}

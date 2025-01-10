@@ -11,7 +11,7 @@
 
 #include "Mixture/Util/ToString.hpp"
 
-#define VK_ASSERT(arg, err) VkResult res = arg; OPAL_CORE_ASSERT(res == VK_SUCCESS, err)
+#define VK_ASSERT(arg, err) { VkResult res = arg; OPAL_CORE_ASSERT(res == VK_SUCCESS, err); }
 
 #define VULKAN_HANDLE(VulkanHandleType, name) \
     public: VulkanHandleType GetHandle() const { return name; } \

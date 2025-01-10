@@ -7,13 +7,12 @@ namespace Vulkan
     class WindowSurface
     {
     public:
-        WindowSurface(const VkInstance instance);
+        WindowSurface();
         ~WindowSurface();
         
         OPAL_NON_COPIABLE(WindowSurface);
         
     private:
         VULKAN_HANDLE(VkSurfaceKHR, m_Surface);
-        const VkInstance m_Instance;
     };
 }

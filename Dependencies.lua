@@ -3,6 +3,7 @@ IncludeDir = {}
 IncludeDir["spdlog"] = "%{wks.location}/vendor/spdlog/include"
 IncludeDir["Vulkan"] = os.getenv("VULKAN_SDK") .. "/Include"
 IncludeDir["glm"] = "%{wks.location}/vendor/glm"
+IncludeDir["glfw"] = "%{wks.location}/vendor/glfw/include"
 IncludeDir["stb_image"] = "%{wks.location}/vendor/stb_image"
 
 LibraryDir = {}

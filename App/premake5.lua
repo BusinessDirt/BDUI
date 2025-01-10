@@ -24,6 +24,7 @@ project "App"
     }
 
     links {
+        "GLFW",
         "Opal",
         "Mixture"
     }

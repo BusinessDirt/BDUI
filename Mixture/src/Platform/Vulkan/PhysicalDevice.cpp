@@ -1,6 +1,8 @@
 #include "mxpch.hpp"
 #include "Platform/Vulkan/PhysicalDevice.hpp"
 
+#include "Platform/Vulkan/Context.hpp"
+
 #include <Opal/Base.hpp>
 
 #include <set>
@@ -21,16 +23,15 @@ namespace Vulkan
         }  
     }
 
-    PhysicalDevice::PhysicalDevice(VkInstance instance, const VkSurfaceKHR surface, const std::vector<const char*>& requiredExtensions)
-        : m_Instance(instance), m_Surface(surface)
+    PhysicalDevice::PhysicalDevice(const std::vector<const char*>& requiredExtensions)
     {
         uint32_t deviceCount = 0;
-        vkEnumeratePhysicalDevices(m_Instance, &deviceCount, nullptr);
+        vkEnumeratePhysicalDevices(Context::Get().m_Instance->GetHandle(), &deviceCount, nullptr);
         
         OPAL_CORE_ASSERT(deviceCount > 0, "Failed to find GPU with Vulkan support!");
         
         std::vector<VkPhysicalDevice> devices(deviceCount);
-        vkEnumeratePhysicalDevices(m_Instance, &deviceCount, devices.data());
+        vkEnumeratePhysicalDevices(Context::Get().m_Instance->GetHandle(), &deviceCount, devices.data());
         
         // Use an ordered map to automatically sort candidates by increasing score
         std::multimap<int, VkPhysicalDevice> candidates;
@@ -46,7 +47,6 @@ namespace Vulkan
         {
             m_PhysicalDevice = candidates.rbegin()->second;
             m_QueueFamilyIndices = FindQueueFamilyIndices(m_PhysicalDevice);
-            m_SwapchainSupportDetails = QuerySwapchainSupport(m_PhysicalDevice);
             
             Util::PrintDebugAvailability(Util::GetAvailableExtensions(m_PhysicalDevice), requiredExtensions, [](const VkExtensionProperties& extension) { return extension.extensionName; }, "Device Extensions");
         }
@@ -143,7 +143,7 @@ namespace Vulkan
             
             // Present Queue
             VkBool32 presentSupport = false;
-            vkGetPhysicalDeviceSurfaceSupportKHR(device, i, m_Surface, &presentSupport);
+            vkGetPhysicalDeviceSurfaceSupportKHR(device, i, Context::Get().m_WindowSurface->GetHandle(), &presentSupport);
             if (presentSupport) indices.Present = i;
 
             // break early if all indices have been found
@@ -155,31 +155,36 @@ namespace Vulkan
         return indices;
     }
 
-    SwapchainSupportDetails PhysicalDevice::QuerySwapchainSupport(const VkPhysicalDevice device)
+    SwapchainSupportDetails PhysicalDevice::QuerySwapchainSupport(const VkPhysicalDevice device) const
     {
         SwapchainSupportDetails details;
         
         // Basic surface capabilities
-        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, m_Surface, &details.Capabilities);
+        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device == VK_NULL_HANDLE ? m_PhysicalDevice : device, 
+            Context::Get().m_WindowSurface->GetHandle(), &details.Capabilities);
         
         // Supported surface formats
         uint32_t formatCount;
-        vkGetPhysicalDeviceSurfaceFormatsKHR(device, m_Surface, &formatCount, nullptr);
+        vkGetPhysicalDeviceSurfaceFormatsKHR(device == VK_NULL_HANDLE ? m_PhysicalDevice : device, 
+            Context::Get().m_WindowSurface->GetHandle(), &formatCount, nullptr);
 
         if (formatCount != 0) 
         {
             details.Formats.resize(formatCount);
-            vkGetPhysicalDeviceSurfaceFormatsKHR(device, m_Surface, &formatCount, details.Formats.data());
+            vkGetPhysicalDeviceSurfaceFormatsKHR(device == VK_NULL_HANDLE ? m_PhysicalDevice : device, 
+                Context::Get().m_WindowSurface->GetHandle(), &formatCount, details.Formats.data());
         }
         
         // Supported presentation modes
         uint32_t presentModeCount;
-        vkGetPhysicalDeviceSurfacePresentModesKHR(device, m_Surface, &presentModeCount, nullptr);
+        vkGetPhysicalDeviceSurfacePresentModesKHR(device == VK_NULL_HANDLE ? m_PhysicalDevice : device, 
+            Context::Get().m_WindowSurface->GetHandle(), &presentModeCount, nullptr);
 
         if (presentModeCount != 0) 
         {
             details.PresentModes.resize(presentModeCount);
-            vkGetPhysicalDeviceSurfacePresentModesKHR(device, m_Surface, &presentModeCount, details.PresentModes.data());
+            vkGetPhysicalDeviceSurfacePresentModesKHR(device == VK_NULL_HANDLE ? m_PhysicalDevice : device, 
+                Context::Get().m_WindowSurface->GetHandle(), &presentModeCount, details.PresentModes.data());
         }
         
         return details;

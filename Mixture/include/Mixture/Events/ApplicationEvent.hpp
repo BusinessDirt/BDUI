@@ -7,11 +7,10 @@ namespace Mixture
 	class WindowResizeEvent : public Event 
     {
 	public:
-		WindowResizeEvent(unsigned int width, unsigned int height, bool finished = false) : m_Width(width), m_Height(height), m_Finished(finished) {}
+		WindowResizeEvent(unsigned int width, unsigned int height) : m_Width(width), m_Height(height) {}
 
 		unsigned int GetWidth() const { return m_Width; }
 		unsigned int GetHeight() const { return m_Height; }
-		bool IsFinished() const { return m_Finished; }
 
 		std::string ToString() const override
 		{
@@ -25,7 +24,6 @@ namespace Mixture
 
 	private:
 		unsigned int m_Width, m_Height;
-		bool m_Finished;
 	};
 
 	class WindowCloseEvent : public Event 

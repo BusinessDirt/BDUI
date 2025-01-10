@@ -7,3 +7,6 @@
 [submodule "vendor/stb_image"]
 	path = vendor/stb_image
 	url = https://github.com/nothings/stb
+[submodule "vendor/glfw"]
+	path = vendor/glfw
+	url = https://github.com/BusinessDirt/glfw.git

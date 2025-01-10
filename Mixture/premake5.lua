@@ -18,6 +18,7 @@ project "Mixture"
 
         "%{IncludeDir.spdlog}",
         "%{IncludeDir.Vulkan}",
+        "%{IncludeDir.glfw}",
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb_image}"
     }
