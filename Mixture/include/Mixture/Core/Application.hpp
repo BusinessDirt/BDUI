@@ -36,7 +36,6 @@ namespace Mixture
         void Close();
         
         void OnEvent(Event& e);
-        bool OnWindowClose(WindowCloseEvent& e);
 
         static Application& Get() { return *s_Instance; }
         const Window& GetWindow() const { return *m_Window; }
@@ -44,6 +43,8 @@ namespace Mixture
 
     private:
         void Run();
+        bool OnWindowClose(WindowCloseEvent& e);
+        bool OnWindowResize(WindowResizeEvent& e);
 
     private:
         Scope<Window> m_Window;

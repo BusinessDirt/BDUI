@@ -91,4 +91,9 @@ namespace Vulkan
         m_Swapchain.reset(new Swapchain(*m_PhysicalDevice, m_Device->GetHandle(), m_WindowSurface->GetHandle()));
         m_GraphicsPipeline.reset(new GraphicsPipeline());
     }
+
+    bool Context::OnWindowResize(Mixture::WindowResizeEvent& event)
+    {
+        return false;
+    }
 }

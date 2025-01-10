@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Mixture/Events/ApplicationEvent.hpp"
+
 #include "Platform/Vulkan/Base.hpp"
 #include "Platform/Vulkan/Instance.hpp"
 #include "Platform/Vulkan/DebugMessenger.hpp"
@@ -18,6 +20,7 @@ namespace Vulkan
         ~Context();
         
         void Initialize(const std::string& applicationName);
+        bool OnWindowResize(Mixture::WindowResizeEvent& event);
         
     private:
         std::unique_ptr<Instance> m_Instance = nullptr;

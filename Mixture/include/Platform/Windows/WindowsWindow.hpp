@@ -24,6 +24,7 @@ namespace Mixture {
     private:
         void Init(const WindowProps& props);
         void Shutdown();
+        static LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     private:
         HWND m_WindowHandle;

@@ -37,11 +37,18 @@
     m_Owner->OnClose();
 }
 
+- (void)windowWillResize:(NSNotification *)notification
+{
+    NSWindow* window = (NSWindow*)[notification object];
+    NSRect frame = [window frame];
+    m_Owner->OnResize((int)frame.size.width, (int)frame.size.height, false);
+}
+
 - (void)windowDidResize:(NSNotification *)notification
 {
     NSWindow* window = (NSWindow*)[notification object];
     NSRect frame = [window frame];
-    m_Owner->OnResize((int)frame.size.width, (int)frame.size.height);
+    m_Owner->OnResize((int)frame.size.width, (int)frame.size.height, true);
 }
 @end
 
@@ -183,16 +190,45 @@ namespace Mixture
         }
     }
 
-    void DarwinWindow::OnResize(int width, int height)
+    void DarwinWindow::OnResize(int width, int height, bool finished)
     {
         m_Data.Width = width;
         m_Data.Height = height;
 
         if (m_EventCallback)
         {
-            WindowResizeEvent event(width, height);
+            WindowResizeEvent event(width, height, finished);
             m_EventCallback(event);
         }
+    }
+
+    void OnRestore(int width, int height)
+    {
+        m_Data.Width = width;
+        m_Data.Height = height;
+
+        if (m_EventCallback)
+        {
+            WindowRestoreEvent event(width, height);
+            m_EventCallback(event);
+        }
+    }
+
+    void OnMaximize(int width, int height)
+    {
+        m_Data.Width = width;
+        m_Data.Height = height;
+
+        if (m_EventCallback)
+        {
+            WindowMaximizeEvent event(width, height);
+            m_EventCallback(event);
+        }
+    }
+
+    void OnMinimize()
+    {
+
     }
 
     void DarwinWindow::OnClose()

@@ -17,7 +17,7 @@ namespace Mixture
         props.Title = name;
         
         m_Window = Window::Create(props);
-        m_Window->SetEventCallback([this](Event& event) { OnEvent(event); });
+        m_Window->SetEventCallback(OPAL_BIND_EVENT_FN(OnEvent));
 
         m_AssetManager = CreateScope<AssetManager>();
         
@@ -50,13 +50,20 @@ namespace Mixture
         // Dispatch events to specific handlers
         EventDispatcher dispatcher(event);
 
-        // Handle window close event
-        dispatcher.Dispatch<WindowCloseEvent>([this](WindowCloseEvent& e) { return OnWindowClose(e); });
+        // Handle window close and resize event
+        dispatcher.Dispatch<WindowCloseEvent>(OPAL_BIND_EVENT_FN(OnWindowClose));
+        dispatcher.Dispatch<WindowResizeEvent>(OPAL_BIND_EVENT_FN(OnWindowResize));
     }
 
     bool Application::OnWindowClose(WindowCloseEvent& e)
     {
         m_Running = false;
         return true;
+    }
+
+    bool Application::OnWindowResize(WindowResizeEvent& e)
+    {
+        if (e.IsFinished()) OPAL_CORE_INFO("{}", e.ToString());
+        return m_VulkanContext->OnWindowResize(e);
     }
 }

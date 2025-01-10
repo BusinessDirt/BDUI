@@ -21,7 +21,7 @@ namespace Mixture
         void GetFramebufferSize(int* width, int* height) const override;
         VkSurfaceKHR CreateVulkanSurface(VkInstance instance) const override;
         
-        void OnResize(int width, int height);
+        void OnResize(int width, int height, bool finished);
         void OnClose();
 
     private:
