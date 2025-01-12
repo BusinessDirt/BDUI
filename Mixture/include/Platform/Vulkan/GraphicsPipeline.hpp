@@ -4,7 +4,7 @@
 #include "Platform/Vulkan/Renderpass.hpp"
 #include "Platform/Vulkan/Swapchain.hpp"
 
-#include "Mixture/Core/FrameInfo.hpp"
+#include "Mixture/Renderer/FrameInfo.hpp"
 
 namespace Mixture::Vulkan
 {

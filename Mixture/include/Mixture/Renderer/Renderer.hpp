@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Mixture/Core/Base.hpp"
+#include "Mixture/Renderer/LayerStack.hpp"
 
 #include "Platform/Vulkan/Context.hpp"
 #include "Platform/Vulkan/GraphicsPipeline.hpp"
@@ -21,11 +22,10 @@ namespace Mixture
 		static void DrawFrame();
 		static void OnEvent(Event& e);
 
+		static void PushLayer(Layer* layer) { s_LayerStack->PushLayer(layer); }
+
 	private:
 		static Vulkan::Context& s_VulkanContext;
-
-		static Scope<Vulkan::GraphicsPipeline> s_GraphicsPipeline;
-		static Scope<Vulkan::IndexBuffer> s_IndexBuffer;
-		static Scope<Vulkan::VertexBuffer> s_VertexBuffer;
+		static Scope<LayerStack> s_LayerStack;
 	};
 }

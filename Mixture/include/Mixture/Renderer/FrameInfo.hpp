@@ -7,5 +7,6 @@
 struct FrameInfo
 {
 	uint32_t FrameIndex;
+	float FrameTime;
 	VkCommandBuffer CommandBuffer;
 };

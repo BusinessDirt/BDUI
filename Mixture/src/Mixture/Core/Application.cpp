@@ -1,7 +1,7 @@
 #include "mxpch.hpp"
 #include "Mixture/Core/Application.hpp"
 
-#include "Mixture/Core/Renderer.hpp"
+#include "Mixture/Renderer/Renderer.hpp"
 
 #include <Opal/Base.hpp>
 
