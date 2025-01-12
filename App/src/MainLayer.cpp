@@ -8,10 +8,10 @@ namespace Mixture
         m_Pipeline = CreateScope<Vulkan::GraphicsPipeline>();
 
         const std::vector<Vertex> vertices = {
-            {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}},
-            {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}},
-            {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}},
-            {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}}
+            {{-1.0f, -1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+            {{1.0f, -1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}},
+            {{1.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}},
+            {{-1.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 1.0f}}
         };
 
         const std::vector<uint32_t> indices = {
@@ -34,7 +34,7 @@ namespace Mixture
         m_Pipeline->Bind(frameInfo);
         m_VertexBuffer->Bind(frameInfo.CommandBuffer);
         m_IndexBuffer->Bind(frameInfo.CommandBuffer);
-        vkCmdDrawIndexed(frameInfo.CommandBuffer, m_IndexBuffer->GetIndexCount(), 1, 0, 0, 0);
+        DrawCommand::DrawIndexed(frameInfo.CommandBuffer, m_IndexBuffer->GetIndexCount());
     }
 
     void MainLayer::OnEvent(Event& event)

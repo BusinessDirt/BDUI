@@ -3,6 +3,7 @@
 #include "Mixture/Core/Base.hpp"
 #include "Mixture/Core/Application.hpp"
 
+#include "Mixture/Renderer/DrawCommand.hpp"
 #include "Mixture/Renderer/FrameInfo.hpp"
 #include "Mixture/Renderer/Renderer.hpp"
 #include "Mixture/Renderer/Layer.hpp"
