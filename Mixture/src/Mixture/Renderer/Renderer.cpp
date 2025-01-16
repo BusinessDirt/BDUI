@@ -1,7 +1,7 @@
 #include "mxpch.hpp"
 #include "Mixture/Renderer/Renderer.hpp"
 
-#include "Mixture/Renderer/FrameInfo.hpp"
+#include "Mixture/Renderer/RendererInfo.hpp"
 
 namespace Mixture
 {

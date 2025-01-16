@@ -2,7 +2,7 @@
 
 #include "Mixture/Core/Base.hpp"
 #include "Mixture/Events/Event.hpp"
-#include "Mixture/Renderer/FrameInfo.hpp"
+#include "Mixture/Renderer/RendererInfo.hpp"
 
 namespace Mixture
 {

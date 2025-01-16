@@ -4,7 +4,7 @@
 #include "Platform/Vulkan/Renderpass.hpp"
 #include "Platform/Vulkan/Swapchain.hpp"
 
-#include "Mixture/Renderer/FrameInfo.hpp"
+#include "Mixture/Renderer/RendererInfo.hpp"
 
 namespace Mixture::Vulkan
 {
@@ -13,7 +13,7 @@ namespace Mixture::Vulkan
     public:
         OPAL_NON_COPIABLE(GraphicsPipeline);
 
-        GraphicsPipeline();
+        GraphicsPipeline(const std::string& shaderName);
         ~GraphicsPipeline();
 
         void Bind(const FrameInfo& frameInfo);

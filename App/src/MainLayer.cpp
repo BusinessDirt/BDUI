@@ -5,7 +5,7 @@ namespace Mixture
 {
     void MainLayer::OnAttach()
     {
-        m_Pipeline = CreateScope<Vulkan::GraphicsPipeline>();
+        m_Pipeline = CreateGraphicsPipeline("shader");
 
         const std::vector<Vertex> vertices = {
             {{-1.0f, -1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
@@ -18,8 +18,8 @@ namespace Mixture
             0, 1, 2, 2, 3, 0
         };
 
-        m_VertexBuffer = CreateScope<Vulkan::VertexBuffer>(vertices);
-        m_IndexBuffer = CreateScope<Vulkan::IndexBuffer>(indices);
+        m_VertexBuffer = CreateVertexBuffer(vertices);
+        m_IndexBuffer = CreateIndexBuffer(indices);
     }
 
     void MainLayer::OnDetach()

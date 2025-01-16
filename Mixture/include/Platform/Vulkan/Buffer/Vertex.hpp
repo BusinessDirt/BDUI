@@ -1,24 +1,12 @@
 #pragma once
 
+#include "Mixture/Renderer/RendererInfo.hpp"
+
 #include "Platform/Vulkan/Base.hpp"
-
 #include "Platform/Vulkan/Buffer/Buffer.hpp"
-
-#include <glm/glm.hpp>
 
 namespace Mixture
 {
-    struct Vertex
-    {
-        glm::vec3 Position;
-        glm::vec3 Color;
-
-        bool operator==(const Vertex& other) const
-        {
-            return Position == other.Position && Color == other.Color;
-        }
-    };
-
     namespace Vulkan
     {
         class VertexBuffer

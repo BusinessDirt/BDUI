@@ -8,7 +8,7 @@
 
 namespace Mixture::Vulkan
 {
-    GraphicsPipeline::GraphicsPipeline()
+    GraphicsPipeline::GraphicsPipeline(const std::string& shaderName)
     {
         const Swapchain& swapchain = *Context::Get().m_Swapchain;
 
@@ -16,7 +16,7 @@ namespace Mixture::Vulkan
         flags.PipelineType = Mixture::ShaderCompiler::GRAPHICS_PIPELINE;
         flags.Debug = true;
 
-        Mixture::SPVShader shader = Mixture::ShaderCompiler::Compile("shader", flags);
+        Mixture::SPVShader shader = Mixture::ShaderCompiler::Compile(shaderName, flags);
         ShaderModule vertShader(shader, Mixture::SHADER_STAGE_VERTEX);
         ShaderModule fragShader(shader, Mixture::SHADER_STAGE_FRAGMENT);
         VkPipelineShaderStageCreateInfo shaderStages[] = { vertShader.CreateInfo(), fragShader.CreateInfo() };
