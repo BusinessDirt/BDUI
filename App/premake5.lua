@@ -6,11 +6,7 @@ project "App"
     staticruntime "off"
 
     files { "include/**.hpp", "src/**.cpp" }
-
-    includedirs { 
-        "include"
-    }
-
+    includedirs { "include" }
     libdirs { "%{LibraryDir.Vulkan}" }
 
     externalincludedirs {
@@ -36,41 +32,41 @@ project "App"
         defines { "OPAL_DEBUG" }
         runtime "Debug"
         symbols "On"
-        filter "system:windows"
-            links {
-                "%{Library.ShaderC_Debug}",
-                "%{Library.SPIRV_Cross_Debug}"
-            }
+        links {
+            "%{Library.ShaderC_Debug}",
+            "%{Library.SPIRV_Cross_Debug}"
+        }
 
     filter "configurations:Release"
         defines { "OPAL_RELEASE" }
         runtime "Release"
         optimize "On"
         symbols "On"
-        filter "system:windows"
-            links {
-                "%{Library.ShaderC_Release}",
-                "%{Library.SPIRV_Cross_Release}"
-            }
+        links {
+            "%{Library.ShaderC_Release}",
+            "%{Library.SPIRV_Cross_Release}"
+        }
 
     filter "configurations:Dist"
         defines { "OPAL_DIST" }
         runtime "Release"
         optimize "On"
         symbols "Off"
-        filter "system:windows"
-            links {
-                "%{Library.ShaderC_Release}",
-                "%{Library.SPIRV_Cross_Release}"
-            }
+        links {
+            "%{Library.ShaderC_Release}",
+            "%{Library.SPIRV_Cross_Release}"
+        }   
 
     -- windows specific settings
     filter "system:windows"
         links { "%{Library.Vulkan}" }
+        buildoptions { "/utf-8" }
 
     -- mac specific settings
     filter "action:xcode4"
         local vulkanFW = os.getenv("VULKAN_SDK") .. "/Frameworks"
+        local vulkanLibs = os.getenv("VULKAN_SDK") .. "/Lib"
+
         links {
             "vulkan.framework",
             "Cocoa.framework",
@@ -82,13 +78,10 @@ project "App"
 
         frameworkdirs { 
             vulkanFW,
-            "/System/Library/Frameworks" 
+            "/System/Library/Frameworks",
+            "%{LibraryDir.Vulkan}"
         }
 
         xcodebuildsettings {
-            ["LD_RUNPATH_SEARCH_PATHS"] = "@executable_path/../Frameworks @loader_path/../Frameworks " .. vulkanFW
+            ["LD_RUNPATH_SEARCH_PATHS"] = "@executable_path/../Frameworks @loader_path/../Frameworks " .. vulkanFW .. " " .. vulkanLibs
         }
-
-    -- Add the /utf-8 flag
-    filter "action:vs2022" -- Only apply for MSVC toolset
-        buildoptions { "/utf-8" }

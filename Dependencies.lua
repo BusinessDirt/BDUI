@@ -22,4 +22,14 @@ if os.istarget("windows") then
     Library["ShaderC_Release"] = "%{LibraryDir.VulkanSDK}/shaderc_shared.lib"
     Library["SPIRV_Cross_Release"] = "%{LibraryDir.VulkanSDK}/spirv-cross-core.lib"
     Library["SPIRV_Cross_GLSL_Release"] = "%{LibraryDir.VulkanSDK}/spirv-cross-glsl.lib"
+elseif os.istarget("macosx") then
+    Library["ShaderC_Debug"] = "shaderc_shared"
+    Library["SPIRV_Cross_Debug"] = "spirv-cross-core"
+    Library["SPIRV_Cross_GLSL_Debug"] = "spirv-cross-glsl"
+
+    Library["ShaderC_Release"] = "shaderc_shared"
+    Library["SPIRV_Cross_Release"] = "spirv-cross-glsl"
+    Library["SPIRV_Cross_GLSL_Release"] = "spirv-cross-glsl"
 end
+
+
