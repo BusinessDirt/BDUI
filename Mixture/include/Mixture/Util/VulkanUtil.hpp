@@ -7,30 +7,14 @@
 #include "Platform/Vulkan/Buffer/Buffer.hpp"
 #include "Platform/Vulkan/GraphicsPipeline.hpp"
 
+#define CREATE_FUNC(type) template <typename... Args> static Scope<Vulkan::type> Create##type(Args&&... args) { return CreateScope<Vulkan::type>(std::forward<Args>(args)...); }
+
 namespace Mixture
 {
-    static Scope<Vulkan::IndexBuffer> CreateIndexBuffer(const std::vector<uint32_t>& indices)
-    {
-        return CreateScope<Vulkan::IndexBuffer>(indices);
-    }
-
-    static Scope<Vulkan::VertexBuffer> CreateVertexBuffer(const std::vector<Vertex>& vertices)
-    {
-        return CreateScope<Vulkan::VertexBuffer>(vertices);
-    }
-
-    static Scope<Vulkan::VertexBuffer> CreateVertexBuffer()
-    {
-        return CreateScope<Vulkan::VertexBuffer>();
-    }
-
-    static Scope<Vulkan::Buffer> CreateBuffer(VkDeviceSize instanceSize, uint32_t instanceCount, VkBufferUsageFlags usageFlags, VkMemoryPropertyFlags memoryPropertyFlags, VkDeviceSize minOffsetAlignment = 1)
-    {
-        return CreateScope<Vulkan::Buffer>(instanceSize, instanceCount, usageFlags, memoryPropertyFlags, minOffsetAlignment);
-    }
-
-    static Scope<Vulkan::GraphicsPipeline> CreateGraphicsPipeline(const std::string& shaderName)
-    {
-        return CreateScope<Vulkan::GraphicsPipeline>(shaderName);
-    }
+    CREATE_FUNC(IndexBuffer)
+    CREATE_FUNC(VertexBuffer)
+    CREATE_FUNC(Buffer)
+    CREATE_FUNC(GraphicsPipeline)
 }
+
+#undef CREATE_FUNC

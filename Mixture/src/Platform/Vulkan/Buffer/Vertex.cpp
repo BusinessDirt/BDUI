@@ -18,7 +18,6 @@ namespace Mixture::Vulkan
 
     void VertexBuffer::SetData(const std::vector<Vertex>& vertices)
     {
-        OPAL_CORE_INFO("SetData()");
         m_VertexCount = static_cast<uint32_t>(vertices.size());
         OPAL_CORE_ASSERT(m_VertexCount >= 3, "Vertex count must be at least 3!");
 
