@@ -1,5 +1,4 @@
 project "App"
-    kind "ConsoleApp"
     language "C++"
     cppdialect "C++20"
     targetdir "Binaries/%{cfg.buildcfg}"
@@ -29,6 +28,7 @@ project "App"
     objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
 
     filter "configurations:Debug"
+        kind "ConsoleApp"
         defines { "OPAL_DEBUG" }
         runtime "Debug"
         symbols "On"
@@ -38,6 +38,7 @@ project "App"
         }
 
     filter "configurations:Release"
+        kind "ConsoleApp"
         defines { "OPAL_RELEASE" }
         runtime "Release"
         optimize "On"
@@ -48,6 +49,7 @@ project "App"
         }
 
     filter "configurations:Dist"
+        kind "WindowedApp"
         defines { "OPAL_DIST" }
         runtime "Release"
         optimize "On"

@@ -9,22 +9,27 @@
 
 namespace Mixture
 {
-    Scope<Vulkan::IndexBuffer> CreateIndexBuffer(const std::vector<uint32_t>& indices)
+    static Scope<Vulkan::IndexBuffer> CreateIndexBuffer(const std::vector<uint32_t>& indices)
     {
         return CreateScope<Vulkan::IndexBuffer>(indices);
     }
 
-    Scope<Vulkan::VertexBuffer> CreateVertexBuffer(const std::vector<Vertex>& vertices)
+    static Scope<Vulkan::VertexBuffer> CreateVertexBuffer(const std::vector<Vertex>& vertices)
     {
         return CreateScope<Vulkan::VertexBuffer>(vertices);
     }
 
-    Scope<Vulkan::Buffer> CreateBuffer(VkDeviceSize instanceSize, uint32_t instanceCount, VkBufferUsageFlags usageFlags, VkMemoryPropertyFlags memoryPropertyFlags, VkDeviceSize minOffsetAlignment = 1)
+    static Scope<Vulkan::VertexBuffer> CreateVertexBuffer()
+    {
+        return CreateScope<Vulkan::VertexBuffer>();
+    }
+
+    static Scope<Vulkan::Buffer> CreateBuffer(VkDeviceSize instanceSize, uint32_t instanceCount, VkBufferUsageFlags usageFlags, VkMemoryPropertyFlags memoryPropertyFlags, VkDeviceSize minOffsetAlignment = 1)
     {
         return CreateScope<Vulkan::Buffer>(instanceSize, instanceCount, usageFlags, memoryPropertyFlags, minOffsetAlignment);
     }
 
-    Scope<Vulkan::GraphicsPipeline> CreateGraphicsPipeline(const std::string& shaderName)
+    static Scope<Vulkan::GraphicsPipeline> CreateGraphicsPipeline(const std::string& shaderName)
     {
         return CreateScope<Vulkan::GraphicsPipeline>(shaderName);
     }

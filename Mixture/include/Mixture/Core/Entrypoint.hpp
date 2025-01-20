@@ -16,9 +16,9 @@ int Entrypoint(int argc, char** argv)
     return 0;
 }
 
-#ifdef MX_DIST
+#ifdef OPAL_DIST
 
-#if defined(MX_PLATFORM_WINDOWS)
+#if defined(OPAL_PLATFORM_WINDOWS)
 
 #include <Windows.h>
 
@@ -27,7 +27,7 @@ int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmd
     return Entrypoint(__argc, __argv);
 }
 
-#elif defined(MX_PLATFORM_MACOSX)
+#elif defined(OPAL_PLATFORM_MACOSX)
 
 
 

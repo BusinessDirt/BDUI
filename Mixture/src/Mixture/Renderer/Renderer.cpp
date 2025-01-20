@@ -2,6 +2,7 @@
 #include "Mixture/Renderer/Renderer.hpp"
 
 #include "Mixture/Renderer/RendererInfo.hpp"
+#include "Mixture/Renderer/ShapeRenderer.hpp"
 
 namespace Mixture
 {
@@ -11,11 +12,13 @@ namespace Mixture
     void Renderer::Init(const std::string& applicationName)
     {
         s_VulkanContext.Initialize(applicationName);
+        ShapeRenderer::Initialize();
     }
 
     void Renderer::Shutdown()
     {
         s_LayerStack = nullptr;
+        ShapeRenderer::Shutdown();
         s_VulkanContext.Shutdown();
     }
 
@@ -44,6 +47,7 @@ namespace Mixture
             s_VulkanContext.BeginRenderpass(commandBuffer);
 
             s_LayerStack->Update(frameInfo);
+            ShapeRenderer::Render(frameInfo);
 
             s_VulkanContext.EndRenderpass(commandBuffer);
             s_VulkanContext.EndFrame(commandBuffer);

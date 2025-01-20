@@ -12,5 +12,15 @@ namespace Mixture
 	{
 		vkCmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
 	}
+
+	void DrawCommand::DrawIndirect(VkCommandBuffer commandBuffer, const Vulkan::Buffer& buffer, VkDeviceSize offset)
+	{
+		vkCmdDrawIndirect(commandBuffer, buffer.GetHandle(), offset, buffer.GetInstanceCount(), buffer.GetInstanceSize());
+	}
+
+	void DrawCommand::DrawIndexedIndirect(VkCommandBuffer commandBuffer, const Vulkan::Buffer& buffer, VkDeviceSize offset)
+	{
+		vkCmdDrawIndexedIndirect(commandBuffer, buffer.GetHandle(), offset, buffer.GetInstanceCount(), buffer.GetInstanceSize());
+	}
 }
 
