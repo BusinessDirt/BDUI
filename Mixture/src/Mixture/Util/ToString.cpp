@@ -3,7 +3,7 @@
 
 namespace Mixture::Vulkan::ToString
 {
-    std::string Format(VkFormat format)
+    std::string_view Format(VkFormat format)
     {
         switch (format)
         {
@@ -261,7 +261,7 @@ namespace Mixture::Vulkan::ToString
         }
     }
 
-    std::string ShaderFormat(VkFormat format)
+    std::string_view ShaderFormat(VkFormat format)
     {
         switch (format)
         {
@@ -277,7 +277,7 @@ namespace Mixture::Vulkan::ToString
         }
     }
 
-    std::string ColorSpace(VkColorSpaceKHR colorSpace)
+    std::string_view ColorSpace(VkColorSpaceKHR colorSpace)
     {
         switch (colorSpace)
         {
@@ -301,7 +301,7 @@ namespace Mixture::Vulkan::ToString
         }
     }
 
-    std::string PresentMode(VkPresentModeKHR presentMode)
+    std::string_view PresentMode(VkPresentModeKHR presentMode)
     {
         switch (presentMode)
         {
@@ -315,7 +315,7 @@ namespace Mixture::Vulkan::ToString
         }
     }
 
-    std::string PhysicalDeviceType(VkPhysicalDeviceType physicalDeviceType)
+    std::string_view PhysicalDeviceType(VkPhysicalDeviceType physicalDeviceType)
     {
         switch (physicalDeviceType)
         {
