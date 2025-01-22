@@ -17,6 +17,7 @@ namespace Mixture
 		VkPushConstantRange PushConstant{};
 		std::vector<VkVertexInputBindingDescription> VertexInputBindings;
 		std::vector<VkVertexInputAttributeDescription> VertexInputAttributes;
+        std::vector<std::string> VertexAttributeNames;
 		std::unordered_map<ShaderStage, std::vector<uint32_t>> Data;
 	};
 

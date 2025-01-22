@@ -261,6 +261,22 @@ namespace Mixture::Vulkan::ToString
         }
     }
 
+    std::string ShaderFormat(VkFormat format)
+    {
+        switch (format)
+        {
+            case VK_FORMAT_UNDEFINED: return "Undefined";
+            case VK_FORMAT_R32_SINT: return "int";
+            case VK_FORMAT_R32_SFLOAT: return "float";
+            case VK_FORMAT_R32G32_SFLOAT: return "vec2";
+            case VK_FORMAT_R32G32B32_SFLOAT: return "vec3";
+            case VK_FORMAT_R32G32B32A32_SFLOAT: return "vec4";
+            case VK_FORMAT_R64_SINT: return "long";
+            case VK_FORMAT_R64_SFLOAT: return "double";
+            default: return Format(format);
+        }
+    }
+
     std::string ColorSpace(VkColorSpaceKHR colorSpace)
     {
         switch (colorSpace)

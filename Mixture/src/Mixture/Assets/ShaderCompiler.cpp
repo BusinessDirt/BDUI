@@ -125,6 +125,10 @@ namespace Mixture
                 attributeDescription.format = format;
                 attributeDescription.offset = bindingStrides[binding];
                 shader.VertexInputAttributes.emplace_back(attributeDescription);
+                
+                std::string name = vertCompiler.get_name(resource.id);
+                if (name == "") name = vertCompiler.get_fallback_name(resource.id);
+                shader.VertexAttributeNames.push_back(name);
 
                 bindingStrides[binding] += size;
             }
@@ -171,12 +175,11 @@ namespace Mixture
             {
                 VULKAN_INFO_LIST_HEADER("Vertex Attributes", 0);
 
+                int i = 0;
                 for (const auto& attribute : shader.VertexInputAttributes)
                 {
-                    VULKAN_INFO_LIST("Location {}:", 1, attribute.location);
-                    VULKAN_INFO_LIST("Binding: {}", 2, attribute.binding);
-                    VULKAN_INFO_LIST("Format: {}", 2, Vulkan::ToString::Format(attribute.format));
-                    VULKAN_INFO_LIST("Offset: {}", 2, attribute.offset);
+                    VULKAN_INFO_LIST("layout(location = {}, binding = {}, offset = {}) in {} {};", 1, attribute.location, attribute.binding, attribute.offset, Vulkan::ToString::ShaderFormat(attribute.format), shader.VertexAttributeNames[i]);
+                    i++;
                 }
             }
 

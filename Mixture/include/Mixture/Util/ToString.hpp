@@ -8,6 +8,7 @@ namespace Mixture::Vulkan::ToString
 {
 
     std::string Format(VkFormat format);
+    std::string ShaderFormat(VkFormat format);
     std::string ColorSpace(VkColorSpaceKHR colorSpace);
     std::string PresentMode(VkPresentModeKHR presentMode);
     std::string PhysicalDeviceType(VkPhysicalDeviceType physicalDeviceType);
