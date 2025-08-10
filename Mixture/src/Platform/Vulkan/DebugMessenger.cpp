@@ -36,10 +36,10 @@ namespace Mixture::Vulkan
         VkDebugUtilsMessengerCreateInfoEXT createInfo;
         DebugMessenger::PopulateCreateInfo(createInfo);
 
-        auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(Context::Get().m_Instance->GetHandle(), "vkCreateDebugUtilsMessengerEXT");
+        auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(Context::Get().Instance().GetHandle(), "vkCreateDebugUtilsMessengerEXT");
         if (func)
         {
-            func(Context::Get().m_Instance->GetHandle(), &createInfo, nullptr, &m_DebugMessenger);
+            func(Context::Get().Instance().GetHandle(), &createInfo, nullptr, &m_DebugMessenger);
         }
         else
         {
@@ -49,8 +49,8 @@ namespace Mixture::Vulkan
 
     DebugMessenger::~DebugMessenger()
     {
-        auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(Context::Get().m_Instance->GetHandle(), "vkDestroyDebugUtilsMessengerEXT");
-        if (func) func(Context::Get().m_Instance->GetHandle(), m_DebugMessenger, nullptr);
+        auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(Context::Get().Instance().GetHandle(), "vkDestroyDebugUtilsMessengerEXT");
+        if (func) func(Context::Get().Instance().GetHandle(), m_DebugMessenger, nullptr);
     }
 
     void DebugMessenger::PopulateCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)

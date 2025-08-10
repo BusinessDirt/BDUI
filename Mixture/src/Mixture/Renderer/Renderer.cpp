@@ -26,6 +26,7 @@ namespace Mixture
     void Renderer::OnWindowResize(uint32_t width, uint32_t height)
     {
         s_VulkanContext.OnWindowResize(width, height);
+        s_ImGuiRenderer->OnWindowResize(width, height);
     }
 
     void Renderer::DrawFrame()
@@ -41,15 +42,21 @@ namespace Mixture
         if (VkCommandBuffer commandBuffer = s_VulkanContext.BeginFrame())
         {
             FrameInfo frameInfo{};
-            frameInfo.FrameIndex = s_VulkanContext.m_Swapchain->GetCurrentFrameIndex();
+            frameInfo.FrameIndex = s_VulkanContext.Swapchain().GetCurrentFrameIndex();
             frameInfo.FrameTime = frameTime;
             frameInfo.CommandBuffer = commandBuffer;
+            
+            s_ImGuiRenderer->BeginFrame();
+            s_LayerStack->OnRenderUI(frameInfo);
+            s_ImGuiRenderer->EndFrame();
 
             s_VulkanContext.BeginRenderpass(commandBuffer);
-            s_LayerStack->Update(frameInfo);
+            s_LayerStack->OnUpdate(frameInfo);
             s_VulkanContext.EndRenderpass(commandBuffer);
             
-            s_ImGuiRenderer->RenderUI(frameInfo);
+            s_ImGuiRenderer->BeginRenderpass(commandBuffer);
+            s_ImGuiRenderer->Draw(commandBuffer);
+            s_ImGuiRenderer->EndRenderpass(commandBuffer);
             
             s_VulkanContext.EndFrame(commandBuffer);
             commandBuffers.push_back(commandBuffer);

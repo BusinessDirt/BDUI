@@ -10,7 +10,7 @@ namespace Mixture::Vulkan
 {
     Device::Device(const std::vector<const char*>& requiredLayers, const std::vector<const char*>& requiredExtensions)
     {
-        const QueueFamilyIndices& indices = Context::Get().m_PhysicalDevice->GetQueueFamilyIndices();
+        const QueueFamilyIndices& indices = Context::Get().PhysicalDevice().GetQueueFamilyIndices();
         
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
         std::set<uint32_t> uniqueQueueFamilies = { indices.Graphics.value(), indices.Present.value() };
@@ -39,7 +39,7 @@ namespace Mixture::Vulkan
         createInfo.enabledExtensionCount = static_cast<uint32_t>(requiredExtensions.size());
         createInfo.ppEnabledExtensionNames = requiredExtensions.data();
         
-        VK_ASSERT(vkCreateDevice(Context::Get().m_PhysicalDevice->GetHandle(), &createInfo, nullptr, &m_Device), "Failed to create logical device!");
+        VK_ASSERT(vkCreateDevice(Context::Get().PhysicalDevice().GetHandle(), &createInfo, nullptr, &m_Device), "Failed to create logical device!");
         
         // retrieve queues
         vkGetDeviceQueue(m_Device, indices.Graphics.value(), 0, &m_GraphicsQueue);
@@ -55,12 +55,12 @@ namespace Mixture::Vulkan
         }
     }
 
-    VkFormat Device::FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
+    VkFormat Device::FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) const
     {
         for (VkFormat format : candidates)
         {
             VkFormatProperties props;
-            vkGetPhysicalDeviceFormatProperties(Context::Get().m_PhysicalDevice->GetHandle(), format, &props);
+            vkGetPhysicalDeviceFormatProperties(Context::Get().PhysicalDevice().GetHandle(), format, &props);
 
             if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features)
             {
@@ -75,10 +75,10 @@ namespace Mixture::Vulkan
         return VK_FORMAT_UNDEFINED;
     }
 
-    uint32_t Device::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
+    uint32_t Device::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const
     {
         VkPhysicalDeviceMemoryProperties memProperties;
-        vkGetPhysicalDeviceMemoryProperties(Context::Get().m_PhysicalDevice->GetHandle(), &memProperties);
+        vkGetPhysicalDeviceMemoryProperties(Context::Get().PhysicalDevice().GetHandle(), &memProperties);
         for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++)
         {
             if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties)
@@ -92,7 +92,7 @@ namespace Mixture::Vulkan
     }
 
     void Device::CreateImageWithInfo(const VkImageCreateInfo& imageInfo, VkMemoryPropertyFlags properties,
-        VkImage& image, VkDeviceMemory& imageMemory)
+        VkImage& image, VkDeviceMemory& imageMemory) const
     {
         VK_ASSERT(vkCreateImage(m_Device, &imageInfo, nullptr, &image), "Failed to create VkImage!");
 

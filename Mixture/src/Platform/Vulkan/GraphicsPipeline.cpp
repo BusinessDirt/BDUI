@@ -10,7 +10,7 @@ namespace Mixture::Vulkan
 {
     GraphicsPipeline::GraphicsPipeline(const std::string& shaderName)
     {
-        const Swapchain& swapchain = *Context::Get().m_Swapchain;
+        const Swapchain& swapchain = Context::Get().Swapchain();
 
         Mixture::ShaderCompiler::Flags flags{};
         flags.PipelineType = Mixture::ShaderCompiler::GRAPHICS_PIPELINE;
@@ -126,7 +126,7 @@ namespace Mixture::Vulkan
             pipelineLayoutInfo.pPushConstantRanges = &shader.PushConstant;
         }
 
-        VK_ASSERT(vkCreatePipelineLayout(Context::Get().m_Device->GetHandle(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout), "Failed to create Graphics Pipeline Layout!");
+        VK_ASSERT(vkCreatePipelineLayout(Context::Get().Device().GetHandle(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout), "Failed to create Graphics Pipeline Layout!");
 
         VkGraphicsPipelineCreateInfo pipelineInfo{};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -146,20 +146,20 @@ namespace Mixture::Vulkan
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
         pipelineInfo.basePipelineIndex = -1;
 
-        VK_ASSERT(vkCreateGraphicsPipelines(Context::Get().m_Device->GetHandle(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_GraphicsPipeline), "Failed to create Graphics Pipeline");
+        VK_ASSERT(vkCreateGraphicsPipelines(Context::Get().Device().GetHandle(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_GraphicsPipeline), "Failed to create Graphics Pipeline");
     };
 
     GraphicsPipeline::~GraphicsPipeline()
     {
         if (m_GraphicsPipeline)
         {
-            vkDestroyPipeline(Context::Get().m_Device->GetHandle(), m_GraphicsPipeline, nullptr);
+            vkDestroyPipeline(Context::Get().Device().GetHandle(), m_GraphicsPipeline, nullptr);
             m_GraphicsPipeline = nullptr;
         }
 
         if (m_PipelineLayout)
         {
-            vkDestroyPipelineLayout(Context::Get().m_Device->GetHandle(), m_PipelineLayout, nullptr);
+            vkDestroyPipelineLayout(Context::Get().Device().GetHandle(), m_PipelineLayout, nullptr);
             m_PipelineLayout = nullptr;
         }
     }

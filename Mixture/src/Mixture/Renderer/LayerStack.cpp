@@ -12,10 +12,16 @@ namespace Mixture
         }
     }
 
-    void LayerStack::Update(FrameInfo& frameInfo) const
+    void LayerStack::OnUpdate(FrameInfo& frameInfo) const
     {
         for (Layer* layer : m_Layers)
             layer->OnUpdate(frameInfo);
+    }
+
+    void LayerStack::OnRenderUI(FrameInfo& frameInfo) const
+    {
+        for (Layer* layer : m_Layers)
+            layer->OnRenderUI(frameInfo);
     }
 
     void LayerStack::OnEvent(Event& e) const
@@ -23,7 +29,6 @@ namespace Mixture
         for (Layer* layer : m_Layers)
             layer->OnEvent(e);
     }
-
 
     void LayerStack::PushLayer(Layer* overlay)
     {

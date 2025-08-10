@@ -14,6 +14,8 @@
 
 namespace Mixture::Vulkan
 {
+    #define VK_CONTEXT_MEMBER(type, varName) private: Scope<type> varName = nullptr; public: const type& type() { return *varName; }
+
     class Context
     {
     public:
@@ -36,6 +38,8 @@ namespace Mixture::Vulkan
         void EndRenderpass(VkCommandBuffer commandBuffer);
         void EndFrame(VkCommandBuffer commandBuffer);
         void SubmitFrame(const std::vector<VkCommandBuffer>& commandBuffers);
+        
+        uint32_t CurrentImageIndex() { return m_CurrentImageIndex; }
 
     private:
         VkCommandBuffer GetCurrentCommandBuffer() const
@@ -46,15 +50,14 @@ namespace Mixture::Vulkan
 
         void RebuildSwapchain();
         
-    public:
-        Scope<Instance> m_Instance = nullptr;
-        Scope<DebugMessenger> m_DebugMessenger = nullptr;
-        Scope<WindowSurface> m_WindowSurface = nullptr;
-        Scope<PhysicalDevice> m_PhysicalDevice = nullptr;
-        Scope<Device> m_Device = nullptr;
-        Scope<Swapchain> m_Swapchain = nullptr;
-        Scope<CommandPool> m_CommandPool = nullptr;
-        Scope<CommandBuffers> m_CommandBuffers = nullptr;
+        VK_CONTEXT_MEMBER(Instance, m_Instance);
+        VK_CONTEXT_MEMBER(DebugMessenger, m_DebugMessenger);
+        VK_CONTEXT_MEMBER(WindowSurface, m_WindowSurface);
+        VK_CONTEXT_MEMBER(PhysicalDevice, m_PhysicalDevice);
+        VK_CONTEXT_MEMBER(Device, m_Device);
+        VK_CONTEXT_MEMBER(Swapchain, m_Swapchain);
+        VK_CONTEXT_MEMBER(CommandPool, m_CommandPool);
+        VK_CONTEXT_MEMBER(CommandBuffers, m_CommandBuffers);
 
         uint32_t m_CurrentImageIndex = 0;
 

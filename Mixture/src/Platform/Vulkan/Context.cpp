@@ -78,18 +78,18 @@ namespace Mixture::Vulkan
 
     void Context::Initialize(const std::string& applicationName)
     {
-        m_Instance.reset(new Instance(applicationName, Util::GetRequiredLayers(), Util::GetRequiredInstanceExtensions()));
+        m_Instance = CreateScope<class Instance>(applicationName, Util::GetRequiredLayers(), Util::GetRequiredInstanceExtensions());
         
     #ifndef OPAL_DIST
-        m_DebugMessenger.reset(new DebugMessenger());
+        m_DebugMessenger = CreateScope<class DebugMessenger>();
     #endif
         
-        m_WindowSurface.reset(new WindowSurface());
-        m_PhysicalDevice.reset(new PhysicalDevice(Util::GetRequiredDeviceExtensions()));
-        m_Device.reset(new Device(Util::GetRequiredLayers(), Util::GetRequiredDeviceExtensions()));
-        m_CommandPool.reset(new CommandPool());
-        m_Swapchain.reset(new Swapchain());
-        m_CommandBuffers.reset(new CommandBuffers(m_CommandPool->GetHandle(), Swapchain::MAX_FRAMES_IN_FLIGHT));
+        m_WindowSurface = CreateScope<class WindowSurface>();
+        m_PhysicalDevice = CreateScope<class PhysicalDevice>(Util::GetRequiredDeviceExtensions());
+        m_Device = CreateScope<class Device>(Util::GetRequiredLayers(), Util::GetRequiredDeviceExtensions());
+        m_CommandPool = CreateScope<class CommandPool>();
+        m_Swapchain = CreateScope<class Swapchain>();
+        m_CommandBuffers = CreateScope<class CommandBuffers>(m_CommandPool->GetHandle(), Swapchain::MAX_FRAMES_IN_FLIGHT);
     }
 
     void Context::Shutdown()
@@ -107,6 +107,8 @@ namespace Mixture::Vulkan
     void Context::OnWindowResize(uint32_t width, uint32_t height)
     {
         m_WindowResized = true;
+        RebuildSwapchain();
+        m_WindowResized = false;
     }
 
     void Context::WaitForDevice()
@@ -207,8 +209,8 @@ namespace Mixture::Vulkan
     {
         WaitForDevice();
 
-        std::shared_ptr<Swapchain> oldSwapchain = std::move(Context::Get().m_Swapchain);
-        Context::Get().m_Swapchain = CreateScope<Swapchain>(oldSwapchain);
+        std::shared_ptr<class Swapchain> oldSwapchain = std::move(m_Swapchain);
+        Context::Get().m_Swapchain = CreateScope<class Swapchain>(oldSwapchain);
 
         OPAL_CORE_ASSERT(oldSwapchain->CompareSwapFormats(*Context::Get().m_Swapchain.get()), "Swap chain image (or depth) format has changed!");
     }

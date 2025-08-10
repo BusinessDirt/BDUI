@@ -1,6 +1,8 @@
 #include "mxpch.hpp"
 #include "MainLayer.hpp"
 
+#include <imgui.h>
+
 namespace Mixture
 {
     void MainLayer::OnAttach()
@@ -24,6 +26,13 @@ namespace Mixture
 
     void MainLayer::OnUpdate(FrameInfo& frameInfo)
     {
+    }
+
+    void MainLayer::OnRenderUI(FrameInfo& frameInfo)
+    {
+        ImGui::Begin("Test");
+        ImGui::Text("Frame time: %.3f ms", frameInfo.FrameTime);
+        ImGui::End();
     }
 
     void MainLayer::OnEvent(Event& event)

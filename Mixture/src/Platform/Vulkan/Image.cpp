@@ -32,7 +32,7 @@ namespace Mixture::Vulkan
         imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
         imageInfo.flags = 0; // Optional
 
-        VK_ASSERT(vkCreateImage(Context::Get().m_Device->GetHandle(), &imageInfo, nullptr, &m_Image),
+        VK_ASSERT(vkCreateImage(Context::Get().Device().GetHandle(), &imageInfo, nullptr, &m_Image),
             "Failed to create VkImage!");
     }
 
@@ -46,7 +46,7 @@ namespace Mixture::Vulkan
     {
         if (m_Image)
         {
-            vkDestroyImage(Context::Get().m_Device->GetHandle(), m_Image, nullptr);
+            vkDestroyImage(Context::Get().Device().GetHandle(), m_Image, nullptr);
             m_Image = nullptr;
         }
     }
@@ -56,7 +56,7 @@ namespace Mixture::Vulkan
         const auto requirements = GetMemoryRequirements();
         DeviceMemory memory(requirements.size, requirements.memoryTypeBits, 0, properties);
 
-        VK_ASSERT(vkBindImageMemory(Context::Get().m_Device->GetHandle(), m_Image, memory.GetHandle(), 0),
+        VK_ASSERT(vkBindImageMemory(Context::Get().Device().GetHandle(), m_Image, memory.GetHandle(), 0),
             "Failed to bind VkImage VkDeviceMemory!");
 
         return memory;
@@ -65,7 +65,7 @@ namespace Mixture::Vulkan
     VkMemoryRequirements Image::GetMemoryRequirements() const
     {
         VkMemoryRequirements requirements;
-        vkGetImageMemoryRequirements(Context::Get().m_Device->GetHandle(), m_Image, &requirements);
+        vkGetImageMemoryRequirements(Context::Get().Device().GetHandle(), m_Image, &requirements);
         return requirements;
     }
 
@@ -176,7 +176,7 @@ namespace Mixture::Vulkan
     {
         // Check if image format supports linear blitting
         VkFormatProperties formatProperties;
-        vkGetPhysicalDeviceFormatProperties(Context::Get().m_PhysicalDevice->GetHandle(), imageFormat, &formatProperties);
+        vkGetPhysicalDeviceFormatProperties(Context::Get().PhysicalDevice().GetHandle(), imageFormat, &formatProperties);
 
         OPAL_CORE_ASSERT(formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT, 
             "Texture image format does not support linear blitting!");
@@ -284,14 +284,14 @@ namespace Mixture::Vulkan
         createInfo.subresourceRange.baseArrayLayer = 0;
         createInfo.subresourceRange.layerCount = 1;
 
-        VK_ASSERT(vkCreateImageView(Context::Get().m_Device->GetHandle(), &createInfo, nullptr, &m_ImageView), "Failed to create VkImageView!");
+        VK_ASSERT(vkCreateImageView(Context::Get().Device().GetHandle(), &createInfo, nullptr, &m_ImageView), "Failed to create VkImageView!");
 	}
 
 	ImageView::~ImageView()
 	{
         if (m_ImageView)
         {
-            vkDestroyImageView(Context::Get().m_Device->GetHandle(), m_ImageView, nullptr);
+            vkDestroyImageView(Context::Get().Device().GetHandle(), m_ImageView, nullptr);
             m_ImageView = nullptr;
         }
 	}

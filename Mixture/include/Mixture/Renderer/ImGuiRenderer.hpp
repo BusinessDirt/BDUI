@@ -3,6 +3,7 @@
 #include "Mixture/Renderer/RendererInfo.hpp"
 
 #include "Platform/Vulkan/Renderpass.hpp"
+#include "Platform/Vulkan/Swapchain.hpp"
 #include "Platform/Vulkan/Buffer/Frame.hpp"
 
 #include <vulkan/vulkan.h>
@@ -21,10 +22,16 @@ namespace Mixture
 
         void OnWindowResize(uint32_t width, uint32_t height);
 
-        void RenderUI(FrameInfo& info);
+        void BeginFrame();
+        void EndFrame();
+        
+        void BeginRenderpass(VkCommandBuffer commandBuffer);
+        void Draw(VkCommandBuffer commandBuffer);
+        void EndRenderpass(VkCommandBuffer commandBuffer);
         
     private:
-        void CreateFramebuffers();
+        void CreateRenderpass(const Vulkan::Swapchain& swapchain);
+        void CreateFramebuffers(const Vulkan::Swapchain& swapchain);
 
     private:
         Scope<Vulkan::Renderpass> m_Renderpass;
