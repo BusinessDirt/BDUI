@@ -24,8 +24,6 @@ namespace Mixture
 
     void MainLayer::OnUpdate(FrameInfo& frameInfo)
     {
-        ShapeRenderer::DrawRectangle({ -1.0f, -1.0f }, { 0.50f, 0.50f }, { 0.0f, 1.0f, 1.0f });
-        ShapeRenderer::DrawRectangle({ -0.75f, -0.75f }, { 0.75f, 0.75f }, { 1.0f, 1.0f, 1.0f });
     }
 
     void MainLayer::OnEvent(Event& event)

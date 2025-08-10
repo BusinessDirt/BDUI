@@ -2,6 +2,7 @@
 
 #include "Mixture/Core/Base.hpp"
 #include "Mixture/Renderer/LayerStack.hpp"
+#include "Mixture/Renderer/ImGuiRenderer.hpp"
 
 #include "Platform/Vulkan/Context.hpp"
 #include "Platform/Vulkan/GraphicsPipeline.hpp"
@@ -27,5 +28,7 @@ namespace Mixture
 	private:
 		static Vulkan::Context& s_VulkanContext;
 		static Scope<LayerStack> s_LayerStack;
+        
+        static Scope<ImGuiRenderer> s_ImGuiRenderer;
 	};
 }

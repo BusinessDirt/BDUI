@@ -13,6 +13,7 @@ project "App"
         "../Mixture/include",
 
         "%{IncludeDir.spdlog}",
+        "%{IncludeDir.imgui}",
         "%{IncludeDir.Vulkan}",
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb_image}"
@@ -21,7 +22,8 @@ project "App"
     links {
         "GLFW",
         "Opal",
-        "Mixture"
+        "Mixture",
+        "ImGui"
     }
 
     targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")

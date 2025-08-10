@@ -2,23 +2,24 @@
 #include "Mixture/Renderer/Renderer.hpp"
 
 #include "Mixture/Renderer/RendererInfo.hpp"
-#include "Mixture/Renderer/ShapeRenderer.hpp"
 
 namespace Mixture
 {
     Vulkan::Context& Renderer::s_VulkanContext = Vulkan::Context::Get();
     Scope<LayerStack> Renderer::s_LayerStack = CreateScope<LayerStack>();
 
+    Scope<ImGuiRenderer> Renderer::s_ImGuiRenderer = CreateScope<ImGuiRenderer>();
+
     void Renderer::Init(const std::string& applicationName)
     {
         s_VulkanContext.Initialize(applicationName);
-        ShapeRenderer::Initialize();
+        s_ImGuiRenderer->Initialize();
     }
 
     void Renderer::Shutdown()
     {
+        s_ImGuiRenderer->Shutdown();
         s_LayerStack = nullptr;
-        ShapeRenderer::Shutdown();
         s_VulkanContext.Shutdown();
     }
 
@@ -45,11 +46,11 @@ namespace Mixture
             frameInfo.CommandBuffer = commandBuffer;
 
             s_VulkanContext.BeginRenderpass(commandBuffer);
-
             s_LayerStack->Update(frameInfo);
-            ShapeRenderer::Render(frameInfo);
-
             s_VulkanContext.EndRenderpass(commandBuffer);
+            
+            s_ImGuiRenderer->RenderUI(frameInfo);
+            
             s_VulkanContext.EndFrame(commandBuffer);
             commandBuffers.push_back(commandBuffer);
         }
