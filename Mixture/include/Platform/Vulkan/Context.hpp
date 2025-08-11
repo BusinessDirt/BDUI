@@ -9,6 +9,7 @@
 #include "Platform/Vulkan/PhysicalDevice.hpp"
 #include "Platform/Vulkan/Device.hpp"
 #include "Platform/Vulkan/Swapchain.hpp"
+#include "Platform/Vulkan/DescriptorPool.hpp"
 #include "Platform/Vulkan/Command/Pool.hpp"
 #include "Platform/Vulkan/Command/Buffers.hpp"
 
@@ -58,6 +59,7 @@ namespace Mixture::Vulkan
         VK_CONTEXT_MEMBER(Swapchain, m_Swapchain);
         VK_CONTEXT_MEMBER(CommandPool, m_CommandPool);
         VK_CONTEXT_MEMBER(CommandBuffers, m_CommandBuffers);
+        VK_CONTEXT_MEMBER(DescriptorPool, m_DescriptorPool);
 
         uint32_t m_CurrentImageIndex = 0;
 

@@ -30,13 +30,11 @@ namespace Mixture
         void EndRenderpass(VkCommandBuffer commandBuffer);
         
     private:
-        void CreateRenderpass(const Vulkan::Swapchain& swapchain);
-        void CreateFramebuffers(const Vulkan::Swapchain& swapchain);
+        void CreateFramebuffers();
 
     private:
         Scope<Vulkan::Renderpass> m_Renderpass;
         std::vector<Scope<Vulkan::FrameBuffer>> m_FrameBuffers;
-        VkDescriptorPool m_DescriptorPool = VK_NULL_HANDLE;
         
         uint32_t m_Width = 0;
         uint32_t m_Height = 0;

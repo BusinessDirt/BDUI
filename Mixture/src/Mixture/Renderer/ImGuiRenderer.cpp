@@ -24,35 +24,11 @@ namespace Mixture
         m_Width = swapchain.GetWidth();
         m_Height = swapchain.GetHeight();
         
-        // 1. Create Descriptor Pool for ImGui
-        {
-            VkDescriptorPoolSize poolSizes[] =
-            {
-                { VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
-                { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
-                { VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
-                { VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
-                { VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
-                { VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
-                { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
-                { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
-                { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
-                { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
-                { VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 }
-            };
-            
-            VkDescriptorPoolCreateInfo poolInfo{};
-            poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-            poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
-            poolInfo.maxSets = 1000 * IM_ARRAYSIZE(poolSizes);
-            poolInfo.poolSizeCount = (uint32_t)IM_ARRAYSIZE(poolSizes);
-            poolInfo.pPoolSizes = poolSizes;
-            VK_ASSERT(vkCreateDescriptorPool(Vulkan::Context::Get().Device().GetHandle(), &poolInfo, nullptr, &m_DescriptorPool),
-                      "Failed to create Descriptor Pool")
-        }
+        const VkFormat format = swapchain.GetImageFormat();
+        m_Renderpass = CreateScope<Vulkan::Renderpass>(format, false,
+            VK_ATTACHMENT_LOAD_OP_LOAD, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
         
-        CreateRenderpass(swapchain);
-        CreateFramebuffers(swapchain);
+        CreateFramebuffers();
         
         // ImGui context
         IMGUI_CHECKVERSION();
@@ -72,7 +48,7 @@ namespace Mixture
         init_info.QueueFamily = Vulkan::Context::Get().PhysicalDevice().GetQueueFamilyIndices().Graphics.value();
         init_info.Queue = Vulkan::Context::Get().Device().GetGraphicsQueue();
         init_info.PipelineCache = VK_NULL_HANDLE;
-        init_info.DescriptorPool = m_DescriptorPool;
+        init_info.DescriptorPool = Vulkan::Context::Get().DescriptorPool().GetHandle();
         init_info.RenderPass = m_Renderpass->GetHandle();
         init_info.Subpass = 0;
         init_info.MinImageCount = Vulkan::Swapchain::MAX_FRAMES_IN_FLIGHT;
@@ -90,7 +66,7 @@ namespace Mixture
 
     void ImGuiRenderer::Shutdown()
     {
-        if (!m_Renderpass && !m_DescriptorPool) return;
+        if (!m_Renderpass) return;
         
         Vulkan::Context::Get().WaitForDevice();
         
@@ -100,12 +76,6 @@ namespace Mixture
         
         m_FrameBuffers.clear();
         m_Renderpass.reset();
-        
-        if (m_DescriptorPool != VK_NULL_HANDLE)
-        {
-            vkDestroyDescriptorPool(Vulkan::Context::Get().Device().GetHandle(), m_DescriptorPool, nullptr);
-            m_DescriptorPool = VK_NULL_HANDLE;
-        }
     }
 
     void ImGuiRenderer::OnWindowResize(uint32_t width, uint32_t height)
@@ -116,8 +86,7 @@ namespace Mixture
         Vulkan::Context::Get().WaitForDevice();
         
         m_FrameBuffers.clear();
-        const Vulkan::Swapchain& swapchain = Vulkan::Context::Get().Swapchain();
-        CreateFramebuffers(swapchain);
+        CreateFramebuffers();
     }
 
     void ImGuiRenderer::BeginFrame()
@@ -167,20 +136,14 @@ namespace Mixture
         }
     }
 
-    void ImGuiRenderer::CreateFramebuffers(const Vulkan::Swapchain& swapchain)
+    void ImGuiRenderer::CreateFramebuffers()
     {
+        const Vulkan::Swapchain& swapchain = Vulkan::Context::Get().Swapchain();
         m_FrameBuffers.resize(swapchain.GetImageCount());
         for (uint32_t i = 0; i < swapchain.GetImageCount(); i++)
         {
             const Vulkan::FrameBuffer& fb = swapchain.GetFramebuffer(i);
             m_FrameBuffers[i] = CreateScope<Vulkan::FrameBuffer>(VK_NULL_HANDLE, fb.GetImage(), swapchain.GetExtent(), fb.GetFormat(), m_Renderpass->GetHandle());
         }
-    }
-
-    void ImGuiRenderer::CreateRenderpass(const Vulkan::Swapchain& swapchain)
-    {
-        const VkFormat format = swapchain.GetImageFormat();
-        m_Renderpass = CreateScope<Vulkan::Renderpass>(format, false,
-            VK_ATTACHMENT_LOAD_OP_LOAD, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
     }
 }
