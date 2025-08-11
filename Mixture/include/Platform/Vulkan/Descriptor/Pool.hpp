@@ -2,12 +2,14 @@
 
 #include "Platform/Vulkan/Base.hpp"
 
+#include "Platform/Vulkan/Descriptor/PoolSizes.hpp"
+
 namespace Mixture::Vulkan
 {
     class DescriptorPool
     {
     public:
-        DescriptorPool();
+        DescriptorPool(DescriptorPoolSizes poolSizes);
         ~DescriptorPool() { Cleanup(); }
         
         // No copying or assignment

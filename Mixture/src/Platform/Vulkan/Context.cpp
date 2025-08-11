@@ -90,7 +90,9 @@ namespace Mixture::Vulkan
         m_CommandPool = CreateScope<class CommandPool>();
         m_Swapchain = CreateScope<class Swapchain>();
         m_CommandBuffers = CreateScope<class CommandBuffers>(m_CommandPool->GetHandle(), Swapchain::MAX_FRAMES_IN_FLIGHT);
-        m_DescriptorPool = CreateScope<class DescriptorPool>(m_Device->GetHandle());
+        
+        DescriptorPoolSizes descriptorPoolSizes = DescriptorPoolSizes::CreateDefault(1000);
+        m_DescriptorPool = CreateScope<class DescriptorPool>(descriptorPoolSizes);
     }
 
     void Context::Shutdown()

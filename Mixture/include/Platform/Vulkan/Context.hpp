@@ -9,7 +9,7 @@
 #include "Platform/Vulkan/PhysicalDevice.hpp"
 #include "Platform/Vulkan/Device.hpp"
 #include "Platform/Vulkan/Swapchain.hpp"
-#include "Platform/Vulkan/DescriptorPool.hpp"
+#include "Platform/Vulkan/Descriptor/Pool.hpp"
 #include "Platform/Vulkan/Command/Pool.hpp"
 #include "Platform/Vulkan/Command/Buffers.hpp"
 

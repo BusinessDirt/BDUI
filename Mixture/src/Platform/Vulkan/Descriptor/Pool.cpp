@@ -1,33 +1,19 @@
-#include "Platform/Vulkan/DescriptorPool.hpp"
+#include "Platform/Vulkan/Descriptor/Pool.hpp"
 
 #include "Platform/Vulkan/Context.hpp"
 
 namespace Mixture::Vulkan
 {
-    DescriptorPool::DescriptorPool()
+    DescriptorPool::DescriptorPool(DescriptorPoolSizes poolSizes)
     {
-        std::vector<VkDescriptorPoolSize> poolSizes = {
-            { VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
-            { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
-            { VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
-            { VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
-            { VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
-            { VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
-            { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
-            { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
-            { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
-            { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
-            { VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 }
-        };
-        
-        uint32_t poolSizeCount = static_cast<uint32_t>(poolSizes.size());
+        std::vector<VkDescriptorPoolSize> sizes = poolSizes.GetPoolSizes();
         
         VkDescriptorPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
-        poolInfo.maxSets = 1000 * poolSizeCount;
-        poolInfo.poolSizeCount = poolSizeCount;
-        poolInfo.pPoolSizes = poolSizes.data();
+        poolInfo.maxSets = poolSizes.MaxSets();
+        poolInfo.poolSizeCount = static_cast<uint32_t>(sizes.size());
+        poolInfo.pPoolSizes = sizes.data();
         VK_ASSERT(vkCreateDescriptorPool(Context::Get().Device().GetHandle(), &poolInfo, nullptr, &m_Pool), "Failed to create Descriptor Pool");
     }
 
