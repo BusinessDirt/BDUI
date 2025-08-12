@@ -23,10 +23,10 @@ namespace Mixture
         s_VulkanContext.Shutdown();
     }
 
-    void Renderer::OnWindowResize(uint32_t width, uint32_t height)
+    void Renderer::OnFramebufferResize(uint32_t width, uint32_t height)
     {
-        s_VulkanContext.OnWindowResize(width, height);
-        s_ImGuiRenderer->OnWindowResize(width, height);
+        s_VulkanContext.OnFramebufferResize(width, height);
+        s_ImGuiRenderer->OnFramebufferResize(width, height);
     }
 
     void Renderer::DrawFrame()

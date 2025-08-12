@@ -8,5 +8,6 @@
 #include "Mixture/Renderer/LayerStack.hpp"
 #include "Mixture/Renderer/Renderer.hpp"
 #include "Mixture/Renderer/RendererInfo.hpp"
+#include "Mixture/Renderer/ImGuiWidgets.hpp"
 
 #include "Mixture/Util/VulkanUtil.hpp"

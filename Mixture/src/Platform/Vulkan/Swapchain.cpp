@@ -219,7 +219,10 @@ namespace Mixture::Vulkan
     {
         if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) return capabilities.currentExtent;
         
-        VkExtent2D actualExtent = { Mixture::Application::Get().GetWindow().GetWidth(), Mixture::Application::Get().GetWindow().GetHeight() };
+        int framebufferWidth, framebufferHeight;
+        Mixture::Application::Get().GetWindow().GetFramebufferSize(&framebufferWidth, &framebufferHeight);
+        
+        VkExtent2D actualExtent = { static_cast<uint32_t>(framebufferWidth), static_cast<uint32_t>(framebufferHeight) };
         actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
         actualExtent.height = std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
 

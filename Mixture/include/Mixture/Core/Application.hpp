@@ -42,7 +42,7 @@ namespace Mixture
     private:
         void Run();
         bool OnWindowClose(WindowCloseEvent& e);
-        bool OnWindowResize(WindowResizeEvent& e);
+        bool OnFramebufferResize(FramebufferResizeEvent& e);
 
     private:
         Scope<Window> m_Window;

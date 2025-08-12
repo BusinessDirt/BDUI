@@ -7,7 +7,7 @@
 #include "Platform/Vulkan/Buffer/Frame.hpp"
 
 #include <vulkan/vulkan.h>
-
+#include <imgui.h>
 
 namespace Mixture
 {
@@ -20,7 +20,7 @@ namespace Mixture
         void Initialize();
         void Shutdown();
 
-        void OnWindowResize(uint32_t width, uint32_t height);
+        void OnFramebufferResize(uint32_t width, uint32_t height);
 
         void BeginFrame();
         void EndFrame();

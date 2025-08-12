@@ -30,6 +30,8 @@ namespace Mixture
 
     void MainLayer::OnRenderUI(FrameInfo& frameInfo)
     {
+        ImGuiWidgets::Dockspace("MainDockspace", true, 0, ImGuiDockNodeFlags_PassthruCentralNode);
+        
         ImGui::Begin("Test");
         ImGui::Text("Frame time: %.3f ms", frameInfo.FrameTime);
         ImGui::End();

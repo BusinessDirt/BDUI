@@ -18,7 +18,7 @@ namespace Mixture
 		static void Init(const std::string& applicationName);
 		static void Shutdown();
 
-		static void OnWindowResize(uint32_t width, uint32_t height);
+		static void OnFramebufferResize(uint32_t width, uint32_t height);
 
 		static void DrawFrame();
 		static void OnEvent(Event& e);

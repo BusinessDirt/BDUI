@@ -20,7 +20,8 @@ namespace Mixture
 
     void ImGuiRenderer::Initialize()
     {
-        const Vulkan::Swapchain& swapchain = Vulkan::Context::Get().Swapchain();
+        Vulkan::Context& context = Vulkan::Context::Get();
+        const Vulkan::Swapchain& swapchain = context.Swapchain();
         m_Width = swapchain.GetWidth();
         m_Height = swapchain.GetHeight();
         
@@ -42,23 +43,20 @@ namespace Mixture
         // Init ImGui Vulkan backend with the VkRenderPass handle
         ImGui_ImplVulkan_InitInfo init_info{};
         init_info.ApiVersion = VK_API_VERSION_1_2;
-        init_info.Instance = Vulkan::Context::Get().Instance().GetHandle();
-        init_info.PhysicalDevice = Vulkan::Context::Get().PhysicalDevice().GetHandle();
-        init_info.Device = Vulkan::Context::Get().Device().GetHandle();
-        init_info.QueueFamily = Vulkan::Context::Get().PhysicalDevice().GetQueueFamilyIndices().Graphics.value();
-        init_info.Queue = Vulkan::Context::Get().Device().GetGraphicsQueue();
+        init_info.Instance = context.Instance().GetHandle();
+        init_info.PhysicalDevice = context.PhysicalDevice().GetHandle();
+        init_info.Device = context.Device().GetHandle();
+        init_info.QueueFamily = context.PhysicalDevice().GetQueueFamilyIndices().Graphics.value();
+        init_info.Queue = context.Device().GetGraphicsQueue();
         init_info.PipelineCache = VK_NULL_HANDLE;
-        init_info.DescriptorPool = Vulkan::Context::Get().DescriptorPool().GetHandle();
+        init_info.DescriptorPool = context.DescriptorPool().GetHandle();
         init_info.RenderPass = m_Renderpass->GetHandle();
         init_info.Subpass = 0;
         init_info.MinImageCount = Vulkan::Swapchain::MAX_FRAMES_IN_FLIGHT;
         init_info.ImageCount = (uint32_t)swapchain.GetImageCount();
         init_info.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
         init_info.Allocator = nullptr;
-        init_info.CheckVkResultFn = [](VkResult err) {
-            if (err != VK_SUCCESS)
-                throw std::runtime_error("ImGui Vulkan backend error");
-        };
+        init_info.CheckVkResultFn = [](VkResult res) { OPAL_CORE_ASSERT(res == VK_SUCCESS, "ImGui Vulkan backend error");};
 
         ImGui_ImplVulkan_Init(&init_info);
         ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), true);
@@ -78,7 +76,7 @@ namespace Mixture
         m_Renderpass.reset();
     }
 
-    void ImGuiRenderer::OnWindowResize(uint32_t width, uint32_t height)
+    void ImGuiRenderer::OnFramebufferResize(uint32_t width, uint32_t height)
     {
         m_Width = width;
         m_Height = height;

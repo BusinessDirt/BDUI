@@ -55,7 +55,7 @@ namespace Mixture
 
         // Handle window close and resize event
         dispatcher.Dispatch<WindowCloseEvent>(OPAL_BIND_EVENT_FN(OnWindowClose));
-        dispatcher.Dispatch<WindowResizeEvent>(OPAL_BIND_EVENT_FN(OnWindowResize));
+        dispatcher.Dispatch<FramebufferResizeEvent>(OPAL_BIND_EVENT_FN(OnFramebufferResize));
 
         Renderer::OnEvent(event);
     }
@@ -66,9 +66,9 @@ namespace Mixture
         return true;
     }
 
-    bool Application::OnWindowResize(WindowResizeEvent& e)
+    bool Application::OnFramebufferResize(FramebufferResizeEvent& e)
     {
-        Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+        Renderer::OnFramebufferResize(e.GetWidth(), e.GetHeight());
         return false;
     }
 }

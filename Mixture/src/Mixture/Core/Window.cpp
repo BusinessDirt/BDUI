@@ -53,6 +53,18 @@ namespace Mixture
 					WindowResizeEvent event(width, height);
 					data.EventCallback(event);
 				});
+            
+            glfwSetFramebufferSizeCallback(m_WindowHandle, [](GLFWwindow* window, int width, int height)
+                {
+                    WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+                    data.Width = width;
+                    data.Height = height;
+
+                    if (width == 0 || height == 0) data.Minimized = true;
+
+                    FramebufferResizeEvent event(width, height);
+                    data.EventCallback(event);
+                });
 
 			glfwSetWindowCloseCallback(m_WindowHandle, [](GLFWwindow* window)
 				{

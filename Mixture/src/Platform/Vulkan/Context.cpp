@@ -108,11 +108,11 @@ namespace Mixture::Vulkan
         m_Instance = nullptr;
     }
 
-    void Context::OnWindowResize(uint32_t width, uint32_t height)
+    void Context::OnFramebufferResize(uint32_t width, uint32_t height)
     {
-        m_WindowResized = true;
+        m_FramebufferResized = true;
         RebuildSwapchain();
-        m_WindowResized = false;
+        m_FramebufferResized = false;
     }
 
     void Context::WaitForDevice()
@@ -196,10 +196,10 @@ namespace Mixture::Vulkan
     void Context::SubmitFrame(const std::vector<VkCommandBuffer>& commandBuffers)
     {
         VkResult result = m_Swapchain->SubmitCommandBuffers(commandBuffers);
-        if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || m_WindowResized)
+        if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || m_FramebufferResized)
         {
             RebuildSwapchain();
-            m_WindowResized = false;
+            m_FramebufferResized = false;
         }
         else
         {

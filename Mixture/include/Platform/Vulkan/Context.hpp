@@ -31,7 +31,7 @@ namespace Mixture::Vulkan
         void Initialize(const std::string& applicationName);
         void Shutdown();
 
-        void OnWindowResize(uint32_t width, uint32_t height);
+        void OnFramebufferResize(uint32_t width, uint32_t height);
 
         void WaitForDevice();
         VkCommandBuffer BeginFrame();
@@ -43,7 +43,7 @@ namespace Mixture::Vulkan
         uint32_t CurrentImageIndex() { return m_CurrentImageIndex; }
 
     private:
-        VkCommandBuffer GetCurrentCommandBuffer() const
+        VkCommandBuffer GetCurrentCommandBuffer()
         {
             OPAL_CORE_ASSERT(m_IsFrameStarted, "Cannot get command buffer when frame is not in progress!");
             return m_CommandBuffers->Get(m_Swapchain->GetCurrentFrameIndex());
@@ -65,7 +65,7 @@ namespace Mixture::Vulkan
 
     private:
         bool m_IsFrameStarted = false;
-        bool m_WindowResized = false;
+        bool m_FramebufferResized = false;
 
     private:
         static Scope<Context> s_Instance;
