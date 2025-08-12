@@ -13,17 +13,8 @@ namespace Mixture
 
     void ImGuiViewport::BlitFromScene(VkCommandBuffer cmd, VkImage sceneImage, uint32_t sceneWidth, uint32_t sceneHeight)
     {
-        TransitionImageLayout(cmd, sceneImage,
-                              VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
-                              VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                              VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-                              VK_PIPELINE_STAGE_TRANSFER_BIT);
-
-        TransitionImageLayout(cmd, m_Image->GetHandle(),
-                              VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-                              VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                              VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                              VK_PIPELINE_STAGE_TRANSFER_BIT);
+        Vulkan::Image::TransitionImageLayout(cmd, sceneImage, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL);
+        m_Image->TransitionImageLayout(VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, cmd);
 
         VkImageBlit blit{};
         blit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -37,17 +28,8 @@ namespace Mixture
         vkCmdBlitImage(cmd, sceneImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, m_Image->GetHandle(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                        1, &blit, VK_FILTER_LINEAR);
 
-        TransitionImageLayout(cmd, m_Image->GetHandle(),
-                              VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                              VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-                              VK_PIPELINE_STAGE_TRANSFER_BIT,
-                              VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
-
-        TransitionImageLayout(cmd, sceneImage,
-                              VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-                              VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
-                              VK_PIPELINE_STAGE_TRANSFER_BIT,
-                              VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT);
+        m_Image->TransitionImageLayout(VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, cmd);
+        Vulkan::Image::TransitionImageLayout(cmd, sceneImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
     }
 
     void ImGuiViewport::Resize()
@@ -173,37 +155,5 @@ namespace Mixture
         m_ImageMemory.reset();
         m_ImageView.reset();
         m_Image.reset();
-    }
-
-    void ImGuiViewport::TransitionImageLayout(VkCommandBuffer cmd, VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout,
-            VkPipelineStageFlags srcStage, VkPipelineStageFlags dstStage)
-    {
-        VkImageMemoryBarrier barrier{};
-        barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        barrier.oldLayout = oldLayout;
-        barrier.newLayout = newLayout;
-        barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        barrier.image = image;
-        barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        barrier.subresourceRange.baseMipLevel = 0;
-        barrier.subresourceRange.levelCount = 1;
-        barrier.subresourceRange.baseArrayLayer = 0;
-        barrier.subresourceRange.layerCount = 1;
-
-        // Set access masks for common layouts
-        if (oldLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL)
-            barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-        else if (oldLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
-            barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-
-        if (newLayout == VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL)
-            barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
-        else if (newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
-            barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        else if (newLayout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
-            barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-
-        vkCmdPipelineBarrier(cmd, srcStage, dstStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
     }
 }

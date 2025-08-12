@@ -26,7 +26,10 @@ namespace Mixture::Vulkan
         DeviceMemory AllocateMemory(VkMemoryPropertyFlags properties) const;
         VkMemoryRequirements GetMemoryRequirements() const;
 
-        void TransitionImageLayout(VkImageLayout newLayout);
+        static void TransitionImageLayout(VkCommandBuffer cmd, VkImage image, VkImageLayout oldLayout,
+                                          VkImageLayout newLayout, VkFormat imageFormat = VK_FORMAT_UNDEFINED, uint32_t mipLevels = 1);
+        
+        void TransitionImageLayout(VkImageLayout newLayout, VkCommandBuffer commandBuffer = VK_NULL_HANDLE);
         void GenerateMipMaps(VkFormat imageFormat);
         void CopyFrom(const Buffer& buffer);
 

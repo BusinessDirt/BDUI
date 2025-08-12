@@ -25,9 +25,6 @@ namespace Mixture
         void CreateResources();
         void Cleanup();
         
-        void TransitionImageLayout(VkCommandBuffer cmd, VkImage image, VkImageLayout oldLayout, VkImageLayout newLayout,
-                VkPipelineStageFlags srcStage, VkPipelineStageFlags dstStage);
-        
     private:
         uint32_t m_Width = 1, m_Height = 1;
         uint32_t m_ImageWidth = 1, m_ImageHeight = 1;
