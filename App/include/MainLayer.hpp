@@ -15,6 +15,10 @@ namespace Mixture
         void OnUpdate(FrameInfo& frameInfo) override;
         void OnRenderUI(FrameInfo& frameInfo) override;
         void OnEvent(Event& event) override;
+        
+    private:
+        Scope<Vulkan::GraphicsPipeline> m_Pipeline;
+        Scope<Vulkan::VertexBuffer> m_VertexBuffer;
     };
 }
 

@@ -24,6 +24,9 @@ namespace Mixture
 
         // Apply override flags if provided
         window_flags |= windowFlagsOverride;
+        
+        ImVec2 oldPadding = ImGui::GetStyle().WindowPadding;
+        if (fullscreen) ImGui::GetStyle().WindowPadding = ImVec2(0.0f, 0.0f);
 
         ImGui::Begin(windowTitle.data(), pOpen, window_flags);
 
@@ -35,6 +38,8 @@ namespace Mixture
         ImGui::DockSpace(dockspace_id, ImVec2(0, 0), dockspaceFlags);
 
         ImGui::End();
+        
+        ImGui::GetStyle().WindowPadding = oldPadding;
 
         return dockspace_id;
     }

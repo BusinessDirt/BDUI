@@ -46,6 +46,10 @@ namespace Mixture::Vulkan
             createInfo.imageExtent = extent;
             createInfo.imageArrayLayers = 1;
             createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+            
+#ifndef OPAL_DIST
+            createInfo.imageUsage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+#endif
 
             QueueFamilyIndices indices = Context::Get().PhysicalDevice().GetQueueFamilyIndices();
             uint32_t queueFamilyIndices[] = { indices.Graphics.value(), indices.Present.value() };

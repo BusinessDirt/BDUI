@@ -3,6 +3,7 @@
 #include "Mixture/Core/Base.hpp"
 #include "Mixture/Renderer/LayerStack.hpp"
 #include "Mixture/Renderer/ImGuiRenderer.hpp"
+#include "Mixture/Renderer/ImGuiViewport.hpp"
 
 #include "Platform/Vulkan/Context.hpp"
 #include "Platform/Vulkan/GraphicsPipeline.hpp"
@@ -21,6 +22,7 @@ namespace Mixture
 		static void OnFramebufferResize(uint32_t width, uint32_t height);
 
 		static void DrawFrame();
+        static void DrawImGuiViewport();
 		static void OnEvent(Event& e);
 
 		static void PushLayer(Layer* layer) { s_LayerStack->PushLayer(layer); }
@@ -30,5 +32,8 @@ namespace Mixture
 		static Scope<LayerStack> s_LayerStack;
         
         static Scope<ImGuiRenderer> s_ImGuiRenderer;
+#ifndef OPAL_DIST
+        static Scope<ImGuiViewport> s_ImGuiViewport;
+#endif
 	};
 }
