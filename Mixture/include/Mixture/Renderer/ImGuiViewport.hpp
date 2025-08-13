@@ -19,7 +19,7 @@ namespace Mixture
         
         void OnFramebufferResize() { m_Resize = true; }
         void Resize();
-        void DrawWindow();
+        bool DrawWindow();
         
     private:
         void CreateResources();

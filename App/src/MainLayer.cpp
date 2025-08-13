@@ -33,19 +33,21 @@ namespace Mixture
     void MainLayer::OnUpdate(FrameInfo& frameInfo)
     {
         m_Pipeline->Bind(frameInfo);
-        m_VertexBuffer->Bind(frameInfo.CommandBuffer);
-        DrawCommand::Draw(frameInfo.CommandBuffer, m_VertexBuffer->GetVertexCount());
+        m_VertexBuffer->Bind(frameInfo);
+        DrawCommand::Draw(frameInfo, m_VertexBuffer->GetVertexCount());
     }
 
     void MainLayer::OnRenderUI(FrameInfo& frameInfo)
     {
         ImGuiWidgets::Dockspace("MainDockspace", true, ImGuiWindowFlags_NoBackground, ImGuiDockNodeFlags_PassthruCentralNode);
+        m_ViewportFocused = Renderer::DrawImGuiViewport();
         
         ImGui::Begin("Test");
         ImGui::Text("Frame time: %.3f ms", frameInfo.FrameTime);
+        ImGui::Text("Viewport focused: %s", m_ViewportFocused ? "true" : "false");
+        ImGui::Text("Triangle Count: %d", frameInfo.TriangleCount);
+        ImGui::Text("Draw Calls: %d", frameInfo.DrawCalls);
         ImGui::End();
-        
-        Renderer::DrawImGuiViewport();
     }
 
     void MainLayer::OnEvent(Event& event)

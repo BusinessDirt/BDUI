@@ -88,10 +88,12 @@ namespace Mixture
         s_VulkanContext.WaitForDevice();
     }
 
-    void Renderer::DrawImGuiViewport()
+    bool Renderer::DrawImGuiViewport()
     {
 #ifndef OPAL_DIST
-            s_ImGuiViewport->DrawWindow();
+        return s_ImGuiViewport->DrawWindow();
+#else
+        return true;
 #endif
     }
 

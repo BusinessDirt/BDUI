@@ -43,10 +43,10 @@ namespace Mixture::Vulkan
         Buffer::Copy(stagingBuffer.GetHandle(), m_VertexBuffer->GetHandle(), bufferSize);
     }
 
-    void VertexBuffer::Bind(VkCommandBuffer commandBuffer)
+    void VertexBuffer::Bind(FrameInfo& frameInfo)
     {
         VkBuffer buffers[] = { m_VertexBuffer->GetHandle() };
         VkDeviceSize offsets[] = { 0 };
-        vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets);
+        vkCmdBindVertexBuffers(frameInfo.CommandBuffer, 0, 1, buffers, offsets);
     }
 }

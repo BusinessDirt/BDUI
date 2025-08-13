@@ -19,6 +19,8 @@ namespace Mixture
     private:
         Scope<Vulkan::GraphicsPipeline> m_Pipeline;
         Scope<Vulkan::VertexBuffer> m_VertexBuffer;
+        
+        bool m_ViewportFocused = false;
     };
 }
 

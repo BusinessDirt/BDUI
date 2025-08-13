@@ -45,11 +45,13 @@ namespace Mixture
         CreateResources();
     }
 
-    void ImGuiViewport::DrawWindow()
+    bool ImGuiViewport::DrawWindow()
     {
         ImVec2 oldPadding = ImGui::GetStyle().WindowPadding;
         ImGui::GetStyle().WindowPadding = ImVec2(0.0f, 0.0f);
         ImGui::Begin("Viewport");
+        
+        bool focused = ImGui::IsWindowFocused();
         ImVec2 size = ImGui::GetContentRegionAvail();
         
         if ((uint32_t)size.x != m_ImageWidth || (uint32_t)size.y != m_ImageHeight)
@@ -60,8 +62,11 @@ namespace Mixture
         }
         
         ImGui::Image((ImTextureID)m_DescriptorSet, size, ImVec2(0,0), ImVec2(1,1));
+        
         ImGui::End();
         ImGui::GetStyle().WindowPadding = oldPadding;
+        
+        return focused;
     }
 
     void ImGuiViewport::CreateResources()

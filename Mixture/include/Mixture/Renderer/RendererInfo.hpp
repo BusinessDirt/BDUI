@@ -18,27 +18,13 @@ namespace Mixture
         }
     };
 
-    struct VkDrawIndexedIndirectCommand 
-    {
-        uint32_t    IndexCount;
-        uint32_t    InstanceCount;
-        uint32_t    FirstIndex;
-        int32_t     VertexOffset;
-        uint32_t    FirstInstance;
-    };
-
-    struct VkDrawIndirectCommand 
-    {
-        uint32_t    VertexCount;
-        uint32_t    InstanceCount;
-        uint32_t    FirstVertex;
-        uint32_t    FirstInstance;
-    };
-
     struct FrameInfo
     {
         uint32_t FrameIndex;
         float FrameTime;
         VkCommandBuffer CommandBuffer;
+        
+        uint32_t TriangleCount;
+        uint32_t DrawCalls;
     };
 }
