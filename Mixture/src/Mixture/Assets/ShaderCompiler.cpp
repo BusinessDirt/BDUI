@@ -194,7 +194,7 @@ namespace Mixture
 
             options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2);
 
-            std::string source = ReadFile(path);
+            std::string source = Util::ReadFile(path);
 
             auto preProcessed = compiler.PreprocessGlsl(source, shaderKind, path.filename().string().c_str(), options);
             auto compiled = compiler.CompileGlslToSpv(source, shaderKind, path.filename().string().c_str(), options);

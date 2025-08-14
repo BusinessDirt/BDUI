@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <filesystem>
 
-namespace Mixture
+namespace Mixture::Util
 {
     template<typename T, typename ... Rest>
     void HashCombine(std::size_t& seed, const T& v, const Rest&... rest)

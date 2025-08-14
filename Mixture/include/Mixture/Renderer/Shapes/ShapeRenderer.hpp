@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Mixture/Core/Base.hpp"
+#include "Mixture/Util/Util.hpp"
 #include "Mixture/Renderer/RendererInfo.hpp"
+#include "Mixture/Renderer/Shapes/Shapes.hpp"
 
 #include "Platform/Vulkan/GraphicsPipeline.hpp"
 #include "Platform/Vulkan/Buffer/Vertex.hpp"
@@ -41,7 +43,8 @@ namespace Mixture
         Scope<Vulkan::VertexBuffer> m_VertexBuffer;
         Scope<Vulkan::IndexBuffer> m_IndexBuffer;
 
-        std::vector<uint32_t> m_Indices;
-        std::vector<Vertex> m_Vertices;
+        std::vector<Scope<IShape>> m_Shapes;
+        std::size_t m_ShapeHash, m_ShapeSize;
+        bool m_Dirty;
     };
 }

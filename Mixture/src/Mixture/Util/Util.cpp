@@ -1,7 +1,7 @@
 #include "mxpch.hpp"
 #include "Mixture/Util/Util.hpp"
 
-namespace Mixture
+namespace Mixture::Util
 {
     bool Contains(const std::string& str, const std::string& substr)
     {

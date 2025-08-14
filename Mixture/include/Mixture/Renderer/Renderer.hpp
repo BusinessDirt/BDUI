@@ -3,7 +3,7 @@
 #include "Mixture/Core/Base.hpp"
 
 #include "Mixture/Renderer/LayerStack.hpp"
-#include "Mixture/Renderer/ShapeRenderer.hpp"
+#include "Mixture/Renderer/Shapes/ShapeRenderer.hpp"
 #include "Mixture/Renderer/ImGui/ImGuiRenderer.hpp"
 #include "Mixture/Renderer/ImGui/ImGuiViewport.hpp"
 
