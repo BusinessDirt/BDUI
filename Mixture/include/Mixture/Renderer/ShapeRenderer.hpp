@@ -5,6 +5,7 @@
 
 #include "Platform/Vulkan/GraphicsPipeline.hpp"
 #include "Platform/Vulkan/Buffer/Vertex.hpp"
+#include "Platform/Vulkan/Buffer/Index.hpp"
 
 #include <glm/glm.hpp>
 
@@ -24,8 +25,8 @@ namespace Mixture
         void Shutdown();
 
         void Begin();
-        void AddRect(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color);
-        void AddLine(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color, float thickness = 1.0f);
+        void DrawRect(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color);
+        void DrawLine(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color, float thickness = 1.0f);
         void End();
 
         void UploadBuffers(FrameInfo& frameInfo);
@@ -38,7 +39,9 @@ namespace Mixture
         
         Scope<Vulkan::GraphicsPipeline> m_Pipeline;
         Scope<Vulkan::VertexBuffer> m_VertexBuffer;
+        Scope<Vulkan::IndexBuffer> m_IndexBuffer;
 
+        std::vector<uint32_t> m_Indices;
         std::vector<Vertex> m_Vertices;
     };
 }

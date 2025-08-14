@@ -5,6 +5,20 @@ namespace Mixture::Vulkan
 {
     IndexBuffer::IndexBuffer(const std::vector<uint32_t>& indices)
     {
+        SetData(indices, VK_NULL_HANDLE);
+    }
+
+    IndexBuffer::IndexBuffer()
+        : m_IndexCount(0), m_IndexBuffer(VK_NULL_HANDLE)
+    {}
+
+    IndexBuffer::~IndexBuffer()
+    {
+        m_IndexBuffer = nullptr;
+    }
+
+    void IndexBuffer::SetData(const std::vector<uint32_t>& indices, VkCommandBuffer commandBuffer)
+    {
         m_IndexCount = static_cast<uint32_t>(indices.size());
         if (m_IndexCount == 0) return;
 
@@ -20,16 +34,11 @@ namespace Mixture::Vulkan
         m_IndexBuffer = CreateScope<Buffer>(indexSize, m_IndexCount, VK_BUFFER_USAGE_INDEX_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT,
             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
 
-        Buffer::Copy(stagingBuffer.GetHandle(), m_IndexBuffer->GetHandle(), bufferSize);
+        Buffer::Copy(stagingBuffer.GetHandle(), m_IndexBuffer->GetHandle(), bufferSize, commandBuffer);
     }
 
-    IndexBuffer::~IndexBuffer()
+    void IndexBuffer::Bind(FrameInfo& frameInfo)
     {
-        m_IndexBuffer = nullptr;
-    }
-
-    void IndexBuffer::Bind(VkCommandBuffer commandBuffer)
-    {
-        vkCmdBindIndexBuffer(commandBuffer, m_IndexBuffer->GetHandle(), 0, VK_INDEX_TYPE_UINT32);
+        vkCmdBindIndexBuffer(frameInfo.CommandBuffer, m_IndexBuffer->GetHandle(), 0, VK_INDEX_TYPE_UINT32);
     }
 }
