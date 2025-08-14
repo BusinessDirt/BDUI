@@ -2,8 +2,8 @@
 
 #include "Mixture/Core/Base.hpp"
 #include "Mixture/Renderer/LayerStack.hpp"
-#include "Mixture/Renderer/ImGuiRenderer.hpp"
-#include "Mixture/Renderer/ImGuiViewport.hpp"
+#include "Mixture/Renderer/ImGui/ImGuiRenderer.hpp"
+#include "Mixture/Renderer/ImGui/ImGuiViewport.hpp"
 
 #include "Platform/Vulkan/Context.hpp"
 #include "Platform/Vulkan/GraphicsPipeline.hpp"

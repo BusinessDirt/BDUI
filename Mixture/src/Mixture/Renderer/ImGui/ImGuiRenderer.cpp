@@ -1,5 +1,5 @@
 #include "mxpch.hpp"
-#include "Mixture/Renderer/ImGuiRenderer.hpp"
+#include "Mixture/Renderer/ImGui/ImGuiRenderer.hpp"
 
 #include "Mixture/Core/Application.hpp"
 #include "Mixture/Util/ToString.hpp"

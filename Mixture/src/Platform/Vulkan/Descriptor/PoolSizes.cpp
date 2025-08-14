@@ -1,3 +1,4 @@
+#include "mxpch.hpp"
 #include "Platform/Vulkan/Descriptor/PoolSizes.hpp"
 
 namespace Mixture::Vulkan

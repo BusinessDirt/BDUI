@@ -1,4 +1,5 @@
-#include "Mixture/Renderer/ImGuiWidgets.hpp"
+#include "mxpch.hpp"
+#include "Mixture/Renderer/ImGui/ImGuiWidgets.hpp"
 
 namespace Mixture
 {
