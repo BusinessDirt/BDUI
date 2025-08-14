@@ -44,7 +44,7 @@ namespace Mixture
         Scope<Vulkan::IndexBuffer> m_IndexBuffer;
 
         std::vector<Scope<IShape>> m_Shapes;
-        std::size_t m_ShapeHash, m_ShapeSize;
+        std::size_t m_ShapeHash;
         bool m_Dirty;
     };
 }

@@ -58,17 +58,9 @@ namespace Mixture
     void ShapeRenderer::End()
     {
         // Set dirty flag and skip hashing if the size has changed
-        if (m_ShapeSize != m_Shapes.size())
-        {
-            m_Dirty = true;
-            m_ShapeSize = m_Shapes.size();
-        }
-        else
-        {
-            std::size_t oldHash = m_ShapeHash;
-            m_ShapeHash = Util::HashShapeVector(m_Shapes);
-            m_Dirty = m_ShapeHash != oldHash;
-        }
+        std::size_t oldHash = m_ShapeHash;
+        m_ShapeHash = Util::HashShapeVector(m_Shapes);
+        m_Dirty = m_ShapeHash != oldHash;
         
         //if (!m_Dirty) return;
     }
