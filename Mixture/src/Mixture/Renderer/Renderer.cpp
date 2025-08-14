@@ -8,6 +8,7 @@ namespace Mixture
     Vulkan::Context& Renderer::s_VulkanContext = Vulkan::Context::Get();
     Scope<LayerStack> Renderer::s_LayerStack = CreateScope<LayerStack>();
 
+    Scope<ShapeRenderer> Renderer::s_ShapeRenderer = CreateScope<ShapeRenderer>();
     Scope<ImGuiRenderer> Renderer::s_ImGuiRenderer = CreateScope<ImGuiRenderer>();
 #ifndef OPAL_DIST
     Scope<ImGuiViewport> Renderer::s_ImGuiViewport = CreateScope<ImGuiViewport>();
@@ -16,6 +17,8 @@ namespace Mixture
     void Renderer::Init(const std::string& applicationName)
     {
         s_VulkanContext.Initialize(applicationName);
+        
+        s_ShapeRenderer->Initialize();
         s_ImGuiRenderer->Initialize();
 #ifndef OPAL_DIST
         s_ImGuiViewport->Initialize();
@@ -30,12 +33,15 @@ namespace Mixture
         s_ImGuiViewport->Shutdown();
 #endif
         s_ImGuiRenderer->Shutdown();
+        s_ShapeRenderer->Shutdown();
+        
         s_VulkanContext.Shutdown();
     }
 
     void Renderer::OnFramebufferResize(uint32_t width, uint32_t height)
     {
         s_VulkanContext.OnFramebufferResize(width, height);
+        
         s_ImGuiRenderer->OnFramebufferResize(width, height);
 #ifndef OPAL_DIST
         s_ImGuiViewport->OnFramebufferResize();
@@ -62,9 +68,16 @@ namespace Mixture
             frameInfo.FrameIndex = s_VulkanContext.Swapchain().GetCurrentFrameIndex();
             frameInfo.FrameTime = frameTime;
             frameInfo.CommandBuffer = commandBuffer;
+            
+            s_ShapeRenderer->Begin();
+            s_LayerStack->OnUpdate(frameInfo);
+            s_ShapeRenderer->End();
+            s_ShapeRenderer->UploadBuffers(frameInfo);
 
             s_VulkanContext.BeginRenderpass(commandBuffer);
-            s_LayerStack->OnUpdate(frameInfo);
+            
+            s_ShapeRenderer->Render(frameInfo);
+            
             s_VulkanContext.EndRenderpass(commandBuffer);
             
 #ifndef OPAL_DIST

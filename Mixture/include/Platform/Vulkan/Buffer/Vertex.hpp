@@ -16,7 +16,7 @@ namespace Mixture
             VertexBuffer();
             ~VertexBuffer();
 
-            void SetData(const std::vector<Vertex>& vertices);
+            void SetData(const std::vector<Vertex>& vertices, VkCommandBuffer commandBuffer = VK_NULL_HANDLE);
             void Bind(FrameInfo& frameInfo);
             uint32_t GetVertexCount() { return m_VertexCount; }
 

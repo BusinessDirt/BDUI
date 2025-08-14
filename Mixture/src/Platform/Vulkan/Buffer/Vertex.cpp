@@ -4,7 +4,7 @@ namespace Mixture::Vulkan
 {
     VertexBuffer::VertexBuffer(const std::vector<Vertex>& vertices)
     {
-        SetData(vertices);
+        SetData(vertices, VK_NULL_HANDLE);
     }
 
     VertexBuffer::VertexBuffer()
@@ -16,7 +16,7 @@ namespace Mixture::Vulkan
         m_VertexBuffer = nullptr;
     }
 
-    void VertexBuffer::SetData(const std::vector<Vertex>& vertices)
+    void VertexBuffer::SetData(const std::vector<Vertex>& vertices, VkCommandBuffer commandBuffer)
     {
         m_VertexCount = static_cast<uint32_t>(vertices.size());
         OPAL_CORE_ASSERT(m_VertexCount >= 3, "Vertex count must be at least 3!");
@@ -40,7 +40,7 @@ namespace Mixture::Vulkan
         }
 
         // Copy data from the staging buffer to the GPU vertex buffer
-        Buffer::Copy(stagingBuffer.GetHandle(), m_VertexBuffer->GetHandle(), bufferSize);
+        Buffer::Copy(stagingBuffer.GetHandle(), m_VertexBuffer->GetHandle(), bufferSize, commandBuffer);
     }
 
     void VertexBuffer::Bind(FrameInfo& frameInfo)

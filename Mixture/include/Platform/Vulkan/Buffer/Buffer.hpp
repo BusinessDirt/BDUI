@@ -34,7 +34,7 @@ namespace Mixture::Vulkan
         VkMemoryPropertyFlags GetMemoryPropertyFlags() const { return m_MemoryPropertyFlags; }
         VkDeviceSize GetBufferSize() const { return m_BufferSize; }
 
-        static void Copy(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+        static void Copy(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size, VkCommandBuffer commandBuffer = VK_NULL_HANDLE);
 
     private:
         static VkDeviceSize GetAlignment(VkDeviceSize m_InstanceSize, VkDeviceSize minOffsetAlignment);

@@ -10,7 +10,7 @@ namespace Mixture
     struct Vertex
     {
         glm::vec3 Position;
-        glm::vec3 Color;
+        glm::vec4 Color;
 
         bool operator==(const Vertex& other) const
         {

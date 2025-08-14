@@ -1,13 +1,14 @@
 #pragma once
 
 #include "Mixture/Core/Base.hpp"
+
 #include "Mixture/Renderer/LayerStack.hpp"
+#include "Mixture/Renderer/ShapeRenderer.hpp"
 #include "Mixture/Renderer/ImGui/ImGuiRenderer.hpp"
 #include "Mixture/Renderer/ImGui/ImGuiViewport.hpp"
 
 #include "Platform/Vulkan/Context.hpp"
 #include "Platform/Vulkan/GraphicsPipeline.hpp"
-
 #include "Platform/Vulkan/Buffer/Index.hpp"
 #include "Platform/Vulkan/Buffer/Vertex.hpp"
 
@@ -30,11 +31,14 @@ namespace Mixture
 		static void OnEvent(Event& e);
 
 		static void PushLayer(Layer* layer) { s_LayerStack->PushLayer(layer); }
+        
+        static ShapeRenderer& Shapes() { return *s_ShapeRenderer; }
 
 	private:
 		static Vulkan::Context& s_VulkanContext;
 		static Scope<LayerStack> s_LayerStack;
         
+        static Scope<ShapeRenderer> s_ShapeRenderer;
         static Scope<ImGuiRenderer> s_ImGuiRenderer;
 #ifndef OPAL_DIST
         static Scope<ImGuiViewport> s_ImGuiViewport;

@@ -8,7 +8,7 @@
 
 namespace Mixture::Vulkan::SingleTimeCommand
 {
-    static void Submit(const std::function<void(VkCommandBuffer)>& action)
+    static VkCommandBuffer Begin()
     {
         VkCommandBufferAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -24,9 +24,11 @@ namespace Mixture::Vulkan::SingleTimeCommand
         beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
         vkBeginCommandBuffer(commandBuffer, &beginInfo);
+        return commandBuffer;
+    }
 
-        action(commandBuffer);
-
+    static void End(VkCommandBuffer commandBuffer)
+    {
         vkEndCommandBuffer(commandBuffer);
 
         VkSubmitInfo submitInfo{};
@@ -38,5 +40,12 @@ namespace Mixture::Vulkan::SingleTimeCommand
         vkQueueWaitIdle(Context::Get().Device().GetGraphicsQueue());
 
         vkFreeCommandBuffers(Context::Get().Device().GetHandle(), Context::Get().CommandPool().GetHandle(), 1, &commandBuffer);
+    }
+
+    static void Submit(const std::function<void(VkCommandBuffer)>& action)
+    {
+        VkCommandBuffer commandBuffer = Begin();
+        action(commandBuffer);
+        End(commandBuffer);
     }
 }
