@@ -6,7 +6,7 @@ from pathlib import Path
 import Utils
 
 class PremakeConfiguration:
-    premakeVersion = "5.0.0-beta2"
+    premakeVersion = "5.0.0-beta7"
     premakeZipUrl = f"https://github.com/premake/premake-core/releases/download/v{premakeVersion}/premake-{premakeVersion}-"
     premakeLicenseUrl = "https://raw.githubusercontent.com/premake/premake-core/master/LICENSE.txt"
     premakeDirectory = "./vendor/premake/bin"
