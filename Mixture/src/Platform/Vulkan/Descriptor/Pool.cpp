@@ -5,62 +5,73 @@
 
 namespace Mixture::Vulkan
 {
-    DescriptorPool::DescriptorPool(DescriptorPoolSizes poolSizes)
+    DescriptorPool::DescriptorPool()
     {
-        std::vector<VkDescriptorPoolSize> sizes = poolSizes.GetPoolSizes();
+        m_Device = Context::Get().Device().GetHandle();
+        m_FramesInFlight = Swapchain::MAX_FRAMES_IN_FLIGHT;
         
+        // ---- Create Global Pool ----
+        std::vector<VkDescriptorPoolSize> globalPoolSizes = {
+            { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 100 },
+            { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 500 }
+        };
+        
+        m_GlobalPool = CreatePool(600, globalPoolSizes, VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT);
+        
+        // --- Create Per-Frame Pools ---
+        std::vector<VkDescriptorPoolSize> framePoolSizes = {
+            { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 200 }
+        };
+
+        m_FramePools.resize(m_FramesInFlight);
+        for (uint32_t i = 0; i < m_FramesInFlight; i++)
+        {
+            m_FramePools[i] = CreatePool(200, framePoolSizes, VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT);
+        }
+    }
+
+    DescriptorPool::~DescriptorPool()
+    {
+        for (auto pool : m_FramePools) vkDestroyDescriptorPool(m_Device, pool, nullptr);
+        vkDestroyDescriptorPool(m_Device, m_GlobalPool, nullptr);
+    }
+
+    VkDescriptorPool DescriptorPool::CreatePool(uint32_t maxSets, const std::vector<VkDescriptorPoolSize> &poolSizes, VkDescriptorPoolCreateFlags flags)
+    {
         VkDescriptorPoolCreateInfo poolInfo{};
         poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-        poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
-        poolInfo.maxSets = poolSizes.MaxSets();
-        poolInfo.poolSizeCount = static_cast<uint32_t>(sizes.size());
-        poolInfo.pPoolSizes = sizes.data();
-        VK_ASSERT(vkCreateDescriptorPool(Context::Get().Device().GetHandle(), &poolInfo, nullptr, &m_Pool), "Failed to create Descriptor Pool");
+        poolInfo.maxSets = maxSets;
+        poolInfo.poolSizeCount = static_cast<uint32_t>(poolSizes.size());
+        poolInfo.pPoolSizes = poolSizes.data();
+        poolInfo.flags = flags;
+
+        VkDescriptorPool pool;
+        VK_ASSERT(vkCreateDescriptorPool(m_Device, &poolInfo, nullptr, &pool), "Failed to create Descriptor Pool");
+        return pool;
     }
 
-    // Allocates a descriptor set from this pool for the given layout
-    VkDescriptorSet DescriptorPool::AllocateDescriptorSet(VkDescriptorSetLayout layout)
+    DescriptorSet DescriptorPool::AllocateGlobalSet(const std::vector<DescriptorBinding>& bindings)
     {
-        VkDescriptorSetAllocateInfo allocInfo{};
-        allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        allocInfo.descriptorPool = m_Pool;
-        allocInfo.descriptorSetCount = 1;
-        allocInfo.pSetLayouts = &layout;
-
-        VkDescriptorSet descriptorSet;
-        VK_ASSERT(vkAllocateDescriptorSets(Context::Get().Device().GetHandle(), &allocInfo, &descriptorSet),
-                  "Failed to allocate descriptor set");
-
-        return descriptorSet;
+        return DescriptorSet(m_GlobalPool, bindings);
     }
 
-    void DescriptorPool::FreeDescriptorSets(const std::vector<VkDescriptorSet>& descriptorSets)
+    DescriptorSet DescriptorPool::AllocateFrameSet(const std::vector<DescriptorBinding>& bindings, uint32_t frameIndex)
     {
-        if (descriptorSets.empty()) return;
-
-        VK_ASSERT(vkFreeDescriptorSets(Context::Get().Device().GetHandle(), m_Pool,
-                                       static_cast<uint32_t>(descriptorSets.size()), descriptorSets.data()),
-                  "Failed to free descriptor sets");
+        return DescriptorSet(m_FramePools[frameIndex], bindings);
     }
 
-    void DescriptorPool::FreeDescriptorSet(VkDescriptorSet descriptorSet)
+    void DescriptorPool::ResetFramePool(uint32_t frameIndex)
     {
-        FreeDescriptorSets({ descriptorSet });
+        vkResetDescriptorPool(m_Device, m_FramePools[frameIndex], 0);
     }
 
-    // Reset the pool (frees all allocated descriptor sets)
-    void DescriptorPool::Reset()
+    // --- Binding ---
+    void DescriptorPool::Bind(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout,
+                              uint32_t firstSet, const std::vector<VkDescriptorSet>& sets,
+                              const std::vector<uint32_t>& dynamicOffsets)
     {
-        VK_ASSERT(vkResetDescriptorPool(Context::Get().Device().GetHandle(), m_Pool, 0),
-                  "Failed to reset descriptor pool");
-    }
-
-    void DescriptorPool::Cleanup()
-    {
-        if (m_Pool != VK_NULL_HANDLE)
-        {
-            vkDestroyDescriptorPool(Vulkan::Context::Get().Device().GetHandle(), m_Pool, nullptr);
-            m_Pool = VK_NULL_HANDLE;
-        }
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
+                                firstSet, static_cast<uint32_t>(sets.size()), sets.data(),
+                                static_cast<uint32_t>(dynamicOffsets.size()), dynamicOffsets.empty() ? nullptr : dynamicOffsets.data());
     }
 }

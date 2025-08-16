@@ -123,7 +123,7 @@ namespace Mixture
         // Allocate descriptor set
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        allocInfo.descriptorPool = Vulkan::Context::Get().DescriptorPool().GetHandle();
+        allocInfo.descriptorPool = Vulkan::Context::Get().DescriptorPool().GetGlobalHandle();
         allocInfo.descriptorSetCount = 1;
         allocInfo.pSetLayouts = &m_DescriptorSetLayout;
 

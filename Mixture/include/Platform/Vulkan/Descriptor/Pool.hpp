@@ -1,43 +1,36 @@
 #pragma once
 
 #include "Platform/Vulkan/Base.hpp"
-
-#include "Platform/Vulkan/Descriptor/PoolSizes.hpp"
+#include "Platform/Vulkan/Descriptor/Set.hpp"
 
 namespace Mixture::Vulkan
 {
     class DescriptorPool
     {
     public:
-        DescriptorPool(DescriptorPoolSizes poolSizes);
-        ~DescriptorPool() { Cleanup(); }
+        DescriptorPool();
+        ~DescriptorPool();
         
-        // No copying or assignment
-        DescriptorPool(const DescriptorPool&) = delete;
-        DescriptorPool& operator=(const DescriptorPool&) = delete;
-
-        // Allow move semantics
-        DescriptorPool(DescriptorPool&& other) noexcept : m_Pool(other.m_Pool) { other.m_Pool = VK_NULL_HANDLE; }
-        DescriptorPool& operator=(DescriptorPool&& other) noexcept
-        {
-            if (this != &other)
-            {
-                Cleanup();
-                m_Pool = other.m_Pool;
-                other.m_Pool = VK_NULL_HANDLE;
-            }
-            return *this;
-        }
+        DescriptorSet AllocateGlobalSet(const std::vector<DescriptorBinding>& bindings);
+        DescriptorSet AllocateFrameSet(const std::vector<DescriptorBinding>& bindings, uint32_t frameIndex);
         
-        VkDescriptorSet AllocateDescriptorSet(VkDescriptorSetLayout layout);
-        void FreeDescriptorSets(const std::vector<VkDescriptorSet>& descriptorSets);
-        void FreeDescriptorSet(VkDescriptorSet descriptorSet);
-        void Reset();
+        void ResetFramePool(uint32_t frameIndex);
+        void FreeGlobalSet(DescriptorSet& set);
+        
+        void Bind(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout, uint32_t firstSet, const std::vector<VkDescriptorSet>& sets, const std::vector<uint32_t>& dynamicOffsets = {});
+        
+        VkDescriptorPool GetGlobalHandle() const { return m_GlobalPool; }
+        VkDescriptorPool GetFrameHandle(uint32_t frameIndex) const { return m_FramePools[frameIndex]; }
         
     private:
-        void Cleanup();
+        VkDescriptorPool CreatePool(uint32_t maxSets, const std::vector<VkDescriptorPoolSize>& poolSizes,
+                                    VkDescriptorPoolCreateFlags flags);
         
     private:
-        VULKAN_HANDLE(VkDescriptorPool, m_Pool);
+        VkDevice m_Device;
+        uint32_t m_FramesInFlight;
+        
+        VkDescriptorPool m_GlobalPool;
+        std::vector<VkDescriptorPool> m_FramePools;
     };
 }

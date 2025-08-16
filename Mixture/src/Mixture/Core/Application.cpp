@@ -47,17 +47,19 @@ namespace Mixture
     void Application::Run()
 {
         Timer frameTimer{};
+        FrameInfo frameInfo{};
+        
         while (m_Running)
         {
             // Update information about current frame
-            m_FrameInfo.FrameTime = frameTimer.Tick();
+            frameInfo.FrameTime = frameTimer.Tick();
             
             // Update everything
             m_Window->OnUpdate();
-            m_LayerStack->Update(m_FrameInfo);
+            m_LayerStack->Update(frameInfo);
 
             // Render after updating
-            Renderer::DrawFrame(m_FrameInfo, *m_LayerStack);
+            Renderer::DrawFrame(frameInfo, *m_LayerStack);
             
         }
     }

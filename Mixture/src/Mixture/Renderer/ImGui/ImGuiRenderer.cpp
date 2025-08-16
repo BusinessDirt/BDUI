@@ -49,7 +49,7 @@ namespace Mixture
         init_info.QueueFamily = context.PhysicalDevice().GetQueueFamilyIndices().Graphics.value();
         init_info.Queue = context.Device().GetGraphicsQueue();
         init_info.PipelineCache = VK_NULL_HANDLE;
-        init_info.DescriptorPool = context.DescriptorPool().GetHandle();
+        init_info.DescriptorPool = context.DescriptorPool().GetGlobalHandle();
         init_info.RenderPass = m_Renderpass->GetHandle();
         init_info.Subpass = 0;
         init_info.MinImageCount = Vulkan::Swapchain::MAX_FRAMES_IN_FLIGHT;

@@ -55,8 +55,6 @@ namespace Mixture
         Scope<AssetManager> m_AssetManager;
         Scope<LayerStack> m_LayerStack;
         
-        FrameInfo m_FrameInfo{};
-        
         bool m_Running = true;
     private:
         static Application* s_Instance;
