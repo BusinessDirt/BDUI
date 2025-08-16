@@ -5,7 +5,6 @@
 #include "Mixture/Renderer/LayerStack.hpp"
 #include "Mixture/Renderer/Shapes/ShapeRenderer.hpp"
 #include "Mixture/Renderer/ImGui/ImGuiRenderer.hpp"
-#include "Mixture/Renderer/ImGui/ImGuiViewport.hpp"
 
 #include "Platform/Vulkan/Context.hpp"
 #include "Platform/Vulkan/GraphicsPipeline.hpp"
@@ -36,8 +35,5 @@ namespace Mixture
         
         static Scope<ShapeRenderer> s_ShapeRenderer;
         static Scope<ImGuiRenderer> s_ImGuiRenderer;
-#ifndef OPAL_DIST
-        static Scope<ImGuiViewport> s_ImGuiViewport;
-#endif
 	};
 }
