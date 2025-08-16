@@ -328,6 +328,17 @@ namespace Mixture::Vulkan::ToString
         }
     }
 
+    std::string_view DescriptorType(VkDescriptorType descriptorType)
+    {
+        switch (descriptorType)
+        {
+            case VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER: return "Uniform Buffer";
+            case VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER: return "Image Sampler";
+            case VK_DESCRIPTOR_TYPE_STORAGE_BUFFER: return "Storage Buffer";
+            default: return "Unknown Descriptor Type";
+        }
+    }
+
     std::string Version(uint32_t version)
     {
         return fmt::format("{}.{}.{}", VK_VERSION_MAJOR(version), VK_VERSION_MINOR(version), VK_VERSION_PATCH(version));

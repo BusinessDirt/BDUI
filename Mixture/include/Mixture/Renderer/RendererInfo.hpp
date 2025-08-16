@@ -3,6 +3,7 @@
 #include "Mixture/Core/Base.hpp"
 
 #include <glm/glm.hpp>
+#include <vulkan/vulkan.h>
 
 namespace Mixture
 {
@@ -20,5 +21,6 @@ namespace Mixture
     struct FrameInfo
     {
         float FrameTime;
+        VkCommandBuffer CommandBuffer;
     };
 }

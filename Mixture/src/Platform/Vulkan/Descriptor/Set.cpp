@@ -5,12 +5,10 @@
 
 namespace Mixture::Vulkan
 {
-    DescriptorSet::DescriptorSet(VkDescriptorPool pool, const std::vector<DescriptorBinding>& bindings)
+    DescriptorSet::DescriptorSet(VkDescriptorPool pool, Ref<DescriptorSetLayout> layout)
+        : m_Device(Context::Get().Device().GetHandle()), m_Layout(layout)
     {
-        m_Device = Context::Get().Device().GetHandle();
-        m_Layout = CreateScope<DescriptorSetLayout>(bindings);
         VkDescriptorSetLayout layoutHandle = m_Layout->GetHandle();
-        
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         allocInfo.descriptorPool = pool;
@@ -25,7 +23,7 @@ namespace Mixture::Vulkan
         vkFreeDescriptorSets(m_Device, pool, 1, &m_Set);
     }
 
-    void DescriptorSet::UpdateBuffer(uint32_t binding, VkDescriptorBufferInfo* bufferInfo)
+    void DescriptorSet::UpdateBuffer(uint32_t binding, const VkDescriptorBufferInfo* bufferInfo)
     {
         VkWriteDescriptorSet write{};
         write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -38,7 +36,7 @@ namespace Mixture::Vulkan
         vkUpdateDescriptorSets(m_Device, 1, &write, 0, nullptr);
     }
 
-    void DescriptorSet::UpdateImage(uint32_t binding, VkDescriptorImageInfo* imageInfo)
+    void DescriptorSet::UpdateImage(uint32_t binding, const VkDescriptorImageInfo* imageInfo)
     {
         VkWriteDescriptorSet write{};
         write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

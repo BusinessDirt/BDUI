@@ -50,28 +50,18 @@ namespace Mixture::Vulkan
         return pool;
     }
 
-    DescriptorSet DescriptorPool::AllocateGlobalSet(const std::vector<DescriptorBinding>& bindings)
+    DescriptorSet DescriptorPool::AllocateGlobalSet(Ref<DescriptorSetLayout> layout) const
     {
-        return DescriptorSet(m_GlobalPool, bindings);
+        return DescriptorSet(m_GlobalPool, layout);
     }
 
-    DescriptorSet DescriptorPool::AllocateFrameSet(const std::vector<DescriptorBinding>& bindings, uint32_t frameIndex)
+    DescriptorSet DescriptorPool::AllocateFrameSet(Ref<DescriptorSetLayout> layout, uint32_t frameIndex) const
     {
-        return DescriptorSet(m_FramePools[frameIndex], bindings);
+        return DescriptorSet(m_FramePools[frameIndex], layout);
     }
 
-    void DescriptorPool::ResetFramePool(uint32_t frameIndex)
+    void DescriptorPool::ResetFramePool(uint32_t frameIndex) const
     {
         vkResetDescriptorPool(m_Device, m_FramePools[frameIndex], 0);
-    }
-
-    // --- Binding ---
-    void DescriptorPool::Bind(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout,
-                              uint32_t firstSet, const std::vector<VkDescriptorSet>& sets,
-                              const std::vector<uint32_t>& dynamicOffsets)
-    {
-        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout,
-                                firstSet, static_cast<uint32_t>(sets.size()), sets.data(),
-                                static_cast<uint32_t>(dynamicOffsets.size()), dynamicOffsets.empty() ? nullptr : dynamicOffsets.data());
     }
 }

@@ -15,6 +15,7 @@ namespace Mixture
 	struct SPVShader
 	{
 		VkPushConstantRange PushConstant{};
+        std::unordered_map<uint32_t, std::vector<VkDescriptorSetLayoutBinding>> DescriptorSetLayoutBindings;
 		std::vector<VkVertexInputBindingDescription> VertexInputBindings;
 		std::vector<VkVertexInputAttributeDescription> VertexInputAttributes;
         std::vector<std::string> VertexAttributeNames;

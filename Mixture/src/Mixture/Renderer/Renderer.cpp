@@ -13,16 +13,12 @@ namespace Mixture
     void Renderer::Init(const std::string& applicationName)
     {
         s_VulkanContext.Initialize(applicationName);
-        
-        s_ShapeRenderer->Initialize();
         s_ImGuiRenderer->Initialize();
     }
 
     void Renderer::Shutdown()
     {
         s_ImGuiRenderer->Shutdown();
-        s_ShapeRenderer->Shutdown();
-        
         s_VulkanContext.Shutdown();
     }
 
@@ -39,13 +35,10 @@ namespace Mixture
 
         if (VkCommandBuffer commandBuffer = s_VulkanContext.BeginFrame())
         {
-            s_ShapeRenderer->UploadBuffers();
-
+            frameInfo.CommandBuffer = commandBuffer;
+            
             s_VulkanContext.BeginRenderpass(commandBuffer);
-            
-            s_ShapeRenderer->Render(commandBuffer);
             layerStack.Render(frameInfo);
-            
             s_VulkanContext.EndRenderpass(commandBuffer);
             
             s_ImGuiRenderer->BeginFrame();

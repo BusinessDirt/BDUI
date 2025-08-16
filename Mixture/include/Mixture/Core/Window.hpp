@@ -30,6 +30,7 @@ namespace Mixture
 
         unsigned int GetWidth() const { return m_Data.Width; }
         unsigned int GetHeight() const { return m_Data.Height; }
+        float GetAspectRatio() const { return m_Data.AspectRatio; }
         void* GetNativeWindow() const { return m_WindowHandle; }
 
         void OnUpdate() const;
@@ -44,6 +45,7 @@ namespace Mixture
         {
             std::string Title;
             unsigned int Width = 0, Height = 0;
+            float AspectRatio = 0.0f;
             bool VSync = true;
             bool Minimized = false;
             EventCallbackFn EventCallback;

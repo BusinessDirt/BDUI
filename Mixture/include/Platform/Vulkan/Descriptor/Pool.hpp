@@ -11,13 +11,11 @@ namespace Mixture::Vulkan
         DescriptorPool();
         ~DescriptorPool();
         
-        DescriptorSet AllocateGlobalSet(const std::vector<DescriptorBinding>& bindings);
-        DescriptorSet AllocateFrameSet(const std::vector<DescriptorBinding>& bindings, uint32_t frameIndex);
+        DescriptorSet AllocateGlobalSet(Ref<DescriptorSetLayout> layout) const;
+        DescriptorSet AllocateFrameSet(Ref<DescriptorSetLayout> layout, uint32_t frameIndex) const;
         
-        void ResetFramePool(uint32_t frameIndex);
-        void FreeGlobalSet(DescriptorSet& set);
-        
-        void Bind(VkCommandBuffer commandBuffer, VkPipelineLayout pipelineLayout, uint32_t firstSet, const std::vector<VkDescriptorSet>& sets, const std::vector<uint32_t>& dynamicOffsets = {});
+        void ResetFramePool(uint32_t frameIndex) const;
+        void FreeGlobalSet(DescriptorSet& set) const;
         
         VkDescriptorPool GetGlobalHandle() const { return m_GlobalPool; }
         VkDescriptorPool GetFrameHandle(uint32_t frameIndex) const { return m_FramePools[frameIndex]; }

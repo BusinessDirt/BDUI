@@ -3,6 +3,8 @@
 #include "Platform/Vulkan/Base.hpp"
 #include "Platform/Vulkan/Renderpass.hpp"
 #include "Platform/Vulkan/Swapchain.hpp"
+#include "Platform/Vulkan/Descriptor/Layout.hpp"
+#include "Platform/Vulkan/Descriptor/Set.hpp"
 
 #include "Mixture/Renderer/RendererInfo.hpp"
 
@@ -18,10 +20,15 @@ namespace Mixture::Vulkan
 
         void Bind(VkCommandBuffer commandBuffer);
         void PushConstants(VkCommandBuffer commandBuffer, const void* pValues);
+        void UpdateGlobalUniformBuffer(uint32_t binding, const VkDescriptorBufferInfo* bufferInfo);
 
     private:
         VULKAN_HANDLE(VkPipeline, m_GraphicsPipeline);
-        VkPushConstantRange m_PushConstant;
         VkPipelineLayout m_PipelineLayout;
+        
+        VkPushConstantRange m_PushConstant;
+        std::vector<Ref<DescriptorSetLayout>> m_SetLayouts;
+        
+        Scope<DescriptorSet> m_GlobalSet;
     };
 }

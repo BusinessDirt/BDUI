@@ -53,6 +53,7 @@ namespace Mixture
         {
             // Update information about current frame
             frameInfo.FrameTime = frameTimer.Tick();
+            frameInfo.CommandBuffer = VK_NULL_HANDLE;
             
             // Update everything
             m_Window->OnUpdate();

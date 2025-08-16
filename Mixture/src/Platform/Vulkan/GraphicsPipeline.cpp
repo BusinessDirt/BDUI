@@ -20,6 +20,13 @@ namespace Mixture::Vulkan
         ShaderModule vertShader(shader, Mixture::SHADER_STAGE_VERTEX);
         ShaderModule fragShader(shader, Mixture::SHADER_STAGE_FRAGMENT);
         VkPipelineShaderStageCreateInfo shaderStages[] = { vertShader.CreateInfo(), fragShader.CreateInfo() };
+        
+        // Descriptor Set Layouts
+        for (const auto& [set, bindings] : shader.DescriptorSetLayoutBindings)
+            m_SetLayouts.push_back(CreateRef<DescriptorSetLayout>(bindings));
+        
+        std::vector<VkDescriptorSetLayout> vkLayouts;
+        for (auto& layout : m_SetLayouts) vkLayouts.push_back(layout->GetHandle());
 
         VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
         vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
@@ -116,8 +123,8 @@ namespace Mixture::Vulkan
 
         VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
         pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-        pipelineLayoutInfo.setLayoutCount = 0;
-        pipelineLayoutInfo.pSetLayouts = nullptr;
+        pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(vkLayouts.size());
+        pipelineLayoutInfo.pSetLayouts = vkLayouts.data();
 
         if (shader.PushConstant.size > 0)
         {
@@ -147,6 +154,12 @@ namespace Mixture::Vulkan
         pipelineInfo.basePipelineIndex = -1;
 
         VK_ASSERT(vkCreateGraphicsPipelines(Context::Get().Device().GetHandle(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_GraphicsPipeline), "Failed to create Graphics Pipeline");
+        
+        if (m_SetLayouts.size() > 0)
+        {
+            // Define the global set to be set=0
+            m_GlobalSet = CreateScope<DescriptorSet>(Context::Get().DescriptorPool().AllocateGlobalSet(m_SetLayouts[0]));
+        }
     };
 
     GraphicsPipeline::~GraphicsPipeline()
@@ -167,6 +180,10 @@ namespace Mixture::Vulkan
     void GraphicsPipeline::Bind(VkCommandBuffer commandBuffer)
     {
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline);
+        
+        std::array<VkDescriptorSet, 1> sets = { m_GlobalSet->GetHandle() };
+        vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0,
+                                static_cast<uint32_t>(sets.size()), sets.data(), 0, nullptr);
     }
 
     void GraphicsPipeline::PushConstants(VkCommandBuffer commandBuffer, const void* pValues)
@@ -181,4 +198,17 @@ namespace Mixture::Vulkan
             OPAL_CORE_ERROR("Shader doesn't use push constant!");
         } 
     }
+
+    void GraphicsPipeline::UpdateGlobalUniformBuffer(uint32_t binding, const VkDescriptorBufferInfo* bufferInfo)
+    {
+        if (!m_GlobalSet->GetHandle())
+        {
+            OPAL_CORE_ERROR("Global descriptor set not initialized!");
+            return;
+        }
+        
+        
+        m_GlobalSet->UpdateBuffer(binding, bufferInfo);
+    }
+
 }

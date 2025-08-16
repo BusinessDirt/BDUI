@@ -22,6 +22,7 @@ namespace Mixture
 		m_Data.Title = props.Title;
 		m_Data.Width = props.Width;
 		m_Data.Height = props.Height;
+        m_Data.AspectRatio = ((float)props.Width) / ((float)props.Height);
 
 		glfwInitVulkanLoader(vkGetInstanceProcAddr);
 
@@ -47,6 +48,7 @@ namespace Mixture
 					WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 					data.Width = width;
 					data.Height = height;
+                    data.AspectRatio = ((float)width) / ((float)height);
 
 					if (width == 0 || height == 0) data.Minimized = true;
 
@@ -57,9 +59,6 @@ namespace Mixture
             glfwSetFramebufferSizeCallback(m_WindowHandle, [](GLFWwindow* window, int width, int height)
                 {
                     WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-                    data.Width = width;
-                    data.Height = height;
-
                     if (width == 0 || height == 0) data.Minimized = true;
 
                     FramebufferResizeEvent event(width, height);

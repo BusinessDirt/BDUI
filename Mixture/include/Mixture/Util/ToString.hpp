@@ -12,5 +12,6 @@ namespace Mixture::Vulkan::ToString
     std::string_view ColorSpace(VkColorSpaceKHR colorSpace);
     std::string_view PresentMode(VkPresentModeKHR presentMode);
     std::string_view PhysicalDeviceType(VkPhysicalDeviceType physicalDeviceType);
+    std::string_view DescriptorType(VkDescriptorType descriptorType);
     std::string Version(uint32_t version);
 }

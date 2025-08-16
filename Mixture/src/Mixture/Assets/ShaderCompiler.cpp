@@ -51,6 +51,20 @@ namespace Mixture
             OPAL_CORE_ERROR("Unsupported Format");
             return VK_FORMAT_UNDEFINED;
         }
+    
+        static void ReflectDescriptorSetLayoutBinding(SPVShader& shader, const spirv_cross::Compiler& compiler, const spv::Id& id, VkDescriptorType descriptorType)
+        {
+            uint32_t set = compiler.get_decoration(id, spv::DecorationDescriptorSet);
+            uint32_t binding = compiler.get_decoration(id, spv::DecorationBinding);
+            
+            VkDescriptorSetLayoutBinding layoutBinding{};
+            layoutBinding.binding            = binding;
+            layoutBinding.descriptorType     = descriptorType;
+            layoutBinding.descriptorCount    = 1;
+            layoutBinding.stageFlags         = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+            layoutBinding.pImmutableSamplers = nullptr;
+            shader.DescriptorSetLayoutBindings[set].push_back(layoutBinding);
+        }
     }
 	namespace ShaderCompiler
 	{
@@ -89,15 +103,27 @@ namespace Mixture
             spirv_cross::Compiler vertCompiler(shader.Data.at(SHADER_STAGE_VERTEX));
             spirv_cross::ShaderResources vertResources = vertCompiler.get_shader_resources();
 
-            // Push
+            // ==== Push Constant ====
             shader.PushConstant.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
-            for (const spirv_cross::Resource& resource : vertResources.push_constant_buffers)
+            for (const spirv_cross::Resource& pushConstant : vertResources.push_constant_buffers)
             {
-                const spirv_cross::SPIRType& bufferType = vertCompiler.get_type(resource.base_type_id);
+                const spirv_cross::SPIRType& bufferType = vertCompiler.get_type(pushConstant.base_type_id);
                 shader.PushConstant.size = static_cast<uint32_t>(vertCompiler.get_declared_struct_size(bufferType));
-                vertCompiler.get_binary_offset_for_decoration(resource.id, spv::DecorationBinding, shader.PushConstant.offset);
+                vertCompiler.get_binary_offset_for_decoration(pushConstant.id, spv::DecorationBinding, shader.PushConstant.offset);
             }
+            
+            // ==== Descriptor Set Layout Binding ====
+            for (const spirv_cross::Resource& resource : vertResources.uniform_buffers)
+                Util::ReflectDescriptorSetLayoutBinding(shader, vertCompiler, resource.id, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER);
+            
+            for (const spirv_cross::Resource& resource : vertResources.sampled_images)
+                Util::ReflectDescriptorSetLayoutBinding(shader, vertCompiler, resource.id, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER);
+            
+            for (const spirv_cross::Resource& resource : vertResources.storage_buffers)
+                Util::ReflectDescriptorSetLayoutBinding(shader, vertCompiler, resource.id, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER);
+            
 
+            // ==== Vertex Attributes and Bindings ====
             // Sort resources by location
             // this is required to calculate the offsets properly
             std::vector<spirv_cross::Resource> stageInputs(vertResources.stage_inputs.begin(), vertResources.stage_inputs.end());
@@ -156,6 +182,21 @@ namespace Mixture
                 VULKAN_INFO_LIST_HEADER("Push Constant", 0);
                 VULKAN_INFO_LIST("Size: {}", 1, shader.PushConstant.size);
                 VULKAN_INFO_LIST("Offset: {}", 1, shader.PushConstant.offset);
+            }
+            
+            // Descriptor Set Layout Bindings
+            if (!shader.DescriptorSetLayoutBindings.empty())
+            {
+                VULKAN_INFO_LIST_HEADER("Descriptor Set Layout Bindings", 0);
+                
+                for (const auto& [setIndex, bindings] : shader.DescriptorSetLayoutBindings)
+                    {
+                        for (const auto& binding : bindings)
+                        {
+                            VULKAN_INFO_LIST("set = {}, binding = {}, type = {}, count = {}", 1, setIndex, binding.binding,
+                                Vulkan::ToString::DescriptorType(binding.descriptorType), binding.descriptorCount);
+                        }
+                    }
             }
 
             // Vertex Input Bindings
