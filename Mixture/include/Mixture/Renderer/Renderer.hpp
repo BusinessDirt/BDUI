@@ -22,21 +22,17 @@ namespace Mixture
 
 		static void OnFramebufferResize(uint32_t width, uint32_t height);
 
-		static void DrawFrame();
+		static void DrawFrame(FrameInfo& frameInfo, const LayerStack& layerStack);
         
         /**
          * Returns if the Viewport is currently 'targeted' by the mouse
          */
         static bool DrawImGuiViewport();
-		static void OnEvent(Event& e);
-
-		static void PushLayer(Layer* layer) { s_LayerStack->PushLayer(layer); }
         
         static ShapeRenderer& Shapes() { return *s_ShapeRenderer; }
 
 	private:
 		static Vulkan::Context& s_VulkanContext;
-		static Scope<LayerStack> s_LayerStack;
         
         static Scope<ShapeRenderer> s_ShapeRenderer;
         static Scope<ImGuiRenderer> s_ImGuiRenderer;

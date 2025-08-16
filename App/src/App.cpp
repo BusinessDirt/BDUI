@@ -11,7 +11,7 @@ namespace Mixture
         ExampleApp(ApplicationCommandLineArgs args)
             : Application("App", args)
         {
-            Renderer::PushLayer(new MainLayer());
+            PushLayer(new MainLayer());
         }
     };
 

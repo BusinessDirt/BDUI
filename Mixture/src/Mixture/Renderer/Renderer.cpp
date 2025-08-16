@@ -6,7 +6,6 @@
 namespace Mixture
 {
     Vulkan::Context& Renderer::s_VulkanContext = Vulkan::Context::Get();
-    Scope<LayerStack> Renderer::s_LayerStack = CreateScope<LayerStack>();
 
     Scope<ShapeRenderer> Renderer::s_ShapeRenderer = CreateScope<ShapeRenderer>();
     Scope<ImGuiRenderer> Renderer::s_ImGuiRenderer = CreateScope<ImGuiRenderer>();
@@ -27,8 +26,6 @@ namespace Mixture
 
     void Renderer::Shutdown()
     {
-        s_LayerStack = nullptr;
-        
 #ifndef OPAL_DIST
         s_ImGuiViewport->Shutdown();
 #endif
@@ -48,14 +45,8 @@ namespace Mixture
 #endif
     }
 
-    void Renderer::DrawFrame()
+    void Renderer::DrawFrame(FrameInfo& frameInfo, const LayerStack& layerStack)
     {
-        static auto startTime = std::chrono::high_resolution_clock::now();
-
-        auto currentTime = std::chrono::high_resolution_clock::now();
-        float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
-        startTime = currentTime;
-
         std::vector<VkCommandBuffer> commandBuffers{};
         
 #ifndef OPAL_DIST
@@ -64,19 +55,12 @@ namespace Mixture
         
         if (VkCommandBuffer commandBuffer = s_VulkanContext.BeginFrame())
         {
-            FrameInfo frameInfo{};
-            frameInfo.FrameIndex = s_VulkanContext.Swapchain().GetCurrentFrameIndex();
-            frameInfo.FrameTime = frameTime;
-            frameInfo.CommandBuffer = commandBuffer;
-            
-            s_ShapeRenderer->Begin();
-            s_LayerStack->OnUpdate(frameInfo);
-            s_ShapeRenderer->End();
-            s_ShapeRenderer->UploadBuffers(frameInfo);
+            s_ShapeRenderer->UploadBuffers();
 
             s_VulkanContext.BeginRenderpass(commandBuffer);
             
-            s_ShapeRenderer->Render(frameInfo);
+            s_ShapeRenderer->Render(commandBuffer);
+            layerStack.Render(frameInfo);
             
             s_VulkanContext.EndRenderpass(commandBuffer);
             
@@ -86,7 +70,7 @@ namespace Mixture
 #endif
             
             s_ImGuiRenderer->BeginFrame();
-            s_LayerStack->OnRenderUI(frameInfo);
+            layerStack.RenderImGui(frameInfo);
             s_ImGuiRenderer->EndFrame();
             
             s_ImGuiRenderer->BeginRenderpass(commandBuffer);
@@ -108,10 +92,5 @@ namespace Mixture
 #else
         return true;
 #endif
-    }
-
-    void Renderer::OnEvent(Event& e)
-    {
-        s_LayerStack->OnEvent(e);
     }
 }

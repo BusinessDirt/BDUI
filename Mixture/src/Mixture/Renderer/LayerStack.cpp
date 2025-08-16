@@ -12,22 +12,24 @@ namespace Mixture
         }
     }
 
-    void LayerStack::OnUpdate(FrameInfo& frameInfo) const
+    void LayerStack::Update(FrameInfo& frameInfo) const
     {
-        for (Layer* layer : m_Layers)
-            layer->OnUpdate(frameInfo);
+        for (Layer* layer : m_Layers) layer->OnUpdate(frameInfo);
     }
 
-    void LayerStack::OnRenderUI(FrameInfo& frameInfo) const
+    void LayerStack::Render(FrameInfo& frameInfo) const
     {
-        for (Layer* layer : m_Layers)
-            layer->OnRenderUI(frameInfo);
+        for (Layer* layer : m_Layers) layer->OnRender(frameInfo);
+    }
+
+    void LayerStack::RenderImGui(FrameInfo& frameInfo) const
+    {
+        for (Layer* layer : m_Layers) layer->OnRenderImGui(frameInfo);
     }
 
     void LayerStack::OnEvent(Event& e) const
     {
-        for (Layer* layer : m_Layers)
-            layer->OnEvent(e);
+        for (Layer* layer : m_Layers) layer->OnEvent(e);
     }
 
     void LayerStack::PushLayer(Layer* overlay)

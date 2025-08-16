@@ -37,8 +37,8 @@ namespace Mixture::Vulkan
         Buffer::Copy(stagingBuffer.GetHandle(), m_IndexBuffer->GetHandle(), bufferSize, commandBuffer);
     }
 
-    void IndexBuffer::Bind(FrameInfo& frameInfo)
+    void IndexBuffer::Bind(VkCommandBuffer commandBuffer)
     {
-        vkCmdBindIndexBuffer(frameInfo.CommandBuffer, m_IndexBuffer->GetHandle(), 0, VK_INDEX_TYPE_UINT32);
+        vkCmdBindIndexBuffer(commandBuffer, m_IndexBuffer->GetHandle(), 0, VK_INDEX_TYPE_UINT32);
     }
 }

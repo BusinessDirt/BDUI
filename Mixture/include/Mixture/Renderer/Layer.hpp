@@ -14,8 +14,11 @@ namespace Mixture
 
         virtual void OnAttach() = 0;
         virtual void OnDetach() = 0;
+        
         virtual void OnUpdate(FrameInfo& frameInfo) = 0;
-        virtual void OnRenderUI(FrameInfo& frameInfo) = 0;
+        virtual void OnRender(FrameInfo& frameInfo) = 0;
+        virtual void OnRenderImGui(FrameInfo& frameInfo) = 0;
+        
         virtual void OnEvent(Event& event) = 0;
 
         const std::string& GetName() const { return m_DebugName; }

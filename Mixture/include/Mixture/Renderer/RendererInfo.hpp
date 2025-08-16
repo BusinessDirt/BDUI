@@ -2,7 +2,6 @@
 
 #include "Mixture/Core/Base.hpp"
 
-#include <vulkan/vulkan.h>
 #include <glm/glm.hpp>
 
 namespace Mixture
@@ -20,11 +19,6 @@ namespace Mixture
 
     struct FrameInfo
     {
-        uint32_t FrameIndex;
         float FrameTime;
-        VkCommandBuffer CommandBuffer;
-        
-        uint32_t TriangleCount;
-        uint32_t DrawCalls;
     };
 }

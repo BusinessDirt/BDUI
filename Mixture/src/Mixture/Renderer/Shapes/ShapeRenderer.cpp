@@ -32,43 +32,26 @@ namespace Mixture
         m_Pipeline.reset();
     }
 
-    void ShapeRenderer::Begin()
-    {
-        m_Shapes.clear();
-        m_Dirty = false;
-        
-        const Window& window = Application::Get().GetWindow();
-        m_PushConstant.ViewportSize = glm::vec2(window.GetWidth(), window.GetHeight());
-    }
-
-    void ShapeRenderer::DrawRect(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color)
+    void ShapeRenderer::AddRect(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color)
     {
         m_Shapes.emplace_back(CreateScope<Rectangle>(glm::vec3(start.x, start.y, 0.0f),
                                                      glm::vec3(end.x, end.y, 0.0f),
                                                      color));
     }
 
-    void ShapeRenderer::DrawLine(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color, float thickness)
+    void ShapeRenderer::AddLine(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color, float thickness)
     {
         m_Shapes.emplace_back(CreateScope<Line>(glm::vec3(start.x, start.y, 0.0f),
                                                 glm::vec3(end.x, end.y, 0.0f),
                                                 color, thickness));
     }
 
-    void ShapeRenderer::End()
+    void ShapeRenderer::UploadBuffers()
     {
         // Set dirty flag and skip hashing if the size has changed
         std::size_t oldHash = m_ShapeHash;
         m_ShapeHash = Util::HashShapeVector(m_Shapes);
-        m_Dirty = m_ShapeHash != oldHash;
-        
-        //if (!m_Dirty) return;
-    }
-
-    void ShapeRenderer::UploadBuffers(FrameInfo& frameInfo)
-    {
-        if (!m_Dirty) return;
-        m_Dirty = false;
+        if (m_ShapeHash == oldHash) return;
         
         // Tesselate shapes
         std::vector<Vertex> vertices;
@@ -81,16 +64,22 @@ namespace Mixture
         m_IndexBuffer->SetData(indices);
     }
 
-    void ShapeRenderer::Render(FrameInfo& frameInfo)
+    void ShapeRenderer::Render(VkCommandBuffer commandBuffer)
     {
         if (m_Shapes.size() <= 0) return;
         
-        m_Pipeline->Bind(frameInfo);
-        m_Pipeline->PushConstants(frameInfo, &m_PushConstant);
+        m_Pipeline->Bind(commandBuffer);
+        m_Pipeline->PushConstants(commandBuffer, &m_PushConstant);
         
-        m_VertexBuffer->Bind(frameInfo);
-        m_IndexBuffer->Bind(frameInfo);
+        m_VertexBuffer->Bind(commandBuffer);
+        m_IndexBuffer->Bind(commandBuffer);
         
-        DrawCommand::DrawIndexed(frameInfo, m_IndexBuffer->GetIndexCount());
+        DrawCommand::DrawIndexed(commandBuffer, m_IndexBuffer->GetIndexCount());
+        
+        // Reset for next frame
+        m_Shapes.clear();
+        
+        const Window& window = Application::Get().GetWindow();
+        m_PushConstant.ViewportSize = glm::vec2(window.GetWidth(), window.GetHeight());
     }
 }

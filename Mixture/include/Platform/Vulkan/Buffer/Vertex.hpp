@@ -13,11 +13,15 @@ namespace Mixture
         {
         public:
             VertexBuffer(const std::vector<Vertex>& vertices);
+            VertexBuffer(void* vertices, uint32_t vertexCount, uint32_t vertexSize);
             VertexBuffer();
             ~VertexBuffer();
 
             void SetData(const std::vector<Vertex>& vertices, VkCommandBuffer commandBuffer = VK_NULL_HANDLE);
-            void Bind(FrameInfo& frameInfo);
+            void SetData(void* vertices, uint32_t vertexCount, uint32_t vertexSize, VkCommandBuffer commandBuffer = VK_NULL_HANDLE);
+            
+            void Bind(VkCommandBuffer commandBuffer);
+            
             uint32_t GetVertexCount() { return m_VertexCount; }
 
         private:

@@ -12,8 +12,11 @@ namespace Mixture
 
         void OnAttach() override;
         void OnDetach() override;
+        
         void OnUpdate(FrameInfo& frameInfo) override;
-        void OnRenderUI(FrameInfo& frameInfo) override;
+        void OnRender(FrameInfo& frameInfo) override;
+        void OnRenderImGui(FrameInfo& frameInfo) override;
+        
         void OnEvent(Event& event) override;
         
     private:

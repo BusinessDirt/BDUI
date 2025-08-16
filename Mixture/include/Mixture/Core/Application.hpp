@@ -6,6 +6,9 @@
 #include "Mixture/Events/Event.hpp"
 #include "Mixture/Events/ApplicationEvent.hpp"
 
+#include "Mixture/Renderer/LayerStack.hpp"
+#include "Mixture/Renderer/RendererInfo.hpp"
+
 int Entrypoint(int argc, char** argv);
 
 namespace Mixture
@@ -38,6 +41,9 @@ namespace Mixture
         static Application& Get() { return *s_Instance; }
         const Window& GetWindow() const { return *m_Window; }
         const AssetManager& GetAssetManager() const { return *m_AssetManager; }
+        
+        void PushLayer(Layer* layer) { m_LayerStack->PushLayer(layer); };
+        void PopLayer(Layer* layer) { m_LayerStack->PopLayer(layer); }
 
     private:
         void Run();
@@ -47,6 +53,9 @@ namespace Mixture
     private:
         Scope<Window> m_Window;
         Scope<AssetManager> m_AssetManager;
+        Scope<LayerStack> m_LayerStack;
+        
+        FrameInfo m_FrameInfo{};
         
         bool m_Running = true;
     private:

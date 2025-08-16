@@ -15,7 +15,9 @@ namespace Mixture::Vulkan
         ~IndexBuffer();
 
         void SetData(const std::vector<uint32_t>& indices, VkCommandBuffer commandBuffer = VK_NULL_HANDLE);
-        void Bind(FrameInfo& frameInfo);
+        
+        void Bind(VkCommandBuffer commandBuffer);
+        
         uint32_t GetIndexCount() { return m_IndexCount; }
 
     private:

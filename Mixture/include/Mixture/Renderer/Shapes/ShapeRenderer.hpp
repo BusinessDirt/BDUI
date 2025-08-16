@@ -26,13 +26,11 @@ namespace Mixture
         void Initialize();
         void Shutdown();
 
-        void Begin();
-        void DrawRect(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color);
-        void DrawLine(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color, float thickness = 1.0f);
-        void End();
+        void AddRect(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color);
+        void AddLine(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color, float thickness = 1.0f);
 
-        void UploadBuffers(FrameInfo& frameInfo);
-        void Render(FrameInfo& frameInfo);
+        void UploadBuffers();
+        void Render(VkCommandBuffer commandBuffer);
 
     private:
         static const char* SHADER_NAME;
@@ -45,6 +43,5 @@ namespace Mixture
 
         std::vector<Scope<IShape>> m_Shapes;
         std::size_t m_ShapeHash;
-        bool m_Dirty;
     };
 }

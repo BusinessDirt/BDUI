@@ -164,19 +164,16 @@ namespace Mixture::Vulkan
         }
     }
 
-    void GraphicsPipeline::Bind(const FrameInfo& frameInfo)
+    void GraphicsPipeline::Bind(VkCommandBuffer commandBuffer)
     {
-        vkCmdBindPipeline(frameInfo.CommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline);
-        //std::array<VkDescriptorSet, 2> sets = { frameInfo.GlobalSet, frameInfo.InstanceSet };
-        //vkCmdBindDescriptorSets(frameInfo.CommandBuffer.GetAsVulkanHandle(), VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout->GetHandle(), 0,
-        //    static_cast<uint32_t>(sets.size()), sets.data(), 0, nullptr);
+        vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline);
     }
 
-    void GraphicsPipeline::PushConstants(const FrameInfo& frameInfo, const void* pValues)
+    void GraphicsPipeline::PushConstants(VkCommandBuffer commandBuffer, const void* pValues)
     {
         if (m_PushConstant.size > 0)
         {
-            vkCmdPushConstants(frameInfo.CommandBuffer, m_PipelineLayout, m_PushConstant.stageFlags,
+            vkCmdPushConstants(commandBuffer, m_PipelineLayout, m_PushConstant.stageFlags,
                 m_PushConstant.offset, m_PushConstant.size, pValues);
         }
         else

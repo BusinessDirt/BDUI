@@ -3,38 +3,24 @@
 
 namespace Mixture 
 {
-	void DrawCommand::Draw(FrameInfo& frameInfo, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
+	void DrawCommand::Draw(VkCommandBuffer commandBuffer, uint32_t vertexCount, uint32_t instanceCount, uint32_t firstVertex, uint32_t firstInstance)
 	{
-		vkCmdDraw(frameInfo.CommandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
-#ifndef OPAL_DIST
-        frameInfo.DrawCalls += 1;
-        frameInfo.TriangleCount += vertexCount / 3;
-#endif
+		vkCmdDraw(commandBuffer, vertexCount, instanceCount, firstVertex, firstInstance);
 	}
 
-	void DrawCommand::DrawIndexed(FrameInfo& frameInfo, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance)
+	void DrawCommand::DrawIndexed(VkCommandBuffer commandBuffer, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, int32_t vertexOffset, uint32_t firstInstance)
 	{
-		vkCmdDrawIndexed(frameInfo.CommandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
-#ifndef OPAL_DIST
-        frameInfo.DrawCalls += 1;
-        frameInfo.TriangleCount += indexCount / 3;
-#endif
+		vkCmdDrawIndexed(commandBuffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
 	}
 
-	void DrawCommand::DrawIndirect(FrameInfo& frameInfo, const Vulkan::Buffer& buffer, VkDeviceSize offset)
+	void DrawCommand::DrawIndirect(VkCommandBuffer commandBuffer, const Vulkan::Buffer& buffer, VkDeviceSize offset)
 	{
-		vkCmdDrawIndirect(frameInfo.CommandBuffer, buffer.GetHandle(), offset, buffer.GetInstanceCount(), static_cast<uint32_t>(buffer.GetInstanceSize()));
-#ifndef OPAL_DIST
-        frameInfo.DrawCalls += 1;
-#endif
+		vkCmdDrawIndirect(commandBuffer, buffer.GetHandle(), offset, buffer.GetInstanceCount(), static_cast<uint32_t>(buffer.GetInstanceSize()));
 	}
 
-	void DrawCommand::DrawIndexedIndirect(FrameInfo& frameInfo, const Vulkan::Buffer& buffer, VkDeviceSize offset)
+	void DrawCommand::DrawIndexedIndirect(VkCommandBuffer commandBuffer, const Vulkan::Buffer& buffer, VkDeviceSize offset)
 	{
-		vkCmdDrawIndexedIndirect(frameInfo.CommandBuffer, buffer.GetHandle(), offset, buffer.GetInstanceCount(), static_cast<uint32_t>(buffer.GetInstanceSize()));
-#ifndef OPAL_DIST
-        frameInfo.DrawCalls += 1;
-#endif
+		vkCmdDrawIndexedIndirect(commandBuffer, buffer.GetHandle(), offset, buffer.GetInstanceCount(), static_cast<uint32_t>(buffer.GetInstanceSize()));
 	}
 }
 
