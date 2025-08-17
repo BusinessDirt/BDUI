@@ -8,7 +8,7 @@ namespace Mixture
     class ExampleApp : public Application
     {
     public:
-        ExampleApp(ApplicationCommandLineArgs args)
+        explicit ExampleApp(ApplicationCommandLineArgs args)
             : Application("App", args)
         {
             PushLayer(new MainLayer());

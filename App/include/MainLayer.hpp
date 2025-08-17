@@ -30,8 +30,8 @@ namespace Mixture
         Scope<Vulkan::VertexBuffer> m_VertexBuffer;
         Scope<Vulkan::IndexBuffer> m_IndexBuffer;
         
-        Scope<Vulkan::Buffer> m_UniformBuffer;
-        UniformBufferObject m_UniformBufferObject;
+        Scope<Vulkan::UniformBuffer> m_UniformBuffer;
+        UniformBufferObject m_UniformBufferObject{};
         float m_Z = 1.0f;
         
         bool m_ViewportFocused = false;

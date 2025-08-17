@@ -9,3 +9,5 @@
 #include "Mixture/Renderer/Renderer.hpp"
 #include "Mixture/Renderer/RendererInfo.hpp"
 #include "Mixture/Renderer/ImGui/ImGuiWidgets.hpp"
+
+#include "Platform/Vulkan/Buffer/Uniform.hpp"

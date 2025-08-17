@@ -1,6 +1,8 @@
 #include "mxpch.hpp"
 #include "Platform/Vulkan/GraphicsPipeline.hpp"
 
+#include <ranges>
+
 #include "Mixture/Assets/ShaderCompiler.hpp"
 
 #include "Platform/Vulkan/ShaderModule.hpp"
@@ -12,17 +14,17 @@ namespace Mixture::Vulkan
     {
         const Swapchain& swapchain = Context::Get().Swapchain();
 
-        Mixture::ShaderCompiler::Flags flags{};
-        flags.PipelineType = Mixture::ShaderCompiler::GRAPHICS_PIPELINE;
+        ShaderCompiler::Flags flags{};
+        flags.PipelineType = ShaderCompiler::GRAPHICS_PIPELINE;
         flags.Debug = true;
 
-        Mixture::SPVShader shader = Mixture::ShaderCompiler::Compile(shaderName, flags);
-        ShaderModule vertShader(shader, Mixture::SHADER_STAGE_VERTEX);
-        ShaderModule fragShader(shader, Mixture::SHADER_STAGE_FRAGMENT);
+        SPVShader shader = Mixture::ShaderCompiler::Compile(shaderName, flags);
+        ShaderModule vertShader(shader, SHADER_STAGE_VERTEX);
+        ShaderModule fragShader(shader, SHADER_STAGE_FRAGMENT);
         VkPipelineShaderStageCreateInfo shaderStages[] = { vertShader.CreateInfo(), fragShader.CreateInfo() };
         
         // Descriptor Set Layouts
-        for (const auto& [set, bindings] : shader.DescriptorSetLayoutBindings)
+        for (const auto& bindings : shader.DescriptorSetLayoutBindings | std::views::values)
             m_SetLayouts.push_back(CreateRef<DescriptorSetLayout>(bindings));
         
         std::vector<VkDescriptorSetLayout> vkLayouts;
@@ -43,8 +45,8 @@ namespace Mixture::Vulkan
         VkViewport viewport{};
         viewport.x = 0.0f;
         viewport.y = 0.0f;
-        viewport.width = (float)swapchain.GetExtent().width;
-        viewport.height = (float)swapchain.GetExtent().height;
+        viewport.width = static_cast<float>(swapchain.GetExtent().width);
+        viewport.height = static_cast<float>(swapchain.GetExtent().height);
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
 
@@ -155,7 +157,7 @@ namespace Mixture::Vulkan
 
         VK_ASSERT(vkCreateGraphicsPipelines(Context::Get().Device().GetHandle(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_GraphicsPipeline), "Failed to create Graphics Pipeline");
         
-        if (m_SetLayouts.size() > 0)
+        if (!m_SetLayouts.empty())
         {
             // Define the global set to be set=0
             m_GlobalSet = CreateScope<DescriptorSet>(Context::Get().DescriptorPool().AllocateGlobalSet(m_SetLayouts[0]));
@@ -177,7 +179,7 @@ namespace Mixture::Vulkan
         }
     }
 
-    void GraphicsPipeline::Bind(VkCommandBuffer commandBuffer)
+    void GraphicsPipeline::Bind(VkCommandBuffer commandBuffer) const
     {
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline);
         
@@ -186,7 +188,7 @@ namespace Mixture::Vulkan
                                 static_cast<uint32_t>(sets.size()), sets.data(), 0, nullptr);
     }
 
-    void GraphicsPipeline::PushConstants(VkCommandBuffer commandBuffer, const void* pValues)
+    void GraphicsPipeline::PushConstants(VkCommandBuffer commandBuffer, const void* pValues) const
     {
         if (m_PushConstant.size > 0)
         {
@@ -199,7 +201,7 @@ namespace Mixture::Vulkan
         } 
     }
 
-    void GraphicsPipeline::UpdateGlobalUniformBuffer(uint32_t binding, const VkDescriptorBufferInfo* bufferInfo)
+    void GraphicsPipeline::UpdateGlobalUniformBuffer(const VkDescriptorBufferInfo* bufferInfo) const
     {
         if (!m_GlobalSet->GetHandle())
         {
@@ -207,8 +209,8 @@ namespace Mixture::Vulkan
             return;
         }
         
-        
-        m_GlobalSet->UpdateBuffer(binding, bufferInfo);
+        // Binding 0 is inferred here
+        m_GlobalSet->UpdateBuffer(0, bufferInfo);
     }
 
 }

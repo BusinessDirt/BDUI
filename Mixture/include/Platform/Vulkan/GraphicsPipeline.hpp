@@ -18,9 +18,9 @@ namespace Mixture::Vulkan
         GraphicsPipeline(const std::string& shaderName);
         ~GraphicsPipeline();
 
-        void Bind(VkCommandBuffer commandBuffer);
-        void PushConstants(VkCommandBuffer commandBuffer, const void* pValues);
-        void UpdateGlobalUniformBuffer(uint32_t binding, const VkDescriptorBufferInfo* bufferInfo);
+        void Bind(VkCommandBuffer commandBuffer) const;
+        void PushConstants(VkCommandBuffer commandBuffer, const void* pValues) const;
+        void UpdateGlobalUniformBuffer(const VkDescriptorBufferInfo* bufferInfo) const;
 
     private:
         VULKAN_HANDLE(VkPipeline, m_GraphicsPipeline);

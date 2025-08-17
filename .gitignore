@@ -11,6 +11,9 @@ Intermediates/
 **.vcxproj.user
 **.csproj
 
+# JetBrains
+.idea
+
 # cmake
 CMakeLists.txt.user
 CMakeCache.txt
