@@ -35,7 +35,7 @@ namespace Mixture
 
         void OnUpdate() const;
         void GetFramebufferSize(int* width, int* height) const;
-        void CreateVulkanSurface(VkInstance instance, VkAllocationCallbacks* allocator, VkSurfaceKHR* surface) const;
+        void CreateVulkanSurface(VkInstance instance, const VkAllocationCallbacks* allocator, VkSurfaceKHR* surface) const;
         
         // Event callback setter
         void SetEventCallback(const EventCallbackFn& callback) { m_Data.EventCallback = callback; }

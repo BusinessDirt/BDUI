@@ -5,7 +5,7 @@
 
 namespace Mixture::Vulkan
 {
-	ShaderModule::ShaderModule(const Mixture::SPVShader& shader, Mixture::ShaderStage stage)
+	ShaderModule::ShaderModule(const SPVShader& shader, const ShaderStage stage)
 		: m_Stage(stage)
 	{
 		if (!shader.Data.contains(stage))
@@ -19,9 +19,10 @@ namespace Mixture::Vulkan
 		VkShaderModuleCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 		createInfo.codeSize = code.size() * 4;
-		createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
+		createInfo.pCode = code.data();
 
-		VK_ASSERT(vkCreateShaderModule(Context::Get().Device().GetHandle(), &createInfo, nullptr, &m_ShaderModule), "Failed to create VkShaderModule!");
+		VK_ASSERT(vkCreateShaderModule(Context::Get().Device().GetHandle(), &createInfo, nullptr, &m_ShaderModule),
+				  "Failed to create VkShaderModule!");
 	}
 
 	ShaderModule::~ShaderModule()
@@ -37,7 +38,7 @@ namespace Mixture::Vulkan
 	{
 		VkPipelineShaderStageCreateInfo createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-		createInfo.stage = (VkShaderStageFlagBits)m_Stage;
+		createInfo.stage = static_cast<VkShaderStageFlagBits>(m_Stage);
 		createInfo.module = m_ShaderModule;
 		createInfo.pName = "main";
 		return createInfo;

@@ -11,9 +11,9 @@ namespace Mixture
         LayerStack() = default;
         ~LayerStack();
 
-        void Update(FrameInfo& info) const;
-        void Render(FrameInfo& info) const;
-        void RenderImGui(FrameInfo& info) const;
+        void Update(FrameInfo& frameInfo) const;
+        void Render(FrameInfo& frameInfo) const;
+        void RenderImGui(FrameInfo& frameInfo) const;
         
         void OnEvent(Event& e) const;
 

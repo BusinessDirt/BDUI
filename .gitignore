@@ -12,7 +12,7 @@ Intermediates/
 **.csproj
 
 # JetBrains
-.idea
+.idea/
 
 # cmake
 CMakeLists.txt.user

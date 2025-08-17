@@ -7,10 +7,12 @@ namespace Mixture::Vulkan
     class DescriptorSetLayout
     {
     public:
-        DescriptorSetLayout(const std::vector<VkDescriptorSetLayoutBinding>& bindings);
+        OPAL_NON_COPIABLE(DescriptorSetLayout);
+        
+        explicit DescriptorSetLayout(const std::vector<VkDescriptorSetLayoutBinding>& bindings);
         ~DescriptorSetLayout();
 
-        const std::vector<VkDescriptorSetLayoutBinding>& GetBindings() const { return m_Bindings; }
+        OPAL_NODISCARD const std::vector<VkDescriptorSetLayoutBinding>& GetBindings() const { return m_Bindings; }
 
     private:
         VULKAN_HANDLE(VkDescriptorSetLayout, m_Layout);

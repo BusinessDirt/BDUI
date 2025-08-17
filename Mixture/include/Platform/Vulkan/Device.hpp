@@ -16,12 +16,12 @@ namespace Mixture::Vulkan
         
         OPAL_NON_COPIABLE(Device);
 
-        VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) const;
-        uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
+        static VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+        static uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
         void CreateImageWithInfo(const VkImageCreateInfo& imageInfo, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory) const;
         
-        VkQueue GetGraphicsQueue() const { return m_GraphicsQueue; }
-        VkQueue GetPresentQueue() const { return m_PresentQueue; }
+        OPAL_NODISCARD VkQueue GetGraphicsQueue() const { return m_GraphicsQueue; }
+        OPAL_NODISCARD VkQueue GetPresentQueue() const { return m_PresentQueue; }
         
     private:
         VULKAN_HANDLE(VkDevice, m_Device);

@@ -8,9 +8,7 @@ namespace Mixture::Vulkan
         SetData(indices, VK_NULL_HANDLE);
     }
 
-    IndexBuffer::IndexBuffer()
-        : m_IndexCount(0), m_IndexBuffer(VK_NULL_HANDLE)
-    {}
+    IndexBuffer::IndexBuffer() : m_IndexBuffer(VK_NULL_HANDLE) {}
 
     IndexBuffer::~IndexBuffer()
     {
@@ -23,9 +21,9 @@ namespace Mixture::Vulkan
         if (m_IndexCount == 0) return;
 
         uint32_t indexSize = sizeof(indices[0]);
-        VkDeviceSize bufferSize = indexSize * m_IndexCount;
+        const VkDeviceSize bufferSize = m_IndexCount * indexSize;
 
-        Buffer stagingBuffer = Buffer(indexSize, m_IndexCount, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        auto stagingBuffer = Buffer(indexSize, m_IndexCount, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
         stagingBuffer.Map();
@@ -37,7 +35,7 @@ namespace Mixture::Vulkan
         Buffer::Copy(stagingBuffer.GetHandle(), m_IndexBuffer->GetHandle(), bufferSize, commandBuffer);
     }
 
-    void IndexBuffer::Bind(VkCommandBuffer commandBuffer)
+    void IndexBuffer::Bind(const VkCommandBuffer commandBuffer) const
     {
         vkCmdBindIndexBuffer(commandBuffer, m_IndexBuffer->GetHandle(), 0, VK_INDEX_TYPE_UINT32);
     }

@@ -15,54 +15,56 @@ namespace Mixture::Vulkan
 {
     namespace Util
     {
-        static std::vector<const char*> GetRequiredLayers()
-        {
-            std::vector<const char*> requiredLayers;
+        namespace {
+            std::vector<const char*> GetRequiredLayers()
+            {
+                std::vector<const char*> requiredLayers;
 
-            // Common layers for validation
-        #ifndef OPAL_DIST
-            requiredLayers.push_back("VK_LAYER_KHRONOS_validation");
-        #endif
+                // Common layers for validation
+#ifndef OPAL_DIST
+                requiredLayers.push_back("VK_LAYER_KHRONOS_validation");
+#endif
 
-            return requiredLayers;
-        }
+                return requiredLayers;
+            }
 
-        static std::vector<const char*> GetRequiredInstanceExtensions()
-        {
-            std::vector<const char*> requiredExtensions;
+            std::vector<const char*> GetRequiredInstanceExtensions()
+            {
+                std::vector<const char*> requiredExtensions;
 
-            // Common extensions
-            requiredExtensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
+                // Common extensions
+                requiredExtensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
             
-        #if defined(OPAL_PLATFORM_WINDOWS)
-            requiredExtensions.push_back(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
-        #elif defined(OPAL_PLATFORM_DARWIN)
-            requiredExtensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
-            requiredExtensions.push_back(VK_EXT_METAL_SURFACE_EXTENSION_NAME);
-        #elif defined(OPAL_PLATFORM_LINUX)
-            requiredExtensions.push_back(VK_KHR_XLIB_SURFACE_EXTENSION_NAME);
-        #endif
+#if defined(OPAL_PLATFORM_WINDOWS)
+                requiredExtensions.push_back(VK_KHR_WIN32_SURFACE_EXTENSION_NAME);
+#elif defined(OPAL_PLATFORM_DARWIN)
+                requiredExtensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+                requiredExtensions.push_back(VK_EXT_METAL_SURFACE_EXTENSION_NAME);
+#elif defined(OPAL_PLATFORM_LINUX)
+                requiredExtensions.push_back(VK_KHR_XLIB_SURFACE_EXTENSION_NAME);
+#endif
 
-        #ifndef OPAL_DIST
-            requiredExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-        #endif
+#ifndef OPAL_DIST
+                requiredExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+#endif
 
-            return requiredExtensions;
-        }
-    
-        static std::vector<const char*> GetRequiredDeviceExtensions()
-        {
-            std::vector<const char*> requiredExtensions;
+                return requiredExtensions;
+            }
+
+            std::vector<const char*> GetRequiredDeviceExtensions()
+            {
+                std::vector<const char*> requiredExtensions;
             
-            // Swapchain
-            requiredExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+                // Swapchain
+                requiredExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
             
-        #ifdef OPAL_PLATFORM_DARWIN
-            // Required for MoltenVK
-            requiredExtensions.push_back("VK_KHR_portability_subset");
-        #endif
+#ifdef OPAL_PLATFORM_DARWIN
+                // Required for MoltenVK
+                requiredExtensions.push_back("VK_KHR_portability_subset");
+#endif
 
-            return requiredExtensions;
+                return requiredExtensions;
+            }
         }
     }
 
@@ -71,7 +73,7 @@ namespace Mixture::Vulkan
 
     Context& Context::Get()
     {
-        std::lock_guard<std::mutex> lock(s_Mutex);
+        std::lock_guard lock(s_Mutex);
         if (s_Instance == nullptr) s_Instance = CreateScope<Context>();
         return *s_Instance;
     }
@@ -114,39 +116,39 @@ namespace Mixture::Vulkan
         m_FramebufferResized = false;
     }
 
-    void Context::WaitForDevice()
+    void Context::WaitForDevice() const
     {
         vkDeviceWaitIdle(m_Device->GetHandle());
     }
 
     VkCommandBuffer Context::BeginFrame()
     {
-        OPAL_CORE_ASSERT(!m_IsFrameStarted, "Can't call BeginFrame() while already in progess!");
+        OPAL_CORE_ASSERT(!m_IsFrameStarted, "Can't call BeginFrame() while already in progess!")
 
-        VkResult result = m_Swapchain->AcquireNextImage();
+        const VkResult result = m_Swapchain->AcquireNextImage();
         if (result == VK_ERROR_OUT_OF_DATE_KHR)
         {
             RebuildSwapchain();
             return VK_NULL_HANDLE;
         }
 
-        OPAL_CORE_ASSERT(result == VK_SUCCESS || result == VK_SUBOPTIMAL_KHR, "Failed to acquire Swapchain image!");
+        OPAL_CORE_ASSERT(result == VK_SUCCESS || result == VK_SUBOPTIMAL_KHR, "Failed to acquire Swapchain image!")
 
         m_IsFrameStarted = true;
 
-        VkCommandBuffer commandBuffer = GetCurrentCommandBuffer();
+        const VkCommandBuffer commandBuffer = GetCurrentCommandBuffer();
         VkCommandBufferBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
         beginInfo.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
-        VK_ASSERT(vkBeginCommandBuffer(commandBuffer, &beginInfo), "Failed to begin recording command buffer!");
+        VK_ASSERT(vkBeginCommandBuffer(commandBuffer, &beginInfo), "Failed to begin recording command buffer!")
 
         return commandBuffer;
     }
 
-    void Context::BeginRenderpass(VkCommandBuffer commandBuffer)
+    void Context::BeginRenderpass(const VkCommandBuffer commandBuffer) const
     {
-        OPAL_CORE_ASSERT(m_IsFrameStarted, "Can't call BeginRenderPass() if frame is not in progress!");
+        OPAL_CORE_ASSERT(m_IsFrameStarted, "Can't call BeginRenderPass() if frame is not in progress!")
 
         VkRenderPassBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -154,17 +156,17 @@ namespace Mixture::Vulkan
         beginInfo.framebuffer = m_Swapchain->GetFramebuffer(m_CurrentImageIndex).GetHandle();
 
         std::array<VkClearValue, 2> clearValues{};
-        clearValues[0].color = { 0.0f, 0.0f, 0.0f, 1.0f };
-        clearValues[1].depthStencil = { 1.0f, 0 };
+        clearValues[0].color = {{0.0f, 0.0f, 0.0f, 1.0f}};
+        clearValues[1].depthStencil = {.depth = 1.0f, .stencil = 0 };
 
-        beginInfo.renderArea.offset = { 0, 0 };
+        beginInfo.renderArea.offset = {.x = 0, .y = 0 };
         beginInfo.renderArea.extent = m_Swapchain->GetExtent();
         beginInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
         beginInfo.pClearValues = clearValues.data();
 
         vkCmdBeginRenderPass(commandBuffer, &beginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
-        VkViewport viewport{};
+        VkViewport viewport;
         viewport.x = 0.0f;
         viewport.y = 0.0f;
         viewport.width = static_cast<float>(m_Swapchain->GetExtent().width);
@@ -172,37 +174,37 @@ namespace Mixture::Vulkan
         viewport.minDepth = 0.0f;
         viewport.maxDepth = 1.0f;
 
-        VkRect2D scissor{ { 0, 0 }, m_Swapchain->GetExtent() };
+        const VkRect2D scissor{ { 0, 0 }, m_Swapchain->GetExtent() };
 
         vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
         vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
     }
 
-    void Context::EndRenderpass(VkCommandBuffer commandBuffer)
+    void Context::EndRenderpass(const VkCommandBuffer commandBuffer)
     {
-        OPAL_CORE_ASSERT(m_IsFrameStarted, "Can't call EndRenderPass() if frame is not in progress!");
-        OPAL_CORE_ASSERT(commandBuffer == GetCurrentCommandBuffer(), "Can't end render pass on command buffer from a different frame!");
+        OPAL_CORE_ASSERT(m_IsFrameStarted, "Can't call EndRenderPass() if frame is not in progress!")
+        OPAL_CORE_ASSERT(commandBuffer == GetCurrentCommandBuffer(), "Can't end render pass on command buffer from a different frame!")
 
         vkCmdEndRenderPass(commandBuffer);
     }
 
-    void Context::EndFrame(VkCommandBuffer commandBuffer)
+    void Context::EndFrame(const VkCommandBuffer commandBuffer) const
     {
-        OPAL_CORE_ASSERT(m_IsFrameStarted, "Can't call EndFrame() while frame is not in progress!");
-        VK_ASSERT(vkEndCommandBuffer(commandBuffer), "Failed to record command buffer!");
+        OPAL_CORE_ASSERT(m_IsFrameStarted, "Can't call EndFrame() while frame is not in progress!")
+        VK_ASSERT(vkEndCommandBuffer(commandBuffer), "Failed to record command buffer!")
     }
 
     void Context::SubmitFrame(const std::vector<VkCommandBuffer>& commandBuffers)
     {
-        VkResult result = m_Swapchain->SubmitCommandBuffers(commandBuffers);
-        if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || m_FramebufferResized)
+        if (VkResult result = m_Swapchain->SubmitCommandBuffers(commandBuffers);
+            result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || m_FramebufferResized)
         {
             RebuildSwapchain();
             m_FramebufferResized = false;
         }
         else
         {
-            OPAL_CORE_ASSERT(result == VK_SUCCESS, "Failed to present Swapchain image!");
+            OPAL_CORE_ASSERT(result == VK_SUCCESS, "Failed to present Swapchain image!")
         }
 
         m_IsFrameStarted = false;
@@ -215,6 +217,6 @@ namespace Mixture::Vulkan
         std::shared_ptr<class Swapchain> oldSwapchain = std::move(m_Swapchain);
         Context::Get().m_Swapchain = CreateScope<class Swapchain>(oldSwapchain);
 
-        OPAL_CORE_ASSERT(oldSwapchain->CompareSwapFormats(*Context::Get().m_Swapchain.get()), "Swap chain image (or depth) format has changed!");
+        OPAL_CORE_ASSERT(oldSwapchain->CompareSwapFormats(*Context::Get().m_Swapchain.get()), "Swap chain image (or depth) format has changed!")
     }
 }

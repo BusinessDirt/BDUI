@@ -11,7 +11,7 @@ namespace Mixture::Vulkan
 	{
 		VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, const VkImageTiling tiling, const VkFormatFeatureFlags features)
 		{
-			for (auto format : candidates)
+			for (const auto format : candidates)
 			{
 				VkFormatProperties props;
 				vkGetPhysicalDeviceFormatProperties(Context::Get().PhysicalDevice().GetHandle(), format, &props);

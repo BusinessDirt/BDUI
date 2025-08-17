@@ -9,7 +9,7 @@ namespace Mixture::Vulkan
 {
     WindowSurface::WindowSurface()
     {
-        const Mixture::Window& window = Mixture::Application::Get().GetWindow();
+        const Window& window = Application::Get().GetWindow();
         window.CreateVulkanSurface(Context::Get().Instance().GetHandle(), nullptr, &m_Surface);
     }
 

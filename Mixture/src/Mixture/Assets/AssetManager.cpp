@@ -5,22 +5,25 @@ namespace Mixture
 {
 	namespace Util
 	{
-		static std::filesystem::path GetProjectRootPath()
+		namespace 
 		{
-			std::filesystem::path currentPath = std::filesystem::current_path();
-			while (!currentPath.empty())
+			std::filesystem::path GetProjectRootPath()
 			{
-				if (std::filesystem::exists(currentPath / ".git")) return currentPath;
-				currentPath = currentPath.parent_path();
-			}
+				std::filesystem::path currentPath = std::filesystem::current_path();
+				while (!currentPath.empty())
+				{
+					if (std::filesystem::exists(currentPath / ".git")) return currentPath;
+					currentPath = currentPath.parent_path();
+				}
 
-			return {};
+				return {};
+			}
 		}
 	}
 
 	AssetManager::AssetManager()
 	{
-		std::filesystem::path relativePath = Util::GetProjectRootPath() / "App" / "assets";
+		const std::filesystem::path relativePath = Util::GetProjectRootPath() / "App" / "assets";
 		m_AssetsPath = std::filesystem::absolute(relativePath);
 	}
 

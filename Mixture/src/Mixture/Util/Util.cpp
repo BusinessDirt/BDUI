@@ -11,14 +11,12 @@ namespace Mixture::Util
     std::string ReadFile(const std::filesystem::path& filepath)
     {
         std::string result;
-        std::ifstream in(filepath, std::ios::in | std::ios::binary); // ifstream closes itself due to RAII
 
-        if (in)
+        if (std::ifstream in(filepath, std::ios::in | std::ios::binary); in)
         {
             in.seekg(0, std::ios::end);
-            size_t size = in.tellg();
 
-            if (size != -1)
+            if (const size_t size = in.tellg(); size != -1)
             {
                 result.resize(size);
                 in.seekg(0, std::ios::beg);

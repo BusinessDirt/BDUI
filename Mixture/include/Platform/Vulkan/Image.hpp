@@ -19,24 +19,24 @@ namespace Mixture::Vulkan
         Image(Image&& other) noexcept;
         ~Image();
 
-        VkExtent2D GetExtent() const { return m_Extent; }
-        VkFormat GetFormat() const { return m_Format; }
-        uint32_t GetMipLevels() const { return m_MipLevels; }
+        OPAL_NODISCARD VkExtent2D GetExtent() const { return m_Extent; }
+        OPAL_NODISCARD VkFormat GetFormat() const { return m_Format; }
+        OPAL_NODISCARD uint32_t GetMipLevels() const { return m_MipLevels; }
 
-        DeviceMemory AllocateMemory(VkMemoryPropertyFlags properties) const;
-        VkMemoryRequirements GetMemoryRequirements() const;
+        OPAL_NODISCARD DeviceMemory AllocateMemory(VkMemoryPropertyFlags properties) const;
+        OPAL_NODISCARD VkMemoryRequirements GetMemoryRequirements() const;
 
-        static void TransitionImageLayout(VkCommandBuffer cmd, VkImage image, VkImageLayout oldLayout,
+        static void TransitionImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout oldLayout,
                                           VkImageLayout newLayout, VkFormat imageFormat = VK_FORMAT_UNDEFINED, uint32_t mipLevels = 1);
         
         void TransitionImageLayout(VkImageLayout newLayout, VkCommandBuffer commandBuffer = VK_NULL_HANDLE);
-        void GenerateMipMaps(VkFormat imageFormat);
-        void CopyFrom(const Buffer& buffer);
+        void GenerateMipMaps(VkFormat imageFormat) const;
+        void CopyFrom(const Buffer& buffer) const;
 
     private:
         uint32_t m_MipLevels;
-        const VkExtent2D m_Extent;
-        const VkFormat m_Format;
+        VkExtent2D m_Extent;
+        VkFormat m_Format;
         VkImageLayout m_ImageLayout;
 
         VULKAN_HANDLE(VkImage, m_Image);
@@ -52,8 +52,5 @@ namespace Mixture::Vulkan
 
     private:
         VULKAN_HANDLE(VkImageView, m_ImageView);
-
-        const VkImage m_Image;
-        const VkFormat m_Format;
     };
 }

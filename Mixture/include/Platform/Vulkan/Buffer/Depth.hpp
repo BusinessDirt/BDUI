@@ -13,11 +13,11 @@ namespace Mixture::Vulkan
     public:
         OPAL_NON_COPIABLE(DepthBuffer);
 
-        DepthBuffer(VkExtent2D extent);
+        explicit DepthBuffer(VkExtent2D extent);
         ~DepthBuffer();
 
-        VkFormat GetFormat() const { return m_Format; }
-        const ImageView& GetImageView() const { return *m_ImageView; }
+        OPAL_NODISCARD VkFormat GetFormat() const { return m_Format; }
+        OPAL_NODISCARD const ImageView& GetImageView() const { return *m_ImageView; }
 
         static bool HasStencilComponent(const VkFormat format)
         {

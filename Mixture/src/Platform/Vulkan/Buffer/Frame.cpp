@@ -6,8 +6,8 @@
 
 namespace Mixture::Vulkan
 {
-	FrameBuffer::FrameBuffer(VkImageView depthAttachment, VkImage swapchainImage, VkExtent2D extent, VkFormat format, VkRenderPass renderPass)
-		: m_Image(swapchainImage), m_Format(format)
+	FrameBuffer::FrameBuffer(const VkImageView depthAttachment, const VkImage swapchainImage, const VkExtent2D extent, const VkFormat format, const VkRenderPass renderPass)
+		: m_Format(format), m_Image(swapchainImage)
 	{
 		m_ImageView = CreateScope<ImageView>(m_Image, m_Format, VK_IMAGE_ASPECT_COLOR_BIT);
 
@@ -23,7 +23,7 @@ namespace Mixture::Vulkan
 		createInfo.height = extent.height;
 		createInfo.layers = 1;
 
-		VK_ASSERT(vkCreateFramebuffer(Context::Get().Device().GetHandle(), &createInfo, nullptr, &m_FrameBuffer), "Failed to create VkFramebuffer");
+		VK_ASSERT(vkCreateFramebuffer(Context::Get().Device().GetHandle(), &createInfo, nullptr, &m_FrameBuffer), "Failed to create VkFramebuffer")
 	}
 
 	FrameBuffer::~FrameBuffer()

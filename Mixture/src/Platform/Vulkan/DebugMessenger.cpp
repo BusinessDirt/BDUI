@@ -8,35 +8,51 @@
 namespace Mixture::Vulkan
 {
 
-    // local callback functions
-    static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-        VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
+    namespace
     {
-        
-        switch(messageSeverity)
+        VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(const VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+        VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData)
         {
-            case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
+        
+            switch(messageSeverity)
             {
-                OPAL_CORE_ERROR(pCallbackData->pMessage);
-                break;
+                case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
+                {
+                    OPAL_CORE_ERROR(pCallbackData->pMessage);
+                    break;
+                }
+                case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
+                {
+                    OPAL_CORE_WARN(pCallbackData->pMessage);
+                    break;
+                }
+                case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT:
+                {
+                    OPAL_CORE_TRACE(pCallbackData->pMessage);
+                    break;
+                }
+                case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
+                {
+                    OPAL_CORE_INFO(pCallbackData->pMessage);
+                    break;
+                }
+                case VK_DEBUG_UTILS_MESSAGE_SEVERITY_FLAG_BITS_MAX_ENUM_EXT:
+                {
+                    break;
+                }
             }
-            case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
-            {
-                OPAL_CORE_WARN(pCallbackData->pMessage);
-                break;
-            }
-            default: break;
+
+            return VK_FALSE;
         }
-
-        return VK_FALSE;
     }
-
+    
     DebugMessenger::DebugMessenger()
     {
         VkDebugUtilsMessengerCreateInfoEXT createInfo;
         DebugMessenger::PopulateCreateInfo(createInfo);
 
-        auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(Context::Get().Instance().GetHandle(), "vkCreateDebugUtilsMessengerEXT");
+        const auto func = reinterpret_cast<PFN_vkCreateDebugUtilsMessengerEXT>(  // NOLINT(clang-diagnostic-cast-function-type-strict)
+            vkGetInstanceProcAddr(Context::Get().Instance().GetHandle(), "vkCreateDebugUtilsMessengerEXT"));
         if (func)
         {
             func(Context::Get().Instance().GetHandle(), &createInfo, nullptr, &m_DebugMessenger);
@@ -49,8 +65,11 @@ namespace Mixture::Vulkan
 
     DebugMessenger::~DebugMessenger()
     {
-        auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(Context::Get().Instance().GetHandle(), "vkDestroyDebugUtilsMessengerEXT");
-        if (func) func(Context::Get().Instance().GetHandle(), m_DebugMessenger, nullptr);
+        if (const auto func = reinterpret_cast<PFN_vkDestroyDebugUtilsMessengerEXT>(vkGetInstanceProcAddr(  // NOLINT(clang-diagnostic-cast-function-type-strict)
+            Context::Get().Instance().GetHandle(), "vkDestroyDebugUtilsMessengerEXT")))
+        {
+            func(Context::Get().Instance().GetHandle(), m_DebugMessenger, nullptr);
+        }
     }
 
     void DebugMessenger::PopulateCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)

@@ -11,16 +11,19 @@ namespace Mixture::Vulkan
 {
     namespace Util
     {
-        static std::vector<VkExtensionProperties> GetAvailableExtensions(const VkPhysicalDevice physicalDevice)
+        namespace
         {
-            uint32_t extensionCount;
-            vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
+            std::vector<VkExtensionProperties> GetAvailableExtensions(const VkPhysicalDevice physicalDevice)
+            {
+                uint32_t extensionCount;
+                vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
 
-            std::vector<VkExtensionProperties> availableExtensions(extensionCount);
-            vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
+                std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+                vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
             
-            return availableExtensions;
-        }  
+                return availableExtensions;
+            } 
+        }
     }
 
     PhysicalDevice::PhysicalDevice(const std::vector<const char*>& requiredExtensions)
@@ -28,7 +31,7 @@ namespace Mixture::Vulkan
         uint32_t deviceCount = 0;
         vkEnumeratePhysicalDevices(Context::Get().Instance().GetHandle(), &deviceCount, nullptr);
         
-        OPAL_CORE_ASSERT(deviceCount > 0, "Failed to find GPU with Vulkan support!");
+        OPAL_CORE_ASSERT(deviceCount > 0, "Failed to find GPU with Vulkan support!")
         
         std::vector<VkPhysicalDevice> devices(deviceCount);
         vkEnumeratePhysicalDevices(Context::Get().Instance().GetHandle(), &deviceCount, devices.data());
@@ -51,7 +54,7 @@ namespace Mixture::Vulkan
             Util::PrintDebugAvailability(Util::GetAvailableExtensions(m_PhysicalDevice), requiredExtensions, [](const VkExtensionProperties& extension) { return extension.extensionName; }, "Device Extensions");
         }
         
-        OPAL_CORE_ASSERT(m_PhysicalDevice != VK_NULL_HANDLE, "Failed to find suitable GPU!");
+        OPAL_CORE_ASSERT(m_PhysicalDevice != VK_NULL_HANDLE, "Failed to find suitable GPU!")
         
         // Debug Information
         vkGetPhysicalDeviceProperties(m_PhysicalDevice, &m_Properties);

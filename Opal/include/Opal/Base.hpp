@@ -22,6 +22,8 @@
     #define OPAL_DEBUGBREAK()
 #endif
 
+#define OPAL_NODISCARD [[nodiscard]] 
+
 #define OPAL_EXPAND_MACRO(x) x
 #define OPAL_STRINGIFY_MACRO(x) #x
 
@@ -33,5 +35,5 @@
     name(name&&) = delete; \
     name& operator=(name&&) = delete
 
-#include "Opal/Log.hpp"
 #include "Opal/Assert.hpp"
+#include "Opal/Log.hpp"

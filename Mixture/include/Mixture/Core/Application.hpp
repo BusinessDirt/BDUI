@@ -36,7 +36,7 @@ namespace Mixture
 
         void Close();
         
-        void OnEvent(Event& e);
+        void OnEvent(Event& event);
 
         static Application& Get() { return *s_Instance; }
         const Window& GetWindow() const { return *m_Window; }
@@ -46,9 +46,9 @@ namespace Mixture
         void PopLayer(Layer* layer) { m_LayerStack->PopLayer(layer); }
 
     private:
-        void Run();
+        void Run() const;
         bool OnWindowClose(WindowCloseEvent& e);
-        bool OnFramebufferResize(FramebufferResizeEvent& e);
+        bool OnFramebufferResize(const FramebufferResizeEvent& e);
 
     private:
         Scope<Window> m_Window;

@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Platform/Vulkan/Base.hpp"
-#include "Platform/Vulkan/Renderpass.hpp"
-#include "Platform/Vulkan/Swapchain.hpp"
 #include "Platform/Vulkan/Descriptor/Layout.hpp"
 #include "Platform/Vulkan/Descriptor/Set.hpp"
 
@@ -15,7 +13,7 @@ namespace Mixture::Vulkan
     public:
         OPAL_NON_COPIABLE(GraphicsPipeline);
 
-        GraphicsPipeline(const std::string& shaderName);
+        explicit GraphicsPipeline(const std::string& shaderName);
         ~GraphicsPipeline();
 
         void Bind(VkCommandBuffer commandBuffer) const;

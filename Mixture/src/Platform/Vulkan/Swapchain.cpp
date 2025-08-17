@@ -17,18 +17,18 @@ namespace Mixture::Vulkan
         Init(true);
     }
 
-    Swapchain::Swapchain(std::shared_ptr<Swapchain> previous)
+    Swapchain::Swapchain(const std::shared_ptr<Swapchain>& previous)
         : m_OldSwapchain(previous)
     {
         Init(false);
         m_OldSwapchain = nullptr;
     }
 
-    void Swapchain::Init(bool debug)
+    void Swapchain::Init(const bool debug)
     {
-        SwapchainSupportDetails details = Context::Get().PhysicalDevice().QuerySwapchainSupport();
-        VkSurfaceFormatKHR surfaceFormat = ChooseSurfaceFormat(details.Formats);
-        VkPresentModeKHR presentMode = ChoosePresentMode(details.PresentModes);
+        const SwapchainSupportDetails details = Context::Get().PhysicalDevice().QuerySwapchainSupport();
+        auto [format, colorSpace] = ChooseSurfaceFormat(details.Formats);
+        const VkPresentModeKHR presentMode = ChoosePresentMode(details.PresentModes);
         VkExtent2D extent = ChooseExtent(details.Capabilities);
 
         uint32_t imageCount = details.Capabilities.minImageCount + 1;
@@ -41,8 +41,8 @@ namespace Mixture::Vulkan
             createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
             createInfo.surface = Context::Get().WindowSurface().GetHandle();
             createInfo.minImageCount = imageCount;
-            createInfo.imageFormat = surfaceFormat.format;
-            createInfo.imageColorSpace = surfaceFormat.colorSpace;
+            createInfo.imageFormat = format;
+            createInfo.imageColorSpace = colorSpace;
             createInfo.imageExtent = extent;
             createInfo.imageArrayLayers = 1;
             createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
@@ -51,8 +51,8 @@ namespace Mixture::Vulkan
             createInfo.imageUsage |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
 #endif
 
-            QueueFamilyIndices indices = Context::Get().PhysicalDevice().GetQueueFamilyIndices();
-            uint32_t queueFamilyIndices[] = { indices.Graphics.value(), indices.Present.value() };
+            const QueueFamilyIndices indices = Context::Get().PhysicalDevice().GetQueueFamilyIndices();
+            const uint32_t queueFamilyIndices[] = { indices.Graphics.value(), indices.Present.value() };
 
             if (indices.Graphics != indices.Present)
             {
@@ -74,12 +74,13 @@ namespace Mixture::Vulkan
 
             createInfo.oldSwapchain = m_OldSwapchain ? m_OldSwapchain->m_Swapchain : VK_NULL_HANDLE;
 
-            VK_ASSERT(vkCreateSwapchainKHR(Context::Get().Device().GetHandle(), &createInfo, nullptr, &m_Swapchain), "Failed to create Swapchain!");
+            VK_ASSERT(vkCreateSwapchainKHR(Context::Get().Device().GetHandle(), &createInfo, nullptr, &m_Swapchain),
+                      "Failed to create Swapchain!")
 
             if (debug)
             {
                 VULKAN_INFO_BEGIN("Swapchain Details");
-                VULKAN_INFO_LIST("Surface Format: {}, {}", 0, ToString::Format(surfaceFormat.format), ToString::ColorSpace(surfaceFormat.colorSpace));
+                VULKAN_INFO_LIST("Surface Format: {}, {}", 0, ToString::Format(format), ToString::ColorSpace(colorSpace));
                 VULKAN_INFO_LIST("Present Mode: {}", 0, ToString::PresentMode(presentMode));
                 VULKAN_INFO_LIST("Extent: {} x {}", 0, extent.width, extent.height);
                 VULKAN_INFO_END();
@@ -95,7 +96,7 @@ namespace Mixture::Vulkan
         vkGetSwapchainImagesKHR(Context::Get().Device().GetHandle(), m_Swapchain, &imageCount, images.data());
 
         m_Extent = extent;
-        m_Renderpass = CreateScope<Renderpass>(surfaceFormat.format, true,
+        m_Renderpass = CreateScope<Renderpass>(format, true,
             VK_ATTACHMENT_LOAD_OP_CLEAR, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
 
         // Depth and Frame buffers
@@ -105,7 +106,7 @@ namespace Mixture::Vulkan
         {
             m_DepthBuffers[i] = CreateScope<DepthBuffer>(extent);
             m_FrameBuffers[i] = CreateScope<FrameBuffer>(m_DepthBuffers[i]->GetImageView().GetHandle(), images[i],
-                extent, surfaceFormat.format, m_Renderpass->GetHandle());
+                extent, format, m_Renderpass->GetHandle());
         }
 
         // sync objects
@@ -139,7 +140,7 @@ namespace Mixture::Vulkan
         }
     }
 
-    VkResult Swapchain::AcquireNextImage()
+    VkResult Swapchain::AcquireNextImage() const
     {
         m_InFlightFences[m_CurrentFrame].Wait(std::numeric_limits<uint64_t>::max());
         
@@ -149,16 +150,16 @@ namespace Mixture::Vulkan
 
     VkResult Swapchain::SubmitCommandBuffers(const std::vector<VkCommandBuffer>& commandBuffers)
     {
-        uint32_t currentImageIndex = Context::Get().m_CurrentImageIndex;
+        const uint32_t currentImageIndex = Context::Get().m_CurrentImageIndex;
         if (m_ImagesInFlight[currentImageIndex] != nullptr)
         {
             m_ImagesInFlight[currentImageIndex]->Wait(std::numeric_limits<uint64_t>::max());
         }
         m_ImagesInFlight[currentImageIndex] = &m_InFlightFences[m_CurrentFrame];
 
-        VkSemaphore waitSemaphores[] = { m_ImageAvailableSemaphores[m_CurrentFrame].GetHandle() };
-        VkSemaphore signalSemaphores[] = { m_RenderFinishedSemaphores[m_CurrentFrame].GetHandle() };
-        VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
+        const VkSemaphore waitSemaphores[] = { m_ImageAvailableSemaphores[m_CurrentFrame].GetHandle() };
+        const VkSemaphore signalSemaphores[] = { m_RenderFinishedSemaphores[m_CurrentFrame].GetHandle() };
+        constexpr VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 
         VkSubmitInfo submitInfo{};
         submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -172,9 +173,9 @@ namespace Mixture::Vulkan
 
         m_InFlightFences[m_CurrentFrame].Reset();
         VK_ASSERT(vkQueueSubmit(Context::Get().Device().GetGraphicsQueue(), 1, &submitInfo, m_InFlightFences[m_CurrentFrame].GetHandle()),
-            "Failed to submit draw command buffer!");
+                  "Failed to submit draw command buffer!")
 
-        VkSwapchainKHR swapChains[] = { m_Swapchain };
+        const VkSwapchainKHR swapChains[] = { m_Swapchain };
         VkPresentInfoKHR presentInfo{};
         presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
         presentInfo.waitSemaphoreCount = 1;
@@ -183,7 +184,7 @@ namespace Mixture::Vulkan
         presentInfo.pSwapchains = swapChains;
         presentInfo.pImageIndices = &Context::Get().m_CurrentImageIndex;
 
-        VkResult result = vkQueuePresentKHR(Context::Get().Device().GetPresentQueue(), &presentInfo);
+        const VkResult result = vkQueuePresentKHR(Context::Get().Device().GetPresentQueue(), &presentInfo);
         m_CurrentFrame = (m_CurrentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
         return result;
     }
@@ -224,7 +225,7 @@ namespace Mixture::Vulkan
         if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) return capabilities.currentExtent;
         
         int framebufferWidth, framebufferHeight;
-        Mixture::Application::Get().GetWindow().GetFramebufferSize(&framebufferWidth, &framebufferHeight);
+        Application::Get().GetWindow().GetFramebufferSize(&framebufferWidth, &framebufferHeight);
         
         VkExtent2D actualExtent = { static_cast<uint32_t>(framebufferWidth), static_cast<uint32_t>(framebufferHeight) };
         actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);

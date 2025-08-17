@@ -12,11 +12,11 @@ namespace Mixture
 
     Application::Application(const std::string& name, ApplicationCommandLineArgs args)
     {
-        OPAL_CORE_ASSERT(!s_Instance, "Application already exisits!");
+        OPAL_CORE_ASSERT(!s_Instance, "Application already exists!")
         
         s_Instance = this;
-        
-        WindowProps props = WindowProps();
+
+        auto props = WindowProps();
         props.Title = name;
         
         m_Window = CreateScope<Window>(props);
@@ -44,8 +44,8 @@ namespace Mixture
         m_Running = false;
     }
 
-    void Application::Run()
-{
+    void Application::Run() const
+    {
         Timer frameTimer{};
         FrameInfo frameInfo{};
         
@@ -83,7 +83,7 @@ namespace Mixture
         return true;
     }
 
-    bool Application::OnFramebufferResize(FramebufferResizeEvent& e)
+    bool Application::OnFramebufferResize(const FramebufferResizeEvent& e)
     {
         Renderer::OnFramebufferResize(e.GetWidth(), e.GetHeight());
         return false;

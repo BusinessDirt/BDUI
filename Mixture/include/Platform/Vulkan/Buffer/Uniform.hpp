@@ -11,7 +11,7 @@ namespace Mixture::Vulkan
         UniformBuffer(uint32_t instanceSize, uint32_t instanceCount = 1);
         ~UniformBuffer();
 
-        void SetData(void* data, uint32_t index = 0) const;
+        void SetData(const void* data, uint32_t index = 0) const;
         const VkDescriptorBufferInfo* GetDescriptorInfo(uint32_t index = 0);
 
     private:

@@ -1,8 +1,6 @@
 #pragma once
 #include "Platform/Vulkan/Base.hpp"
 
-#include "Platform/Vulkan/WindowSurface.hpp"
-
 #include <Opal/Base.hpp>
 
 namespace Mixture::Vulkan
@@ -12,7 +10,7 @@ namespace Mixture::Vulkan
         std::optional<uint32_t> Graphics;
         std::optional<uint32_t> Present;
         
-        bool IsComplete()
+        bool IsComplete() const
         {
             return Graphics.has_value() && Present.has_value();
         }
@@ -28,22 +26,22 @@ namespace Mixture::Vulkan
     class PhysicalDevice
     {
     public:
-        PhysicalDevice(const std::vector<const char*>& requiredExtensions);
+        explicit PhysicalDevice(const std::vector<const char*>& requiredExtensions);
         ~PhysicalDevice() = default;
         
         OPAL_NON_COPIABLE(PhysicalDevice);
         
-        const VkPhysicalDeviceProperties& GetProperties() const { return m_Properties; }
-        const VkPhysicalDeviceFeatures& GetFeatures() const { return m_Features; }
-        const QueueFamilyIndices& GetQueueFamilyIndices() const { return m_QueueFamilyIndices; }
+        OPAL_NODISCARD const VkPhysicalDeviceProperties& GetProperties() const { return m_Properties; }
+        OPAL_NODISCARD const VkPhysicalDeviceFeatures& GetFeatures() const { return m_Features; }
+        OPAL_NODISCARD const QueueFamilyIndices& GetQueueFamilyIndices() const { return m_QueueFamilyIndices; }
 
-        SwapchainSupportDetails QuerySwapchainSupport(const VkPhysicalDevice device = VK_NULL_HANDLE) const;
+        SwapchainSupportDetails QuerySwapchainSupport(VkPhysicalDevice device = VK_NULL_HANDLE) const;
 
     private:
         int RateDeviceSuitability(VkPhysicalDevice device, const std::vector<const char*>& requiredExtensions);
         bool CheckExtensionSupport(VkPhysicalDevice device, const std::vector<const char*>& requiredExtensions);
         
-        QueueFamilyIndices FindQueueFamilyIndices(const VkPhysicalDevice device);
+        QueueFamilyIndices FindQueueFamilyIndices(VkPhysicalDevice device);
         
     private:
         VULKAN_HANDLE(VkPhysicalDevice, m_PhysicalDevice);

@@ -22,7 +22,7 @@ namespace Mixture
         s_VulkanContext.Shutdown();
     }
 
-    void Renderer::OnFramebufferResize(uint32_t width, uint32_t height)
+    void Renderer::OnFramebufferResize(const uint32_t width, const uint32_t height)
     {
         s_VulkanContext.OnFramebufferResize(width, height);
         
@@ -33,7 +33,7 @@ namespace Mixture
     {
         std::vector<VkCommandBuffer> commandBuffers{};
 
-        if (VkCommandBuffer commandBuffer = s_VulkanContext.BeginFrame())
+        if (const VkCommandBuffer commandBuffer = s_VulkanContext.BeginFrame())
         {
             frameInfo.CommandBuffer = commandBuffer;
             

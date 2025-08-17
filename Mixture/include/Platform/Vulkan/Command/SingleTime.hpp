@@ -27,7 +27,7 @@ namespace Mixture::Vulkan::SingleTimeCommand
         return commandBuffer;
     }
 
-    static void End(VkCommandBuffer commandBuffer)
+    static void End(const VkCommandBuffer commandBuffer)
     {
         vkEndCommandBuffer(commandBuffer);
 
@@ -44,7 +44,7 @@ namespace Mixture::Vulkan::SingleTimeCommand
 
     static void Submit(const std::function<void(VkCommandBuffer)>& action)
     {
-        VkCommandBuffer commandBuffer = Begin();
+        const VkCommandBuffer commandBuffer = Begin();
         action(commandBuffer);
         End(commandBuffer);
     }

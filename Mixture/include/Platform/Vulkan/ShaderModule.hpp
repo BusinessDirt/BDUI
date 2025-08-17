@@ -8,13 +8,15 @@ namespace Mixture::Vulkan
 	class ShaderModule
 	{
 	public:
-		ShaderModule(const Mixture::SPVShader& shader, Mixture::ShaderStage stage);
+		OPAL_NON_COPIABLE(ShaderModule);
+		
+		ShaderModule(const SPVShader& shader, ShaderStage stage);
 		~ShaderModule();
 
 		VkPipelineShaderStageCreateInfo CreateInfo();
 
 	private:
 		VULKAN_HANDLE(VkShaderModule, m_ShaderModule);
-		Mixture::ShaderStage m_Stage;
+		ShaderStage m_Stage;
 	};
 }

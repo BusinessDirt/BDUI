@@ -9,10 +9,14 @@ namespace Mixture
 {
     namespace Util
     {
-        std::size_t HashShapeVector(const std::vector<Scope<IShape>>& shapes) {
-            std::size_t seed = shapes.size();
-            for (const auto& shape : shapes) shape->HashCombine(seed);
-            return seed;
+        namespace
+        {
+            std::size_t HashShapeVector(const std::vector<Scope<IShape>>& shapes)
+            {
+                std::size_t seed = shapes.size();
+                for (const auto& shape : shapes) shape->HashCombine(seed);
+                return seed;
+            }
         }
     }
 
@@ -53,20 +57,20 @@ namespace Mixture
         m_ShapeHash = Util::HashShapeVector(m_Shapes);
         if (m_ShapeHash == oldHash) return;
         
-        // Tesselate shapes
+        // Tessellate shapes
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
         for (const auto& shape : m_Shapes) shape->Tesselate(vertices, indices);
         
-        if (vertices.size() == 0 || indices.size() == 0) return;
+        if (vertices.empty() || indices.empty()) return;
         
         m_VertexBuffer->SetData(vertices);
         m_IndexBuffer->SetData(indices);
     }
 
-    void ShapeRenderer::Render(VkCommandBuffer commandBuffer)
+    void ShapeRenderer::Render(const VkCommandBuffer commandBuffer)
     {
-        if (m_Shapes.size() <= 0) return;
+        if (m_Shapes.empty()) return;
         
         m_Pipeline->Bind(commandBuffer);
         m_Pipeline->PushConstants(commandBuffer, &m_PushConstant);

@@ -4,37 +4,35 @@ namespace Mixture::Vulkan
 {
     VertexBuffer::VertexBuffer(const std::vector<Vertex>& vertices)
     {
-        SetData((void*)vertices.data(), static_cast<uint32_t>(vertices.size()), sizeof(Vertex), VK_NULL_HANDLE);
+        SetData(vertices.data(), static_cast<uint32_t>(vertices.size()), sizeof(Vertex), VK_NULL_HANDLE);
     }
 
-    VertexBuffer::VertexBuffer(void* vertices, uint32_t vertexCount, uint32_t vertexSize)
+    VertexBuffer::VertexBuffer(const void* vertices, const uint32_t vertexCount, const uint32_t vertexSize)
     {
         SetData(vertices, vertexCount, vertexSize, VK_NULL_HANDLE);
     }
 
-    VertexBuffer::VertexBuffer()
-        : m_VertexCount(0), m_VertexBuffer(VK_NULL_HANDLE)
-    {}
+    VertexBuffer::VertexBuffer() : m_VertexBuffer(VK_NULL_HANDLE) {}
 
     VertexBuffer::~VertexBuffer()
     {
         m_VertexBuffer = nullptr;
     }
 
-    void VertexBuffer::SetData(const std::vector<Vertex>& vertices, VkCommandBuffer commandBuffer)
+    void VertexBuffer::SetData(const std::vector<Vertex>& vertices, const VkCommandBuffer commandBuffer)
     {
-        SetData((void*)vertices.data(), static_cast<uint32_t>(vertices.size()), sizeof(Vertex), commandBuffer);
+        SetData(vertices.data(), static_cast<uint32_t>(vertices.size()), sizeof(Vertex), commandBuffer);
     }
 
-    void VertexBuffer::SetData(void* vertices, uint32_t vertexCount, uint32_t vertexSize, VkCommandBuffer commandBuffer)
+    void VertexBuffer::SetData(const void* vertices, const uint32_t vertexCount, uint32_t vertexSize, const VkCommandBuffer commandBuffer)
     {
         m_VertexCount = vertexCount;
-        OPAL_CORE_ASSERT(m_VertexCount >= 3, "Vertex count must be at least 3!");
+        OPAL_CORE_ASSERT(m_VertexCount >= 3, "Vertex count must be at least 3!")
 
-        VkDeviceSize bufferSize = vertexSize * m_VertexCount;
+        const VkDeviceSize bufferSize = static_cast<uint64_t>(vertexSize) * m_VertexCount;
 
         // Create a staging buffer for data transfer
-        Buffer stagingBuffer = Buffer(vertexSize, m_VertexCount, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+        auto stagingBuffer = Buffer(vertexSize, m_VertexCount, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
         // Map and write data to the staging buffer
@@ -52,10 +50,10 @@ namespace Mixture::Vulkan
         Buffer::Copy(stagingBuffer.GetHandle(), m_VertexBuffer->GetHandle(), bufferSize, commandBuffer);
     }
 
-    void VertexBuffer::Bind(VkCommandBuffer commandBuffer)
+    void VertexBuffer::Bind(const VkCommandBuffer commandBuffer) const
     {
-        VkBuffer buffers[] = { m_VertexBuffer->GetHandle() };
-        VkDeviceSize offsets[] = { 0 };
+        const VkBuffer buffers[] = { m_VertexBuffer->GetHandle() };
+        constexpr VkDeviceSize offsets[] = { 0 };
         vkCmdBindVertexBuffers(commandBuffer, 0, 1, buffers, offsets);
     }
 }

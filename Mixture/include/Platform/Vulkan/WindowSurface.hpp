@@ -7,10 +7,10 @@ namespace Mixture::Vulkan
     class WindowSurface
     {
     public:
+        OPAL_NON_COPIABLE(WindowSurface);
+        
         WindowSurface();
         ~WindowSurface();
-        
-        OPAL_NON_COPIABLE(WindowSurface);
         
     private:
         VULKAN_HANDLE(VkSurfaceKHR, m_Surface);
