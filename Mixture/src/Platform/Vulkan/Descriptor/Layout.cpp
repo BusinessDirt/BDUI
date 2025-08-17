@@ -15,7 +15,8 @@ namespace Mixture::Vulkan
         info.bindingCount = static_cast<uint32_t>(bindings.size());
         info.pBindings = bindings.data();
 
-        VK_ASSERT(vkCreateDescriptorSetLayout(m_Device, &info, nullptr, &m_Layout), "Failed to create DescriptorSetLayout");
+        VK_ASSERT(vkCreateDescriptorSetLayout(m_Device, &info, nullptr, &m_Layout),
+                  "Failed to create DescriptorSetLayout")
     }
 
     DescriptorSetLayout::~DescriptorSetLayout() {

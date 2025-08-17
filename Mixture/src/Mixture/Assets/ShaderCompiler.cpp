@@ -8,6 +8,7 @@
 
 #include "Mixture/Core/Application.hpp"
 
+#include <algorithm>
 #include <shaderc/shaderc.hpp>
 #include <spirv_cross/spirv_cross.hpp>
 
@@ -15,74 +16,78 @@ namespace Mixture
 {
     namespace Util
     {
-        static shaderc_shader_kind ShaderStageToShaderC(ShaderStage stage)
+        namespace
         {
-            if (stage == SHADER_STAGE_VERTEX) return shaderc_vertex_shader;
-            if (stage == SHADER_STAGE_FRAGMENT) return shaderc_fragment_shader;
+            shaderc_shader_kind ShaderStageToShaderC(const ShaderStage stage)
+            {
+                if (stage == ShaderStageVertex) return shaderc_vertex_shader;
+                if (stage == ShaderStageFragment) return shaderc_fragment_shader;
 
-            OPAL_CORE_ERROR("Unsupported shader type");
-            return shaderc_vertex_shader; // these issues should be catched at runtime so returning this shouldn't be a problem
-        }
-
-        static VkFormat GetVkFormat(const spirv_cross::SPIRType& type)
-        {
-            if (type.basetype == spirv_cross::SPIRType::Float)
-            {
-                if (type.vecsize == 1) return VK_FORMAT_R32_SFLOAT;
-                if (type.vecsize == 2) return VK_FORMAT_R32G32_SFLOAT;
-                if (type.vecsize == 3) return VK_FORMAT_R32G32B32_SFLOAT;
-                if (type.vecsize == 4) return VK_FORMAT_R32G32B32A32_SFLOAT;
-            }
-            if (type.basetype == spirv_cross::SPIRType::Int)
-            {
-                if (type.vecsize == 1) return VK_FORMAT_R32_SINT;
-                if (type.vecsize == 2) return VK_FORMAT_R32G32_SINT;
-                if (type.vecsize == 3) return VK_FORMAT_R32G32B32_SINT;
-                if (type.vecsize == 4) return VK_FORMAT_R32G32B32A32_SINT;
-            }
-            if (type.basetype == spirv_cross::SPIRType::UInt)
-            {
-                if (type.vecsize == 1) return VK_FORMAT_R32_UINT;
-                if (type.vecsize == 2) return VK_FORMAT_R32G32_UINT;
-                if (type.vecsize == 3) return VK_FORMAT_R32G32B32_UINT;
-                if (type.vecsize == 4) return VK_FORMAT_R32G32B32A32_UINT;
+                OPAL_CORE_ERROR("Unsupported shader type");
+                return shaderc_vertex_shader; // these issues should be caught at runtime so returning this shouldn't be a problem
             }
 
-            OPAL_CORE_ERROR("Unsupported Format");
-            return VK_FORMAT_UNDEFINED;
-        }
-    
-        static void ReflectDescriptorSetLayoutBinding(SPVShader& shader, const spirv_cross::Compiler& compiler, const spv::Id& id, VkDescriptorType descriptorType)
-        {
-            uint32_t set = compiler.get_decoration(id, spv::DecorationDescriptorSet);
-            uint32_t binding = compiler.get_decoration(id, spv::DecorationBinding);
-            
-            VkDescriptorSetLayoutBinding layoutBinding{};
-            layoutBinding.binding            = binding;
-            layoutBinding.descriptorType     = descriptorType;
-            layoutBinding.descriptorCount    = 1;
-            layoutBinding.stageFlags         = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
-            layoutBinding.pImmutableSamplers = nullptr;
-            shader.DescriptorSetLayoutBindings[set].push_back(layoutBinding);
+            VkFormat GetVkFormat(const spirv_cross::SPIRType& type)
+            {
+                if (type.basetype == spirv_cross::SPIRType::Float)
+                {
+                    if (type.vecsize == 1) return VK_FORMAT_R32_SFLOAT;
+                    if (type.vecsize == 2) return VK_FORMAT_R32G32_SFLOAT;
+                    if (type.vecsize == 3) return VK_FORMAT_R32G32B32_SFLOAT;
+                    if (type.vecsize == 4) return VK_FORMAT_R32G32B32A32_SFLOAT;
+                }
+                if (type.basetype == spirv_cross::SPIRType::Int)
+                {
+                    if (type.vecsize == 1) return VK_FORMAT_R32_SINT;
+                    if (type.vecsize == 2) return VK_FORMAT_R32G32_SINT;
+                    if (type.vecsize == 3) return VK_FORMAT_R32G32B32_SINT;
+                    if (type.vecsize == 4) return VK_FORMAT_R32G32B32A32_SINT;
+                }
+                if (type.basetype == spirv_cross::SPIRType::UInt)
+                {
+                    if (type.vecsize == 1) return VK_FORMAT_R32_UINT;
+                    if (type.vecsize == 2) return VK_FORMAT_R32G32_UINT;
+                    if (type.vecsize == 3) return VK_FORMAT_R32G32B32_UINT;
+                    if (type.vecsize == 4) return VK_FORMAT_R32G32B32A32_UINT;
+                }
+
+                OPAL_CORE_ERROR("Unsupported Format");
+                return VK_FORMAT_UNDEFINED;
+            }
+        
+            void ReflectDescriptorSetLayoutBinding(SpvShader& shader, const spirv_cross::Compiler& compiler, const spv::Id& id, const VkDescriptorType descriptorType)
+            {
+                const uint32_t set = compiler.get_decoration(id, spv::DecorationDescriptorSet);
+                const uint32_t binding = compiler.get_decoration(id, spv::DecorationBinding);
+                
+                VkDescriptorSetLayoutBinding layoutBinding;
+                layoutBinding.binding            = binding;
+                layoutBinding.descriptorType     = descriptorType;
+                layoutBinding.descriptorCount    = 1;
+                layoutBinding.stageFlags         = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT;
+                layoutBinding.pImmutableSamplers = nullptr;
+                shader.DescriptorSetLayoutBindings[set].push_back(layoutBinding);
+            }
         }
     }
+    
 	namespace ShaderCompiler
 	{
-		SPVShader Compile(const std::string& shaderName, const Flags& compileFlags)
+		SpvShader Compile(const std::string& shaderName, const Flags& compileFlags)
 		{
             const std::filesystem::path shaderPath = Application::Get().GetAssetManager().GetShaderPath();
-            SPVShader spvShader{};
+            SpvShader spvShader{};
 
             // Get a list of files for the given compiler stage flags
-            Vector<std::filesystem::path> shaderFiles = Vector<std::filesystem::path>();
+            auto shaderFiles = Vector<std::filesystem::path>();
             switch (compileFlags.PipelineType)
             {
-            case GRAPHICS_PIPELINE:
-            {
-                // .vert and .frag
-                shaderFiles.push_back(shaderPath / (shaderName + ".vert"));
-                shaderFiles.push_back(shaderPath / (shaderName + ".frag"));
-            }
+                case Graphics:
+                {
+                    // .vert and .frag
+                    shaderFiles.push_back(shaderPath / (shaderName + ".vert"));
+                    shaderFiles.push_back(shaderPath / (shaderName + ".frag"));
+                }
             }
 
             // compile every stage
@@ -98,9 +103,9 @@ namespace Mixture
             return spvShader;
 		}
 
-		void Reflect(SPVShader& shader)
+		void Reflect(SpvShader& shader)
 		{
-            spirv_cross::Compiler vertCompiler(shader.Data.at(SHADER_STAGE_VERTEX));
+            spirv_cross::Compiler vertCompiler(shader.Data.at(ShaderStageVertex));
             spirv_cross::ShaderResources vertResources = vertCompiler.get_shader_resources();
 
             // ==== Push Constant ====
@@ -126,24 +131,24 @@ namespace Mixture
             // ==== Vertex Attributes and Bindings ====
             // Sort resources by location
             // this is required to calculate the offsets properly
-            std::vector<spirv_cross::Resource> stageInputs(vertResources.stage_inputs.begin(), vertResources.stage_inputs.end());
-            std::sort(stageInputs.begin(), stageInputs.end(), [&vertCompiler](const spirv_cross::Resource& a, const spirv_cross::Resource& b)
-                {
-                    uint32_t locationA = vertCompiler.get_decoration(a.id, spv::DecorationLocation);
-                    uint32_t locationB = vertCompiler.get_decoration(b.id, spv::DecorationLocation);
-                    return locationA < locationB;
-                });
+            std::vector stageInputs(vertResources.stage_inputs.begin(), vertResources.stage_inputs.end());
+            std::ranges::sort(stageInputs, [&vertCompiler](const spirv_cross::Resource& a, const spirv_cross::Resource& b)
+            {
+                const uint32_t locationA = vertCompiler.get_decoration(a.id, spv::DecorationLocation);
+                const uint32_t locationB = vertCompiler.get_decoration(b.id, spv::DecorationLocation);
+                return locationA < locationB;
+            });
 
             std::unordered_map<uint32_t, uint32_t> bindingStrides;
 
             for (const spirv_cross::Resource& resource : stageInputs)
             {
-                uint32_t location = vertCompiler.get_decoration(resource.id, spv::DecorationLocation);
+                const uint32_t location = vertCompiler.get_decoration(resource.id, spv::DecorationLocation);
                 uint32_t binding = vertCompiler.get_decoration(resource.id, spv::DecorationBinding);
-                auto type = vertCompiler.get_type(resource.base_type_id);
+                const auto& type = vertCompiler.get_type(resource.base_type_id);
 
-                VkFormat format = Util::GetVkFormat(type);
-                uint32_t size = type.vecsize * 4; // Assuming 4 bytes per component (float, int, uint)
+                const VkFormat format = Util::GetVkFormat(type);
+                const uint32_t size = type.vecsize * 4; // Assuming 4 bytes per component (float, int, uint)
 
                 VkVertexInputAttributeDescription attributeDescription{};
                 attributeDescription.location = location;
@@ -153,7 +158,7 @@ namespace Mixture
                 shader.VertexInputAttributes.emplace_back(attributeDescription);
                 
                 std::string name = vertCompiler.get_name(resource.id);
-                if (name == "") name = vertCompiler.get_fallback_name(resource.id);
+                if (name.empty()) name = vertCompiler.get_fallback_name(resource.id);
                 shader.VertexAttributeNames.push_back(name);
 
                 bindingStrides[binding] += size;
@@ -169,12 +174,12 @@ namespace Mixture
             }
 		}
 
-        void DebugPrint(const std::string& shaderName, const Flags& compileFlags, SPVShader& shader)
+        void DebugPrint(const std::string& shaderName, const Flags& compileFlags, SpvShader& shader)
         {
             VULKAN_INFO_BEGIN("Compiled Shader");
             // General Information
             VULKAN_INFO_LIST("Name: {}", 0, shaderName);
-            VULKAN_INFO_LIST("Pipeline Type: {}", 0, (compileFlags.PipelineType == GRAPHICS_PIPELINE ? "Graphics" : "Unknown"));
+            VULKAN_INFO_LIST("Pipeline Type: {}", 0, compileFlags.PipelineType == Graphics ? "Graphics" : "Unknown");
 
             // Push Constant
             if (shader.PushConstant.size > 0)
@@ -200,7 +205,7 @@ namespace Mixture
             }
 
             // Vertex Input Bindings
-            if (shader.VertexInputBindings.size() > 0)
+            if (!shader.VertexInputBindings.empty())
             {
                 VULKAN_INFO_LIST_HEADER("Vertex Input Bindings", 0);
                 
@@ -212,14 +217,14 @@ namespace Mixture
             }
 
             // Vertex Input Attributes
-            if (shader.VertexInputAttributes.size() > 0)
+            if (!shader.VertexInputAttributes.empty())
             {
                 VULKAN_INFO_LIST_HEADER("Vertex Attributes", 0);
 
                 int i = 0;
-                for (const auto& attribute : shader.VertexInputAttributes)
+                for (const auto& [location, binding, format, offset] : shader.VertexInputAttributes)
                 {
-                    VULKAN_INFO_LIST("layout(location = {}, binding = {}, offset = {}) in {} {};", 1, attribute.location, attribute.binding, attribute.offset, Vulkan::ToString::ShaderFormat(attribute.format), shader.VertexAttributeNames[i]);
+                    VULKAN_INFO_LIST("layout(location = {}, binding = {}, offset = {}) in {} {};", 1, location, binding, offset, Vulkan::ToString::ShaderFormat(format), shader.VertexAttributeNames[i]);
                     i++;
                 }
             }
@@ -227,27 +232,27 @@ namespace Mixture
             VULKAN_INFO_END();
         }
 
-		std::vector<uint32_t> CompileStage(const std::filesystem::path& path, const Flags& compileFlags, ShaderStage stage)
+		std::vector<uint32_t> CompileStage(const std::filesystem::path& path, const Flags& compileFlags, const ShaderStage stage)
 		{
-            shaderc::Compiler compiler;
-            shaderc::CompileOptions options;
-            shaderc_shader_kind shaderKind = Util::ShaderStageToShaderC(stage);
+		    const shaderc::Compiler compiler;
+		    shaderc::CompileOptions options;
+		    const shaderc_shader_kind shaderKind = Util::ShaderStageToShaderC(stage);
 
-            options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2);
+		    options.SetTargetEnvironment(shaderc_target_env_vulkan, shaderc_env_version_vulkan_1_2);
 
-            std::string source = Util::ReadFile(path);
+		    const std::string source = Util::ReadFile(path);
 
-            auto preProcessed = compiler.PreprocessGlsl(source, shaderKind, path.filename().string().c_str(), options);
-            auto compiled = compiler.CompileGlslToSpv(source, shaderKind, path.filename().string().c_str(), options);
+		    auto preProcessed = compiler.PreprocessGlsl(source, shaderKind, path.filename().string().c_str(), options);
+		    const auto compiled = compiler.CompileGlslToSpv(source, shaderKind, path.filename().string().c_str(), options);
 
 
-            if (compiled.GetCompilationStatus() != shaderc_compilation_status_success)
-            {
-                OPAL_CORE_ERROR(compiled.GetErrorMessage());
-                OPAL_CORE_ASSERT(false);
+		    if (compiled.GetCompilationStatus() != shaderc_compilation_status_success)
+		    {
+		        OPAL_CORE_ERROR(compiled.GetErrorMessage());
+		        OPAL_CORE_ASSERT(false)
             }
 
-            return std::vector<uint32_t>(compiled.cbegin(), compiled.cend());
+		    return { compiled.cbegin(), compiled.cend() };
 		}
 	}
 }

@@ -5,14 +5,14 @@
 
 namespace Mixture::Vulkan
 {
-    Fence::Fence(bool signaled)
+    Fence::Fence(const bool signaled)
     {
         VkFenceCreateInfo fenceInfo = {};
         fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
         fenceInfo.flags = signaled ? VK_FENCE_CREATE_SIGNALED_BIT : 0;
 
         VK_ASSERT(vkCreateFence(Context::Get().Device().GetHandle(), &fenceInfo, nullptr, &m_Fence),
-            "Failed to create VkFence!");
+                  "Failed to create VkFence!")
     }
 
     Fence::~Fence()
@@ -24,13 +24,13 @@ namespace Mixture::Vulkan
         }
     }
 
-    Fence::Fence(Fence&& other)
+    Fence::Fence(Fence&& other) noexcept
         : m_Fence(other.m_Fence)
     {
         other.m_Fence = VK_NULL_HANDLE;
     }
 
-    Fence& Fence::operator=(Fence&& other)
+    Fence& Fence::operator=(Fence&& other) noexcept
     {
         if (this != &other)
         {
@@ -41,12 +41,12 @@ namespace Mixture::Vulkan
         return *this;
     }
 
-    void Fence::Wait(uint64_t timeout)
+    void Fence::Wait(const uint64_t timeout) const
     {
         vkWaitForFences(Context::Get().Device().GetHandle(), 1, &m_Fence, VK_TRUE, timeout);
     }
 
-    void Fence::Reset()
+    void Fence::Reset() const
     {
         vkResetFences(Context::Get().Device().GetHandle(), 1, &m_Fence);
     }

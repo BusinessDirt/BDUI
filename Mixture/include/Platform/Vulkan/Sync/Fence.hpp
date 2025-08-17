@@ -10,14 +10,14 @@ namespace Mixture::Vulkan
         Fence(const Fence&) = delete;
         Fence& operator=(const Fence&) = delete;
 
-        Fence(Fence&& other);
-        Fence& operator=(Fence&& other);
+        Fence(Fence&& other) noexcept;
+        Fence& operator=(Fence&& other) noexcept;
 
-        Fence(bool signaled);
+        explicit Fence(bool signaled);
         ~Fence();
 
-        void Wait(uint64_t timeout);
-        void Reset();
+        void Wait(uint64_t timeout) const;
+        void Reset() const;
 
     private:
         VULKAN_HANDLE(VkFence, m_Fence);

@@ -13,13 +13,13 @@ namespace Mixture::Vulkan
         flagsInfo.pNext = nullptr;
         flagsInfo.flags = allocateFLags;
 
-        VkMemoryAllocateInfo allocInfo = {};
+        VkMemoryAllocateInfo allocInfo;
         allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         allocInfo.pNext = &flagsInfo;
         allocInfo.allocationSize = size;
         allocInfo.memoryTypeIndex = FindMemoryType(memoryTypeBits, propertyFlags);
 
-        VK_ASSERT(vkAllocateMemory(Context::Get().Device().GetHandle(), &allocInfo, nullptr, &m_Memory), "Failed to allocate VkDeviceMemory!");
+        VK_ASSERT(vkAllocateMemory(Context::Get().Device().GetHandle(), &allocInfo, nullptr, &m_Memory), "Failed to allocate VkDeviceMemory!")
     }
 
     DeviceMemory::DeviceMemory(DeviceMemory&& other) noexcept
@@ -37,27 +37,27 @@ namespace Mixture::Vulkan
         }
     }
 
-    void* DeviceMemory::Map(const size_t offset, const size_t size)
+    void* DeviceMemory::Map(const size_t offset, const size_t size) const
     {
         void* data;
-        VK_ASSERT(vkMapMemory(Context::Get().Device().GetHandle(), m_Memory, offset, size, 0, &data), "Failed to map VkDeviceMemory!");
+        VK_ASSERT(vkMapMemory(Context::Get().Device().GetHandle(), m_Memory, offset, size, 0, &data), "Failed to map VkDeviceMemory!")
 
         return data;
     }
 
-    void DeviceMemory::Unmap()
+    void DeviceMemory::Unmap() const
     {
         vkUnmapMemory(Context::Get().Device().GetHandle(), m_Memory);
     }
 
-    uint32_t DeviceMemory::FindMemoryType(const uint32_t typeFilter, const VkMemoryPropertyFlags propertyFlags) const
+    uint32_t DeviceMemory::FindMemoryType(const uint32_t typeFilter, const VkMemoryPropertyFlags propertyFlags)
     {
         VkPhysicalDeviceMemoryProperties memProperties;
         vkGetPhysicalDeviceMemoryProperties(Context::Get().PhysicalDevice().GetHandle(), &memProperties);
 
         for (uint32_t i = 0; i != memProperties.memoryTypeCount; ++i)
         {
-            if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & propertyFlags) == propertyFlags)
+            if (typeFilter & 1 << i && (memProperties.memoryTypes[i].propertyFlags & propertyFlags) == propertyFlags)
             {
                 return i;
             }

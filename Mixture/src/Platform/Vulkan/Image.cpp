@@ -8,12 +8,11 @@
 
 namespace Mixture::Vulkan
 {
-    Image::Image(const VkExtent2D extent, const VkFormat format, uint32_t mipLevels)
+    Image::Image(const VkExtent2D extent, const VkFormat format, const uint32_t mipLevels)
         : Image(extent, format, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, mipLevels)
-    {
-    }
+    {}
 
-    Image::Image(const VkExtent2D extent, const VkFormat format, const VkImageTiling tiling, const VkImageUsageFlags usage, uint32_t mipLevels)
+    Image::Image(const VkExtent2D extent, const VkFormat format, const VkImageTiling tiling, const VkImageUsageFlags usage, const uint32_t mipLevels)
         : m_MipLevels(mipLevels), m_Extent(extent), m_Format(format), m_ImageLayout(VK_IMAGE_LAYOUT_UNDEFINED)
     {
         VkImageCreateInfo imageInfo = {};
@@ -33,11 +32,12 @@ namespace Mixture::Vulkan
         imageInfo.flags = 0; // Optional
 
         VK_ASSERT(vkCreateImage(Context::Get().Device().GetHandle(), &imageInfo, nullptr, &m_Image),
-            "Failed to create VkImage!");
+                  "Failed to create VkImage!")
     }
 
     Image::Image(Image&& other) noexcept
-        : m_Extent(other.m_Extent), m_Format(other.m_Format), m_ImageLayout(other.m_ImageLayout), m_Image(other.m_Image)
+        : m_MipLevels(0), m_Extent(other.m_Extent), m_Format(other.m_Format), m_ImageLayout(other.m_ImageLayout),
+          m_Image(other.m_Image)
     {
         other.m_Image = nullptr;
     }
@@ -57,7 +57,7 @@ namespace Mixture::Vulkan
         DeviceMemory memory(requirements.size, requirements.memoryTypeBits, 0, properties);
 
         VK_ASSERT(vkBindImageMemory(Context::Get().Device().GetHandle(), m_Image, memory.GetHandle(), 0),
-            "Failed to bind VkImage VkDeviceMemory!");
+            "Failed to bind VkImage VkDeviceMemory!")
 
         return memory;
     }
@@ -69,8 +69,8 @@ namespace Mixture::Vulkan
         return requirements;
     }
 
-    void Image::TransitionImageLayout(VkCommandBuffer commandBuffer, VkImage image, VkImageLayout oldLayout,
-                                      VkImageLayout newLayout, VkFormat imageFormat, uint32_t mipLevels)
+    void Image::TransitionImageLayout(const VkCommandBuffer commandBuffer, const VkImage image, const VkImageLayout oldLayout,
+                                      const VkImageLayout newLayout, const VkFormat imageFormat, const uint32_t mipLevels)
     {
         VkImageMemoryBarrier barrier = {};
         barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -98,8 +98,8 @@ namespace Mixture::Vulkan
             barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         }
 
-        VkPipelineStageFlags sourceStage;
-        VkPipelineStageFlags destinationStage;
+        VkPipelineStageFlags sourceStage = 0;
+        VkPipelineStageFlags destinationStage = 0;
         
         if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED)
         {
@@ -232,34 +232,34 @@ namespace Mixture::Vulkan
         vkCmdPipelineBarrier(commandBuffer, sourceStage, destinationStage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
     }
 
-    void Image::TransitionImageLayout(VkImageLayout newLayout, VkCommandBuffer commandBuffer)
+    void Image::TransitionImageLayout(const VkImageLayout newLayout, const VkCommandBuffer commandBuffer)
     {
         if (commandBuffer == VK_NULL_HANDLE)
         {
-            SingleTimeCommand::Submit([&](VkCommandBuffer cmd)
+            SingleTimeCommand::Submit([&](const VkCommandBuffer cmd)
                 {
-                    Image::TransitionImageLayout(cmd, m_Image, m_ImageLayout, newLayout, m_Format, m_MipLevels);
+                    TransitionImageLayout(cmd, m_Image, m_ImageLayout, newLayout, m_Format, m_MipLevels);
                 });
         }
         else
         {
-            Image::TransitionImageLayout(commandBuffer, m_Image, m_ImageLayout, newLayout, m_Format, m_MipLevels);
+            TransitionImageLayout(commandBuffer, m_Image, m_ImageLayout, newLayout, m_Format, m_MipLevels);
         }
         
 
         m_ImageLayout = newLayout;
     }
 
-    void Image::GenerateMipMaps(VkFormat imageFormat)
+    void Image::GenerateMipMaps(const VkFormat imageFormat) const
     {
         // Check if image format supports linear blitting
         VkFormatProperties formatProperties;
         vkGetPhysicalDeviceFormatProperties(Context::Get().PhysicalDevice().GetHandle(), imageFormat, &formatProperties);
 
         OPAL_CORE_ASSERT(formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT, 
-            "Texture image format does not support linear blitting!");
+            "Texture image format does not support linear blitting!")
 
-        SingleTimeCommand::Submit([&](VkCommandBuffer commandBuffer)
+        SingleTimeCommand::Submit([&](const VkCommandBuffer commandBuffer)
             {
                 VkImageMemoryBarrier barrier{};
                 barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -271,8 +271,8 @@ namespace Mixture::Vulkan
                 barrier.subresourceRange.layerCount = 1;
                 barrier.subresourceRange.levelCount = 1;
 
-                int32_t mipWidth = m_Extent.width;
-                int32_t mipHeight = m_Extent.height;
+                int32_t mipWidth = static_cast<int32_t>(m_Extent.width);
+                int32_t mipHeight = static_cast<int32_t>(m_Extent.height);
 
                 for (uint32_t i = 1; i < m_MipLevels; i++)
                 {
@@ -286,21 +286,22 @@ namespace Mixture::Vulkan
                         0, nullptr, 0, nullptr, 1, &barrier);
 
                     VkImageBlit blit{};
-                    blit.srcOffsets[0] = { 0, 0, 0 };
-                    blit.srcOffsets[1] = { mipWidth, mipHeight, 1 };
+                    blit.srcOffsets[0] = {.x = 0, .y = 0, .z = 0 };
+                    blit.srcOffsets[1] = {.x = mipWidth, .y = mipHeight, .z = 1 };
                     blit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
                     blit.srcSubresource.mipLevel = i - 1;
                     blit.srcSubresource.baseArrayLayer = 0;
                     blit.srcSubresource.layerCount = 1;
-                    blit.dstOffsets[0] = { 0, 0, 0 };
-                    blit.dstOffsets[1] = { mipWidth > 1 ? mipWidth / 2 : 1, mipHeight > 1 ? mipHeight / 2 : 1, 1 };
+                    blit.dstOffsets[0] = {.x = 0, .y = 0, .z = 0 };
+                    blit.dstOffsets[1] = {.x = mipWidth > 1 ? mipWidth / 2 : 1, .y = mipHeight > 1 ? mipHeight / 2 : 1,
+                        .z = 1 };
                     blit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
                     blit.dstSubresource.mipLevel = i;
                     blit.dstSubresource.baseArrayLayer = 0;
                     blit.dstSubresource.layerCount = 1;
 
-                    vkCmdBlitImage(commandBuffer, m_Image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, m_Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-                        1, &blit, VK_FILTER_LINEAR);
+                    vkCmdBlitImage(commandBuffer, m_Image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, m_Image,
+                        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit, VK_FILTER_LINEAR);
 
                     barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
                     barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
@@ -325,11 +326,11 @@ namespace Mixture::Vulkan
             });
     }
 
-    void Image::CopyFrom(const Buffer& buffer)
+    void Image::CopyFrom(const Buffer& buffer) const
     {
-        SingleTimeCommand::Submit([&](VkCommandBuffer commandBuffer)
+        SingleTimeCommand::Submit([&](const VkCommandBuffer commandBuffer)
             {
-                VkBufferImageCopy region = {};
+                VkBufferImageCopy region;
                 region.bufferOffset = 0;
                 region.bufferRowLength = 0;
                 region.bufferImageHeight = 0;
@@ -337,15 +338,14 @@ namespace Mixture::Vulkan
                 region.imageSubresource.mipLevel = 0;
                 region.imageSubresource.baseArrayLayer = 0;
                 region.imageSubresource.layerCount = 1;
-                region.imageOffset = { 0, 0, 0 };
-                region.imageExtent = { m_Extent.width, m_Extent.height, 1 };
+                region.imageOffset = {.x = 0, .y = 0, .z = 0 };
+                region.imageExtent = {.width = m_Extent.width, .height = m_Extent.height, .depth = 1 };
 
                 vkCmdCopyBufferToImage(commandBuffer, buffer.GetHandle(), m_Image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
             });
     }
 
-	ImageView::ImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels)
-		: m_Image(image), m_Format(format)
+	ImageView::ImageView(const VkImage image, const VkFormat format, const VkImageAspectFlags aspectFlags, const uint32_t mipLevels)
 	{
         VkImageViewCreateInfo createInfo = {};
         createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -362,7 +362,8 @@ namespace Mixture::Vulkan
         createInfo.subresourceRange.baseArrayLayer = 0;
         createInfo.subresourceRange.layerCount = 1;
 
-        VK_ASSERT(vkCreateImageView(Context::Get().Device().GetHandle(), &createInfo, nullptr, &m_ImageView), "Failed to create VkImageView!");
+        VK_ASSERT(vkCreateImageView(Context::Get().Device().GetHandle(), &createInfo, nullptr, &m_ImageView),
+                  "Failed to create VkImageView!")
 	}
 
 	ImageView::~ImageView()

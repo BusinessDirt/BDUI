@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Mixture/Events/ApplicationEvent.hpp"
-
 #include "Platform/Vulkan/Base.hpp"
 #include "Platform/Vulkan/Instance.hpp"
 #include "Platform/Vulkan/DebugMessenger.hpp"
@@ -20,8 +18,7 @@ namespace Mixture::Vulkan
     class Context
     {
     public:
-        Context(const Context&) = delete;
-        Context& operator=(const Context&) = delete;
+        OPAL_NON_COPIABLE(Context);
 
         static Context& Get();
 
@@ -33,35 +30,35 @@ namespace Mixture::Vulkan
 
         void OnFramebufferResize(uint32_t width, uint32_t height);
 
-        void WaitForDevice();
+        void WaitForDevice() const;
         VkCommandBuffer BeginFrame();
-        void BeginRenderpass(VkCommandBuffer commandBuffer);
-        void EndRenderpass(VkCommandBuffer commandBuffer);
-        void EndFrame(VkCommandBuffer commandBuffer);
+        void BeginRenderpass(VkCommandBuffer commandBuffer) const;
+        void EndRenderpass(VkCommandBuffer commandBuffer) const;
+        void EndFrame(VkCommandBuffer commandBuffer) const;
         void SubmitFrame(const std::vector<VkCommandBuffer>& commandBuffers);
         
-        uint32_t CurrentImageIndex() { return m_CurrentImageIndex; }
+        OPAL_NODISCARD uint32_t CurrentImageIndex() const { return m_CurrentImageIndex; }
+        OPAL_NODISCARD uint32_t* CurrentImageIndexPtr() { return &m_CurrentImageIndex; }
 
     private:
-        VkCommandBuffer GetCurrentCommandBuffer()
+        OPAL_NODISCARD VkCommandBuffer GetCurrentCommandBuffer() const
         {
-            OPAL_CORE_ASSERT(m_IsFrameStarted, "Cannot get command buffer when frame is not in progress!");
+            OPAL_CORE_ASSERT(m_IsFrameStarted, "Cannot get command buffer when frame is not in progress!")
             return m_CommandBuffers->Get(m_Swapchain->GetCurrentFrameIndex());
         }
 
         void RebuildSwapchain();
-        
-        VK_CONTEXT_MEMBER(Instance, m_Instance);
-        VK_CONTEXT_MEMBER(DebugMessenger, m_DebugMessenger);
-        VK_CONTEXT_MEMBER(WindowSurface, m_WindowSurface);
-        VK_CONTEXT_MEMBER(PhysicalDevice, m_PhysicalDevice);
-        VK_CONTEXT_MEMBER(Device, m_Device);
-        VK_CONTEXT_MEMBER(Swapchain, m_Swapchain);
-        VK_CONTEXT_MEMBER(CommandPool, m_CommandPool);
-        VK_CONTEXT_MEMBER(CommandBuffers, m_CommandBuffers);
-        VK_CONTEXT_MEMBER(DescriptorPool, m_DescriptorPool);
 
         uint32_t m_CurrentImageIndex = 0;
+        VK_CONTEXT_MEMBER(Instance, m_Instance)
+        VK_CONTEXT_MEMBER(DebugMessenger, m_DebugMessenger)
+        VK_CONTEXT_MEMBER(WindowSurface, m_WindowSurface)
+        VK_CONTEXT_MEMBER(PhysicalDevice, m_PhysicalDevice)
+        VK_CONTEXT_MEMBER(Device, m_Device)
+        VK_CONTEXT_MEMBER(Swapchain, m_Swapchain)
+        VK_CONTEXT_MEMBER(CommandPool, m_CommandPool)
+        VK_CONTEXT_MEMBER(CommandBuffers, m_CommandBuffers)
+        VK_CONTEXT_MEMBER(DescriptorPool, m_DescriptorPool)
 
     private:
         bool m_IsFrameStarted = false;

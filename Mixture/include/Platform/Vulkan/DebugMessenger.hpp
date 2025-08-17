@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Platform/Vulkan/Base.hpp"
-#include "Platform/Vulkan/Instance.hpp"
 
 #include <Opal/Base.hpp>
 

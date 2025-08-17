@@ -6,15 +6,15 @@
 namespace Mixture 
 {
 
-	class MouseMovedEvent : public Event 
+	class MouseMovedEvent final : public Event 
 	{
 	public:
 		MouseMovedEvent(const float x, const float y) : m_MouseX(x), m_MouseY(y) {}
 
-		float GetX() const { return m_MouseX; }
-		float GetY() const { return m_MouseY; }
+		OPAL_NODISCARD float GetX() const { return m_MouseX; }
+		OPAL_NODISCARD float GetY() const { return m_MouseY; }
 
-		std::string ToString() const override 
+		OPAL_NODISCARD std::string ToString() const override 
 		{
 			std::stringstream ss;
 			ss << "MouseMovedEvent: " << m_MouseX << ", " << m_MouseY;
@@ -27,15 +27,15 @@ namespace Mixture
 		float m_MouseX, m_MouseY;
 	};
 
-	class MouseScrolledEvent : public Event 
+	class MouseScrolledEvent final : public Event 
 	{
 	public:
 		MouseScrolledEvent(const float xOffset, const float yOffset) : m_XOffset(xOffset), m_YOffset(yOffset) {}
 
-		float GetXOffset() const { return m_XOffset; }
-		float GetYOffset() const { return m_YOffset; }
+		OPAL_NODISCARD float GetXOffset() const { return m_XOffset; }
+		OPAL_NODISCARD float GetYOffset() const { return m_YOffset; }
 
-		std::string ToString() const override 
+		OPAL_NODISCARD std::string ToString() const override 
 		{
 			std::stringstream ss;
 			ss << "MouseScrolledEvent: " << GetXOffset() << ", " << GetYOffset();
@@ -51,21 +51,21 @@ namespace Mixture
 	class MouseButtonEvent : public Event 
 	{
 	public:
-		inline MouseCode GetMouseButton() const { return m_Button; }
+		OPAL_NODISCARD MouseCode GetMouseButton() const { return m_Button; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput | EventCategoryMouseButton)
 	protected:
-		MouseButtonEvent(const MouseCode button) : m_Button(button) {}
+		explicit MouseButtonEvent(const MouseCode button) : m_Button(button) {}
 
 		MouseCode m_Button;
 	};
 
-	class MouseButtonPressedEvent : public MouseButtonEvent 
+	class MouseButtonPressedEvent final : public MouseButtonEvent 
 	{
 	public:
-		MouseButtonPressedEvent(const MouseCode button) : MouseButtonEvent(button) {}
+		explicit MouseButtonPressedEvent(const MouseCode button) : MouseButtonEvent(button) {}
 
-		std::string ToString() const override 
+		OPAL_NODISCARD std::string ToString() const override 
 		{
 			std::stringstream ss;
 			ss << "MouseButtonPressedEvent: " << m_Button;
@@ -75,12 +75,12 @@ namespace Mixture
 		EVENT_CLASS_TYPE(MouseButtonPressed)
 	};
 
-	class MouseButtonReleasedEvent : public MouseButtonEvent 
+	class MouseButtonReleasedEvent final : public MouseButtonEvent 
 	{
 	public:
-		MouseButtonReleasedEvent(const MouseCode button) : MouseButtonEvent(button) {}
+		explicit MouseButtonReleasedEvent(const MouseCode button) : MouseButtonEvent(button) {}
 
-		std::string ToString() const override 
+		OPAL_NODISCARD std::string ToString() const override 
 		{
 			std::stringstream ss;
 			ss << "MouseButtonReleasedEvent: " << m_Button;

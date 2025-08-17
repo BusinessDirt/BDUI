@@ -8,23 +8,23 @@ namespace Mixture
 	class KeyEvent : public Event 
 	{
 	public:
-		KeyCode GetKeyCode() const { return m_KeyCode; }
+		OPAL_NODISCARD KeyCode GetKeyCode() const { return m_KeyCode; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 	protected:
-		KeyEvent(const KeyCode keycode) : m_KeyCode(keycode) {}
+		explicit KeyEvent(const KeyCode keycode) : m_KeyCode(keycode) {}
 
 		KeyCode m_KeyCode;
 	};
 
-	class KeyPressedEvent : public KeyEvent 
+	class KeyPressedEvent final : public KeyEvent 
 	{
 	public:
-		KeyPressedEvent(const KeyCode keycode, bool isRepeat = false) : KeyEvent(keycode), m_IsRepeat(isRepeat) {}
+		explicit KeyPressedEvent(const KeyCode keycode, const bool isRepeat = false) : KeyEvent(keycode), m_IsRepeat(isRepeat) {}
 
-		bool IsRepeat() const { return m_IsRepeat; }
+		OPAL_NODISCARD bool IsRepeat() const { return m_IsRepeat; }
 
-		std::string ToString() const override {
+		OPAL_NODISCARD std::string ToString() const override {
 			std::stringstream ss;
 			ss << "KeyPressedEvent: " << m_KeyCode << " (repeat = " << m_IsRepeat << ")";
 			return ss.str();
@@ -35,12 +35,12 @@ namespace Mixture
 		bool m_IsRepeat;
 	};
 
-	class KeyReleasedEvent : public KeyEvent 
+	class KeyReleasedEvent final : public KeyEvent 
 	{
 	public:
-		KeyReleasedEvent(const KeyCode keycode) : KeyEvent(keycode) {}
+		explicit KeyReleasedEvent(const KeyCode keycode) : KeyEvent(keycode) {}
 
-		std::string ToString() const override
+		OPAL_NODISCARD std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << "KeyReleasedEvent: " << m_KeyCode;
@@ -50,12 +50,12 @@ namespace Mixture
 		EVENT_CLASS_TYPE(KeyReleased)
 	};
 
-	class KeyTypedEvent : public KeyEvent 
+	class KeyTypedEvent final : public KeyEvent 
 	{
 	public:
-		KeyTypedEvent(const KeyCode keycode) : KeyEvent(keycode) {}
+		explicit KeyTypedEvent(const KeyCode keycode) : KeyEvent(keycode) {}
 
-		std::string ToString() const override 
+		OPAL_NODISCARD std::string ToString() const override 
 		{
 			std::stringstream ss;
 			ss << "KeyTypedEvent: " << m_KeyCode;

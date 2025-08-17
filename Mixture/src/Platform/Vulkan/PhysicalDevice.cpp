@@ -11,16 +11,19 @@ namespace Mixture::Vulkan
 {
     namespace Util
     {
-        static std::vector<VkExtensionProperties> GetAvailableExtensions(const VkPhysicalDevice physicalDevice)
+        namespace
         {
-            uint32_t extensionCount;
-            vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
+            std::vector<VkExtensionProperties> GetAvailableExtensions(const VkPhysicalDevice physicalDevice)
+            {
+                uint32_t extensionCount;
+                vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
 
-            std::vector<VkExtensionProperties> availableExtensions(extensionCount);
-            vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
+                std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+                vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
             
-            return availableExtensions;
-        }  
+                return availableExtensions;
+            } 
+        }
     }
 
     PhysicalDevice::PhysicalDevice(const std::vector<const char*>& requiredExtensions)
@@ -28,7 +31,7 @@ namespace Mixture::Vulkan
         uint32_t deviceCount = 0;
         vkEnumeratePhysicalDevices(Context::Get().Instance().GetHandle(), &deviceCount, nullptr);
         
-        OPAL_CORE_ASSERT(deviceCount > 0, "Failed to find GPU with Vulkan support!");
+        OPAL_CORE_ASSERT(deviceCount > 0, "Failed to find GPU with Vulkan support!")
         
         std::vector<VkPhysicalDevice> devices(deviceCount);
         vkEnumeratePhysicalDevices(Context::Get().Instance().GetHandle(), &deviceCount, devices.data());
@@ -51,7 +54,7 @@ namespace Mixture::Vulkan
             Util::PrintDebugAvailability(Util::GetAvailableExtensions(m_PhysicalDevice), requiredExtensions, [](const VkExtensionProperties& extension) { return extension.extensionName; }, "Device Extensions");
         }
         
-        OPAL_CORE_ASSERT(m_PhysicalDevice != VK_NULL_HANDLE, "Failed to find suitable GPU!");
+        OPAL_CORE_ASSERT(m_PhysicalDevice != VK_NULL_HANDLE, "Failed to find suitable GPU!")
         
         // Debug Information
         vkGetPhysicalDeviceProperties(m_PhysicalDevice, &m_Properties);
@@ -72,7 +75,7 @@ namespace Mixture::Vulkan
 
     }
 
-    int PhysicalDevice::RateDeviceSuitability(VkPhysicalDevice device, const std::vector<const char*>& requiredExtensions)
+    int PhysicalDevice::RateDeviceSuitability(VkPhysicalDevice device, const std::vector<const char*>& requiredExtensions) const
     {
         // Basic device properites like name, type, supported vulkan versions, etc
         VkPhysicalDeviceProperties deviceProperties;
@@ -88,26 +91,27 @@ namespace Mixture::Vulkan
         if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) score += 1000;
 
         // Maximum possible size of textures affects graphics quality
-        score += deviceProperties.limits.maxImageDimension2D;
+        score += static_cast<int>(deviceProperties.limits.maxImageDimension2D);
         
         // These features need to be supported for the application to work
         // ===============================================================
         
         // Graphics and Present Queue
-        QueueFamilyIndices indices = FindQueueFamilyIndices(device);
-        if (!indices.IsComplete()) score = 0;
+        if (QueueFamilyIndices indices = FindQueueFamilyIndices(device); !indices.IsComplete()) score = 0;
         
         // Device Extensions need to be supported
-        if (!CheckExtensionSupport(device, requiredExtensions)) score = 0;
+        if (!CheckExtensionSupport(device, requiredExtensions))
+            score = 0;
         
         // Swapchain support (has to have atleast one format and present mode)
-        SwapchainSupportDetails swapchainSupport = QuerySwapchainSupport(device);
-        if (swapchainSupport.Formats.empty() || swapchainSupport.PresentModes.empty()) score = 0;
+        if (SwapchainSupportDetails swapchainSupport = QuerySwapchainSupport(device);
+            swapchainSupport.Formats.empty() || swapchainSupport.PresentModes.empty())
+            score = 0;
 
         return score;
     }
 
-    bool PhysicalDevice::CheckExtensionSupport(VkPhysicalDevice device, const std::vector<const char*>& requiredExtensions)
+    bool PhysicalDevice::CheckExtensionSupport(const VkPhysicalDevice device, const std::vector<const char*>& requiredExtensions)
     {
         uint32_t extensionCount;
         vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
@@ -117,10 +121,9 @@ namespace Mixture::Vulkan
 
         std::set<std::string> extensionSet(requiredExtensions.begin(), requiredExtensions.end());
 
-        for (const auto& extension : availableExtensions)
-        {
-            extensionSet.erase(extension.extensionName);
-        }
+        for (const auto& [extensionName, specVersion] : availableExtensions)
+            extensionSet.erase(extensionName);
+        
 
         return extensionSet.empty();
     }

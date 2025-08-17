@@ -1,26 +1,23 @@
 #include "mxpch.hpp"
 #include "Mixture/Assets/SPVShader.hpp"
 
-namespace Mixture
+namespace Mixture::Util
 {
-	namespace Util
+	ShaderStage FilePathToShaderStage(const std::filesystem::path& filePath)
 	{
-		ShaderStage FilePathToShaderStage(const std::filesystem::path& filePath)
-		{
-			std::string extension = filePath.extension().string();
-			if (extension == ".vert") return SHADER_STAGE_VERTEX;
-			if (extension == ".frag") return SHADER_STAGE_FRAGMENT;
+		const std::string extension = filePath.extension().string();
+		if (extension == ".vert") return ShaderStageVertex;
+		if (extension == ".frag") return ShaderStageFragment;
 
-			OPAL_CORE_ERROR("Unknown shader file extension '{0}'", filePath.string().c_str());
-			return SHADER_STAGE_VERTEX;
-		}
+		OPAL_CORE_ERROR("Unknown shader file extension '{0}'", filePath.string().c_str());
+		return ShaderStageVertex;
+	}
 
-		std::string ShaderStageToString(ShaderStage stage)
-		{
-			if (stage == SHADER_STAGE_FRAGMENT) return "Fragment Shader Stage";
-			if (stage == SHADER_STAGE_VERTEX) return "Vertex Shader Stage";
-			return "Unknown Shader Stage";
-		}
+	std::string ShaderStageToString(const ShaderStage stage)
+	{
+		if (stage == ShaderStageFragment) return "Fragment Shader Stage";
+		if (stage == ShaderStageVertex) return "Vertex Shader Stage";
+		return "Unknown Shader Stage";
 	}
 }
 

@@ -1,13 +1,9 @@
 #pragma once
 
-#include <functional>
-
-#include "Mixture/Core/Base.hpp"
-
 namespace Mixture 
 {
 
-	enum class EventType 
+	enum class EventType : uint8_t
 	{
 		None = 0,
 		FramebufferResize, WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
@@ -16,7 +12,7 @@ namespace Mixture
 		MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
 	};
 
-	enum EventCategory 
+	enum EventCategory : uint8_t
 	{
 		None = 0,
 		EventCategoryApplication = BIT(0),
@@ -35,16 +31,19 @@ namespace Mixture
 	class Event 
 	{
 	public:
+		OPAL_NON_COPIABLE(Event);
+		
+		Event() = default;
 		virtual ~Event() = default;
 
-		bool handled = false;
+		bool Handled = false;
 
-		virtual EventType GetEventType() const = 0;
-		virtual const char* GetName() const = 0;
-		virtual int GetCategoryFlags() const = 0;
-		virtual std::string ToString() const { return GetName(); }
+		OPAL_NODISCARD virtual EventType GetEventType() const = 0;
+		OPAL_NODISCARD virtual const char* GetName() const = 0;
+		OPAL_NODISCARD virtual int GetCategoryFlags() const = 0;
+		OPAL_NODISCARD virtual std::string ToString() const { return GetName(); }
 
-		bool IsInCategory(EventCategory category) 
+		OPAL_NODISCARD bool IsInCategory(const EventCategory category) const
 		{
 			return GetCategoryFlags() & category;
 		}
@@ -53,14 +52,14 @@ namespace Mixture
 	class EventDispatcher 
 	{
 	public:
-		EventDispatcher(Event& event) : m_Event(event) {}
+		explicit EventDispatcher(Event& event) : m_Event(event) {}
 
 		template<typename T, typename F>
 		bool Dispatch(const F& func) 
 		{
 			if (m_Event.GetEventType() == T::GetStaticType()) 
 			{
-				m_Event.handled |= func(static_cast<T&>(m_Event));
+				m_Event.Handled |= func(static_cast<T&>(m_Event));
 				return true;
 			}
 			return false;

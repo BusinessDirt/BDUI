@@ -15,40 +15,39 @@ namespace Mixture
 {
     struct ApplicationCommandLineArgs
     {
-        int count = 0;
-        char** args = nullptr;
+        int Count = 0;
+        char** Args = nullptr;
 
-        const char* operator[](int index) const
+        const char* operator[](const int index) const
         {
-            OPAL_CORE_ASSERT(index < count);
-            return args[index];
+            OPAL_CORE_ASSERT(index < Count)
+            return Args[index];
         }
     };
 
     class Application
     {
     public:
-        Application(const std::string& name = "Mixture App", ApplicationCommandLineArgs args = ApplicationCommandLineArgs());
+        OPAL_NON_COPIABLE(Application);
+        
+        explicit Application(const std::string& name = "Mixture App", ApplicationCommandLineArgs args = ApplicationCommandLineArgs());
         virtual ~Application();
-
-        Application(const Application&) = delete;
-        Application& operator=(const Application&) = delete;
 
         void Close();
         
-        void OnEvent(Event& e);
+        void OnEvent(Event& event);
 
         static Application& Get() { return *s_Instance; }
-        const Window& GetWindow() const { return *m_Window; }
-        const AssetManager& GetAssetManager() const { return *m_AssetManager; }
+        OPAL_NODISCARD const Window& GetWindow() const { return *m_Window; }
+        OPAL_NODISCARD const AssetManager& GetAssetManager() const { return *m_AssetManager; }
         
-        void PushLayer(Layer* layer) { m_LayerStack->PushLayer(layer); };
-        void PopLayer(Layer* layer) { m_LayerStack->PopLayer(layer); }
+        void PushLayer(Layer* layer) const { m_LayerStack->PushLayer(layer); }
+        void PopLayer(Layer* layer) const { m_LayerStack->PopLayer(layer); }
 
     private:
-        void Run();
+        void Run() const;
         bool OnWindowClose(WindowCloseEvent& e);
-        bool OnFramebufferResize(FramebufferResizeEvent& e);
+        bool OnFramebufferResize(const FramebufferResizeEvent& e);
 
     private:
         Scope<Window> m_Window;

@@ -1,6 +1,4 @@
 #pragma once
-#include "Mixture/Core/Base.hpp"
-
 #include <chrono>
 
 namespace Mixture
@@ -15,19 +13,19 @@ namespace Mixture
             m_Start = std::chrono::high_resolution_clock::now();
         }
 
-        float Elapsed()
+        OPAL_NODISCARD float Elapsed() const
         {
             return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - m_Start).count() * 0.001f * 0.001f * 0.001f;
         }
 
-        float ElapsedMillis()
+        OPAL_NODISCARD float ElapsedMillis() const
         {
             return Elapsed() * 1000.0f;
         }
         
-        float Tick()
+        OPAL_NODISCARD float Tick()
         {
-            float elapsed = Elapsed();
+            const float elapsed = Elapsed();
             Reset();
             return elapsed;
         }

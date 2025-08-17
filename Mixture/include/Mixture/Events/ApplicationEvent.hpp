@@ -4,15 +4,15 @@
 
 namespace Mixture 
 {
-    class FramebufferResizeEvent : public Event
+    class FramebufferResizeEvent final : public Event
     {
     public:
-        FramebufferResizeEvent(unsigned int width, unsigned int height) : m_Width(width), m_Height(height) {}
+        FramebufferResizeEvent(const unsigned int width, const unsigned int height) : m_Width(width), m_Height(height) {}
 
-        unsigned int GetWidth() const { return m_Width; }
-        unsigned int GetHeight() const { return m_Height; }
+        OPAL_NODISCARD unsigned int GetWidth() const { return m_Width; }
+        OPAL_NODISCARD unsigned int GetHeight() const { return m_Height; }
 
-        std::string ToString() const override
+        OPAL_NODISCARD std::string ToString() const override
         {
             std::stringstream ss;
             ss << "FramebufferResizeEvent: " << m_Width << ", " << m_Height;
@@ -26,15 +26,15 @@ namespace Mixture
         unsigned int m_Width, m_Height;
     };
 
-	class WindowResizeEvent : public Event
+	class WindowResizeEvent final : public Event
     {
 	public:
-		WindowResizeEvent(unsigned int width, unsigned int height) : m_Width(width), m_Height(height) {}
+		WindowResizeEvent(const unsigned int width, const unsigned int height) : m_Width(width), m_Height(height) {}
 
-		unsigned int GetWidth() const { return m_Width; }
-		unsigned int GetHeight() const { return m_Height; }
+		OPAL_NODISCARD unsigned int GetWidth() const { return m_Width; }
+		OPAL_NODISCARD unsigned int GetHeight() const { return m_Height; }
 
-		std::string ToString() const override
+		OPAL_NODISCARD std::string ToString() const override
 		{
 			std::stringstream ss;
 			ss << "WindowResizeEvent: " << m_Width << ", " << m_Height;
@@ -48,7 +48,7 @@ namespace Mixture
 		unsigned int m_Width, m_Height;
 	};
 
-	class WindowCloseEvent : public Event 
+	class WindowCloseEvent final : public Event 
 	{
 	public:
 		WindowCloseEvent() = default;
@@ -57,7 +57,7 @@ namespace Mixture
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class AppTickEvent : public Event 
+	class AppTickEvent final : public Event 
 	{
 	public:
 		AppTickEvent() = default;
@@ -66,7 +66,7 @@ namespace Mixture
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class AppUpdateEvent : public Event 
+	class AppUpdateEvent final : public Event 
 	{
 		AppUpdateEvent() = default;
 
@@ -74,7 +74,7 @@ namespace Mixture
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	};
 
-	class AppRenderEvent : public Event 
+	class AppRenderEvent final : public Event 
 	{
 		AppRenderEvent() = default;
 

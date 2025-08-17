@@ -14,6 +14,8 @@ namespace Mixture
     class ImGuiRenderer
     {
     public:
+        OPAL_NON_COPIABLE(ImGuiRenderer);
+        
         ImGuiRenderer() = default;
         ~ImGuiRenderer();
         
@@ -22,10 +24,10 @@ namespace Mixture
 
         void OnFramebufferResize(uint32_t width, uint32_t height);
 
-        void BeginFrame();
+        void BeginFrame() const;
         void EndFrame();
         
-        void BeginRenderpass(VkCommandBuffer commandBuffer);
+        void BeginRenderpass(VkCommandBuffer commandBuffer) const;
         void Draw(VkCommandBuffer commandBuffer);
         void EndRenderpass(VkCommandBuffer commandBuffer);
         

@@ -1,4 +1,3 @@
-#include "mxpch.hpp"
 #include "MainLayer.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>

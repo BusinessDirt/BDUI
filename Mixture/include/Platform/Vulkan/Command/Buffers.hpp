@@ -9,10 +9,10 @@ namespace Mixture::Vulkan
     public:
         OPAL_NON_COPIABLE(CommandBuffers);
 
-        CommandBuffers(const VkCommandPool commandPool, size_t size);
+        CommandBuffers(VkCommandPool commandPool, size_t size);
         ~CommandBuffers();
 
-        VkCommandBuffer Get(int i) const { return m_CommandBuffers[i]; }
+        OPAL_NODISCARD VkCommandBuffer Get(const uint32_t index) const { return m_CommandBuffers[index]; }
     private:
         std::vector<VkCommandBuffer> m_CommandBuffers;
         VkCommandPool m_CommandPool;

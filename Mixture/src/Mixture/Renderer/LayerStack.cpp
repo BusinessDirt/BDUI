@@ -32,18 +32,17 @@ namespace Mixture
         for (Layer* layer : m_Layers) layer->OnEvent(e);
     }
 
-    void LayerStack::PushLayer(Layer* overlay)
+    void LayerStack::PushLayer(Layer* layer)
     {
-        m_Layers.emplace_back(overlay);
-        overlay->OnAttach();
+        m_Layers.emplace_back(layer);
+        layer->OnAttach();
     }
 
-    void LayerStack::PopLayer(Layer* overlay)
+    void LayerStack::PopLayer(Layer* layer)
     {
-        std::vector<Layer*>::iterator it = std::find(m_Layers.begin(), m_Layers.end(), overlay);
-        if (it != m_Layers.end())
+        if (const auto it = std::ranges::find(m_Layers, layer); it != m_Layers.end())
         {
-            overlay->OnDetach();
+            layer->OnDetach();
             m_Layers.erase(it);
         }
     }

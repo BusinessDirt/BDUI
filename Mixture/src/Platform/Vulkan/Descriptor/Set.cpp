@@ -1,29 +1,30 @@
-#include "mxpch.hpp"
+#include <mxpch.hpp>
 #include "Platform/Vulkan/Descriptor/Set.hpp"
 
 #include "Platform/Vulkan/Context.hpp"
 
 namespace Mixture::Vulkan
 {
-    DescriptorSet::DescriptorSet(VkDescriptorPool pool, Ref<DescriptorSetLayout> layout)
-        : m_Device(Context::Get().Device().GetHandle()), m_Layout(layout)
+    DescriptorSet::DescriptorSet(const VkDescriptorPool pool, const Ref<DescriptorSetLayout>& layout)
+        : m_Layout(layout), m_Device(Context::Get().Device().GetHandle())
     {
-        VkDescriptorSetLayout layoutHandle = m_Layout->GetHandle();
+        const VkDescriptorSetLayout layoutHandle = m_Layout->GetHandle();
         VkDescriptorSetAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         allocInfo.descriptorPool = pool;
         allocInfo.descriptorSetCount = 1;
         allocInfo.pSetLayouts = &layoutHandle;
 
-        VK_ASSERT(vkAllocateDescriptorSets(m_Device, &allocInfo, &m_Set), "Failed to allocate DescriptorSet");
+        VK_ASSERT(vkAllocateDescriptorSets(m_Device, &allocInfo, &m_Set),
+                  "Failed to allocate DescriptorSet")
     }
 
-    void DescriptorSet::Free(VkDescriptorPool pool)
+    void DescriptorSet::Free(const VkDescriptorPool pool) const
     {
         vkFreeDescriptorSets(m_Device, pool, 1, &m_Set);
     }
 
-    void DescriptorSet::UpdateBuffer(uint32_t binding, const VkDescriptorBufferInfo* bufferInfo)
+    void DescriptorSet::UpdateBuffer(const uint32_t binding, const VkDescriptorBufferInfo* bufferInfo) const
     {
         VkWriteDescriptorSet write{};
         write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -36,7 +37,7 @@ namespace Mixture::Vulkan
         vkUpdateDescriptorSets(m_Device, 1, &write, 0, nullptr);
     }
 
-    void DescriptorSet::UpdateImage(uint32_t binding, const VkDescriptorImageInfo* imageInfo)
+    void DescriptorSet::UpdateImage(const uint32_t binding, const VkDescriptorImageInfo* imageInfo) const
     {
         VkWriteDescriptorSet write{};
         write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

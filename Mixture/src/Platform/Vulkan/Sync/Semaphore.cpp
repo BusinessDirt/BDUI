@@ -11,7 +11,7 @@ namespace Mixture::Vulkan
         semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
         VK_ASSERT(vkCreateSemaphore(Context::Get().Device().GetHandle(), &semaphoreInfo, nullptr, &m_Semaphore),
-            "Failed to create VkSemaphore!");
+                  "Failed to create VkSemaphore!")
     }
 
     Semaphore::~Semaphore()
@@ -23,13 +23,13 @@ namespace Mixture::Vulkan
         }
     }
 
-    Semaphore::Semaphore(Semaphore&& other)
+    Semaphore::Semaphore(Semaphore&& other) noexcept
         : m_Semaphore(other.m_Semaphore)
     {
         other.m_Semaphore = VK_NULL_HANDLE;
     }
 
-    Semaphore& Semaphore::operator=(Semaphore&& other)
+    Semaphore& Semaphore::operator=(Semaphore&& other) noexcept
     {
         if (this != &other)
         {

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Mixture/Core/Base.hpp"
-#include "Mixture/Renderer/RendererInfo.hpp"
 #include "Platform/Vulkan/Buffer/Buffer.hpp"
 
 #include <vulkan/vulkan.h>

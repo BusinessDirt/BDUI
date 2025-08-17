@@ -7,7 +7,9 @@ namespace Mixture::Vulkan
 	class Renderpass
 	{
 	public:
-		Renderpass(VkFormat format, bool useDepth = true, VkAttachmentLoadOp loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
+		OPAL_NON_COPIABLE(Renderpass);
+		
+		explicit Renderpass(VkFormat format, bool useDepth = true, VkAttachmentLoadOp loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
 			VkImageLayout initialLayout = VK_IMAGE_LAYOUT_UNDEFINED, VkImageLayout finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR);
 		~Renderpass();
 

@@ -15,9 +15,9 @@ namespace Mixture::Vulkan
 		FrameBuffer(VkImageView depthAttachment, VkImage swapchainImage, VkExtent2D extent, VkFormat format, VkRenderPass renderPass = nullptr);
 		~FrameBuffer();
 
-		VkFormat GetFormat() const { return m_Format; }
-		const VkImage GetImage() const { return m_Image; }
-		const ImageView& GetImageView() const { return *m_ImageView; }
+		OPAL_NODISCARD VkFormat GetFormat() const { return m_Format; }
+		OPAL_NODISCARD VkImage GetImage() const { return m_Image; }
+		OPAL_NODISCARD const ImageView& GetImageView() const { return *m_ImageView; }
 
 	private:
 		VULKAN_HANDLE(VkFramebuffer, m_FrameBuffer);

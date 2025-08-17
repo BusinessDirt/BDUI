@@ -8,13 +8,13 @@ namespace Mixture::Vulkan
     class DescriptorSet
     {
     public:
-        DescriptorSet(VkDescriptorPool pool, Ref<DescriptorSetLayout> layout);
-        void Free(VkDescriptorPool pool);
+        DescriptorSet(VkDescriptorPool pool, const Ref<DescriptorSetLayout>& layout);
+        void Free(VkDescriptorPool pool) const;
         
-        void UpdateBuffer(uint32_t binding, const VkDescriptorBufferInfo* bufferInfo);
-        void UpdateImage(uint32_t binding, const VkDescriptorImageInfo* imageInfo);
+        void UpdateBuffer(uint32_t binding, const VkDescriptorBufferInfo* bufferInfo) const;
+        void UpdateImage(uint32_t binding, const VkDescriptorImageInfo* imageInfo) const;
 
-        const DescriptorSetLayout& GetLayout() const { return *m_Layout; }
+        OPAL_NODISCARD const DescriptorSetLayout& GetLayout() const { return *m_Layout; }
 
     private:
         VULKAN_HANDLE(VkDescriptorSet, m_Set);

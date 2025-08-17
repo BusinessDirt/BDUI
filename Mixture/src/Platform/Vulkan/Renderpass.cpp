@@ -3,7 +3,6 @@
 
 #include "Platform/Vulkan/Context.hpp"
 #include "Platform/Vulkan/Buffer/Depth.hpp"
-#include "Platform/Vulkan/Buffer/Frame.hpp"
 
 namespace Mixture::Vulkan
 {
@@ -77,7 +76,8 @@ namespace Mixture::Vulkan
         renderPassInfo.pDependencies = &dependency;
 
 
-		VK_ASSERT(vkCreateRenderPass(Context::Get().Device().GetHandle(), &renderPassInfo, nullptr, &m_Renderpass), "Failed to create Renderpass");
+		VK_ASSERT(vkCreateRenderPass(Context::Get().Device().GetHandle(), &renderPassInfo, nullptr, &m_Renderpass),
+				  "Failed to create Renderpass")
 	}
 
 	Renderpass::~Renderpass()

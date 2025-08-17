@@ -10,8 +10,8 @@ namespace Mixture::Vulkan
         Semaphore(const Semaphore&) = delete;
         Semaphore& operator=(const Semaphore&) = delete;
 
-        Semaphore(Semaphore&& other);
-        Semaphore& operator=(Semaphore&& other);
+        Semaphore(Semaphore&& other) noexcept;
+        Semaphore& operator=(Semaphore&& other) noexcept;
 
         Semaphore();
         ~Semaphore();

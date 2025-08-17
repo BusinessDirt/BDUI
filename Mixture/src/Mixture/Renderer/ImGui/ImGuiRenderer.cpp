@@ -2,14 +2,13 @@
 #include "Mixture/Renderer/ImGui/ImGuiRenderer.hpp"
 
 #include "Mixture/Core/Application.hpp"
-#include "Mixture/Util/ToString.hpp"
 
 #include "Platform/Vulkan/Context.hpp"
 #include "Platform/Vulkan/Command/SingleTime.hpp"
 
 #include <imgui.h>
-#include <backends/imgui_impl_vulkan.cpp>
 #include <backends/imgui_impl_glfw.cpp>
+#include <backends/imgui_impl_vulkan.cpp>
 
 namespace Mixture
 {
@@ -41,25 +40,25 @@ namespace Mixture
         ImGui::StyleColorsDark();
 
         // Init ImGui Vulkan backend with the VkRenderPass handle
-        ImGui_ImplVulkan_InitInfo init_info{};
-        init_info.ApiVersion = VK_API_VERSION_1_2;
-        init_info.Instance = context.Instance().GetHandle();
-        init_info.PhysicalDevice = context.PhysicalDevice().GetHandle();
-        init_info.Device = context.Device().GetHandle();
-        init_info.QueueFamily = context.PhysicalDevice().GetQueueFamilyIndices().Graphics.value();
-        init_info.Queue = context.Device().GetGraphicsQueue();
-        init_info.PipelineCache = VK_NULL_HANDLE;
-        init_info.DescriptorPool = context.DescriptorPool().GetGlobalHandle();
-        init_info.RenderPass = m_Renderpass->GetHandle();
-        init_info.Subpass = 0;
-        init_info.MinImageCount = Vulkan::Swapchain::MAX_FRAMES_IN_FLIGHT;
-        init_info.ImageCount = (uint32_t)swapchain.GetImageCount();
-        init_info.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
-        init_info.Allocator = nullptr;
-        init_info.CheckVkResultFn = [](VkResult res) { OPAL_CORE_ASSERT(res == VK_SUCCESS, "ImGui Vulkan backend error");};
+        ImGui_ImplVulkan_InitInfo initInfo{};
+        initInfo.ApiVersion = VK_API_VERSION_1_2;
+        initInfo.Instance = context.Instance().GetHandle();
+        initInfo.PhysicalDevice = context.PhysicalDevice().GetHandle();
+        initInfo.Device = context.Device().GetHandle();
+        initInfo.QueueFamily = context.PhysicalDevice().GetQueueFamilyIndices().Graphics.value();
+        initInfo.Queue = context.Device().GetGraphicsQueue();
+        initInfo.PipelineCache = VK_NULL_HANDLE;
+        initInfo.DescriptorPool = context.DescriptorPool().GetGlobalHandle();
+        initInfo.RenderPass = m_Renderpass->GetHandle();
+        initInfo.Subpass = 0;
+        initInfo.MinImageCount = Vulkan::Swapchain::MAX_FRAMES_IN_FLIGHT;
+        initInfo.ImageCount = static_cast<uint32_t>(swapchain.GetImageCount());
+        initInfo.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
+        initInfo.Allocator = nullptr;
+        initInfo.CheckVkResultFn = [](const VkResult res) { OPAL_CORE_ASSERT(res == VK_SUCCESS, "ImGui Vulkan backend error") };
 
-        ImGui_ImplVulkan_Init(&init_info);
-        ImGui_ImplGlfw_InitForVulkan((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow(), true);
+        ImGui_ImplVulkan_Init(&initInfo);
+        ImGui_ImplGlfw_InitForVulkan(static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow()), true);
     }
 
     void ImGuiRenderer::Shutdown()
@@ -76,7 +75,7 @@ namespace Mixture
         m_Renderpass.reset();
     }
 
-    void ImGuiRenderer::OnFramebufferResize(uint32_t width, uint32_t height)
+    void ImGuiRenderer::OnFramebufferResize(const uint32_t width, const uint32_t height)
     {
         m_Width = width;
         m_Height = height;
@@ -87,10 +86,10 @@ namespace Mixture
         CreateFramebuffers();
     }
 
-    void ImGuiRenderer::BeginFrame()
+    void ImGuiRenderer::BeginFrame() const
     {
         ImGuiIO& io = ImGui::GetIO();
-        io.DisplaySize = ImVec2((float)m_Width, (float)m_Height);
+        io.DisplaySize = ImVec2(static_cast<float>(m_Width), static_cast<float>(m_Height));
         
         ImGui_ImplVulkan_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -102,13 +101,13 @@ namespace Mixture
         ImGui::Render();
     }
 
-    void ImGuiRenderer::BeginRenderpass(VkCommandBuffer commandBuffer)
+    void ImGuiRenderer::BeginRenderpass(const VkCommandBuffer commandBuffer) const
     {
         VkRenderPassBeginInfo beginInfo{};
         beginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
         beginInfo.renderPass = m_Renderpass->GetHandle();
         beginInfo.framebuffer = m_FrameBuffers[Vulkan::Context::Get().CurrentImageIndex()]->GetHandle();
-        beginInfo.renderArea.offset = {0, 0};
+        beginInfo.renderArea.offset = {.x = 0, .y = 0};
         beginInfo.renderArea.extent.width = m_Width;
         beginInfo.renderArea.extent.height = m_Height;
         beginInfo.clearValueCount = 0;
@@ -117,17 +116,17 @@ namespace Mixture
         vkCmdBeginRenderPass(commandBuffer, &beginInfo, VK_SUBPASS_CONTENTS_INLINE);
     }
 
-    void ImGuiRenderer::Draw(VkCommandBuffer commandBuffer)
+    void ImGuiRenderer::Draw(const VkCommandBuffer commandBuffer)
     {
         ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), commandBuffer);
     }
 
-    void ImGuiRenderer::EndRenderpass(VkCommandBuffer commandBuffer)
+    void ImGuiRenderer::EndRenderpass(const VkCommandBuffer commandBuffer)
     {
         vkCmdEndRenderPass(commandBuffer);
 
-        ImGuiIO& io = ImGui::GetIO();
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        if (const ImGuiIO& io = ImGui::GetIO();
+            io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
         {
             ImGui::UpdatePlatformWindows();
             ImGui::RenderPlatformWindowsDefault();

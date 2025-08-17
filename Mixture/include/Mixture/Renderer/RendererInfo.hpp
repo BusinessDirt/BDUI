@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Mixture/Core/Base.hpp"
-
 #include <glm/glm.hpp>
 #include <vulkan/vulkan.h>
 

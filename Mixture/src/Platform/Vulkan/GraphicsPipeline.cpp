@@ -15,12 +15,12 @@ namespace Mixture::Vulkan
         const Swapchain& swapchain = Context::Get().Swapchain();
 
         ShaderCompiler::Flags flags{};
-        flags.PipelineType = ShaderCompiler::GRAPHICS_PIPELINE;
+        flags.PipelineType = ShaderCompiler::Graphics;
         flags.Debug = true;
 
-        SPVShader shader = Mixture::ShaderCompiler::Compile(shaderName, flags);
-        ShaderModule vertShader(shader, SHADER_STAGE_VERTEX);
-        ShaderModule fragShader(shader, SHADER_STAGE_FRAGMENT);
+        SpvShader shader = Mixture::ShaderCompiler::Compile(shaderName, flags);
+        ShaderModule vertShader(shader, ShaderStageVertex);
+        ShaderModule fragShader(shader, ShaderStageFragment);
         VkPipelineShaderStageCreateInfo shaderStages[] = { vertShader.CreateInfo(), fragShader.CreateInfo() };
         
         // Descriptor Set Layouts
@@ -51,10 +51,10 @@ namespace Mixture::Vulkan
         viewport.maxDepth = 1.0f;
 
         VkRect2D scissor{};
-        scissor.offset = { 0, 0 };
+        scissor.offset = {.x = 0, .y = 0 };
         scissor.extent = swapchain.GetExtent();
 
-        std::vector<VkDynamicState> dynamicStates = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
+        std::vector dynamicStates = { VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR };
 
         VkPipelineDynamicStateCreateInfo dynamicState{};
         dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
@@ -135,7 +135,8 @@ namespace Mixture::Vulkan
             pipelineLayoutInfo.pPushConstantRanges = &shader.PushConstant;
         }
 
-        VK_ASSERT(vkCreatePipelineLayout(Context::Get().Device().GetHandle(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout), "Failed to create Graphics Pipeline Layout!");
+        VK_ASSERT(vkCreatePipelineLayout(Context::Get().Device().GetHandle(), &pipelineLayoutInfo, nullptr, &m_PipelineLayout),
+                  "Failed to create Graphics Pipeline Layout!")
 
         VkGraphicsPipelineCreateInfo pipelineInfo{};
         pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -155,14 +156,15 @@ namespace Mixture::Vulkan
         pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
         pipelineInfo.basePipelineIndex = -1;
 
-        VK_ASSERT(vkCreateGraphicsPipelines(Context::Get().Device().GetHandle(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_GraphicsPipeline), "Failed to create Graphics Pipeline");
+        VK_ASSERT(vkCreateGraphicsPipelines(Context::Get().Device().GetHandle(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &m_GraphicsPipeline),
+                  "Failed to create Graphics Pipeline")
         
         if (!m_SetLayouts.empty())
         {
             // Define the global set to be set=0
             m_GlobalSet = CreateScope<DescriptorSet>(Context::Get().DescriptorPool().AllocateGlobalSet(m_SetLayouts[0]));
         }
-    };
+    }
 
     GraphicsPipeline::~GraphicsPipeline()
     {
@@ -179,16 +181,16 @@ namespace Mixture::Vulkan
         }
     }
 
-    void GraphicsPipeline::Bind(VkCommandBuffer commandBuffer) const
+    void GraphicsPipeline::Bind(const VkCommandBuffer commandBuffer) const
     {
         vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_GraphicsPipeline);
-        
-        std::array<VkDescriptorSet, 1> sets = { m_GlobalSet->GetHandle() };
+
+        const std::array sets = { m_GlobalSet->GetHandle() };
         vkCmdBindDescriptorSets(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_PipelineLayout, 0,
-                                static_cast<uint32_t>(sets.size()), sets.data(), 0, nullptr);
+                                sets.size(), sets.data(), 0, nullptr);
     }
 
-    void GraphicsPipeline::PushConstants(VkCommandBuffer commandBuffer, const void* pValues) const
+    void GraphicsPipeline::PushConstants(const VkCommandBuffer commandBuffer, const void* pValues) const
     {
         if (m_PushConstant.size > 0)
         {

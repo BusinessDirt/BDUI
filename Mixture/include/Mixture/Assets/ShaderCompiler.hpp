@@ -3,25 +3,22 @@
 #include "Mixture/Core/Base.hpp"
 #include "Mixture/Assets/SPVShader.hpp"
 
-namespace Mixture
+namespace Mixture::ShaderCompiler
 {
-	namespace ShaderCompiler
+	enum PipelineType : uint8_t
 	{
-		enum PipelineType
-		{
-			GRAPHICS_PIPELINE
-		};
+		Graphics
+	};
 
-		struct Flags
-		{
-			PipelineType PipelineType = GRAPHICS_PIPELINE;
-			bool Debug = true;
-		};
+	struct Flags
+	{
+		PipelineType PipelineType = Graphics;
+		bool Debug = true;
+	};
 
-		SPVShader Compile(const std::string& shaderName, const Flags& compileFlags);
+	SpvShader Compile(const std::string& shaderName, const Flags& compileFlags);
 
-		static void Reflect(SPVShader& shader);
-		static void DebugPrint(const std::string& shaderName, const Flags& compileFlags, SPVShader& shader);
-		static std::vector<uint32_t> CompileStage(const std::filesystem::path& path, const Flags& compileFlags, ShaderStage stage);
-	}
+	static void Reflect(SpvShader& shader);
+	static void DebugPrint(const std::string& shaderName, const Flags& compileFlags, SpvShader& shader);
+	static std::vector<uint32_t> CompileStage(const std::filesystem::path& path, const Flags& compileFlags, ShaderStage stage);
 }

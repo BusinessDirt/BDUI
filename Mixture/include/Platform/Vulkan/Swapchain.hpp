@@ -3,8 +3,6 @@
 #include "Platform/Vulkan/Base.hpp"
 #include "Platform/Vulkan/Renderpass.hpp"
 
-#include "Platform/Vulkan/Command/Buffers.hpp"
-
 #include "Platform/Vulkan/Buffer/Frame.hpp"
 #include "Platform/Vulkan/Buffer/Depth.hpp"
 
@@ -18,33 +16,35 @@ namespace Mixture::Vulkan
     public:
         static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
+        OPAL_NON_COPIABLE(Swapchain);
+        
+        explicit Swapchain(const std::shared_ptr<Swapchain>& previous);
         Swapchain();
-        Swapchain(std::shared_ptr<Swapchain> previous);
         ~Swapchain();
 
-        VkExtent2D GetExtent() const { return m_Extent; }
-        uint32_t GetWidth() const { return m_Extent.width; }
-        uint32_t GetHeight() const { return m_Extent.height; }
+        OPAL_NODISCARD VkExtent2D GetExtent() const { return m_Extent; }
+        OPAL_NODISCARD uint32_t GetWidth() const { return m_Extent.width; }
+        OPAL_NODISCARD uint32_t GetHeight() const { return m_Extent.height; }
 
-        const VkFormat GetImageFormat() const { return m_FrameBuffers[0]->GetFormat(); }
-        const VkFormat GetDepthFormat() const { return m_DepthBuffers[0]->GetFormat(); }
+        OPAL_NODISCARD VkFormat GetImageFormat() const { return m_FrameBuffers[0]->GetFormat(); }
+        OPAL_NODISCARD VkFormat GetDepthFormat() const { return m_DepthBuffers[0]->GetFormat(); }
 
-        const Renderpass& GetRenderpass() const { return *m_Renderpass; }
-        const FrameBuffer& GetFramebuffer(int index) const { return *m_FrameBuffers[index]; }
+        OPAL_NODISCARD const Renderpass& GetRenderpass() const { return *m_Renderpass; }
+        OPAL_NODISCARD const FrameBuffer& GetFramebuffer(const uint32_t index) const { return *m_FrameBuffers[index]; }
 
-        uint32_t GetCurrentFrameIndex() const { return static_cast<uint32_t>(m_CurrentFrame); }
-        size_t GetImageCount() const { return m_FrameBuffers.size(); }
+        OPAL_NODISCARD uint32_t GetCurrentFrameIndex() const { return static_cast<uint32_t>(m_CurrentFrame); }
+        OPAL_NODISCARD size_t GetImageCount() const { return m_FrameBuffers.size(); }
 
-        VkResult AcquireNextImage();
-        VkResult SubmitCommandBuffers(const std::vector<VkCommandBuffer>& commandBuffers);
+        OPAL_NODISCARD VkResult AcquireNextImage() const;
+        OPAL_NODISCARD VkResult SubmitCommandBuffers(const std::vector<VkCommandBuffer>& commandBuffers);
 
-        bool CompareSwapFormats(const Swapchain& swapChain) const;
+        OPAL_NODISCARD bool CompareSwapFormats(const Swapchain& swapChain) const;
         
     private:
         void Init(bool debug);
-        VkSurfaceFormatKHR ChooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
-        VkPresentModeKHR  ChoosePresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
-        VkExtent2D ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+        static VkSurfaceFormatKHR ChooseSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+        static VkPresentModeKHR  ChoosePresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+        static VkExtent2D ChooseExtent(const VkSurfaceCapabilitiesKHR& capabilities);
         
     private:
         VULKAN_HANDLE(VkSwapchainKHR, m_Swapchain);

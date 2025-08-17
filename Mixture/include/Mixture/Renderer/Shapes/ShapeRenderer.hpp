@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Mixture/Core/Base.hpp"
-#include "Mixture/Util/Util.hpp"
-#include "Mixture/Renderer/RendererInfo.hpp"
 #include "Mixture/Renderer/Shapes/Shapes.hpp"
 
 #include "Platform/Vulkan/GraphicsPipeline.hpp"

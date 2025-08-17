@@ -18,11 +18,11 @@ namespace Mixture::Vulkan
         ~DeviceMemory();
 
 
-        void* Map(size_t offset, size_t size);
-        void Unmap();
+        OPAL_NODISCARD void* Map(size_t offset, size_t size) const;
+        void Unmap() const;
 
     private:
-        uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const;
+        static uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags propertyFlags);
 
     private:
         VULKAN_HANDLE(VkDeviceMemory, m_Memory);

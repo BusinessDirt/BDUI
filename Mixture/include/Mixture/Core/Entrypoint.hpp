@@ -3,13 +3,13 @@
 #include "Mixture/Core/Base.hpp"
 #include "Mixture/Core/Application.hpp"
 
-extern Mixture::Application* Mixture::CreateApplication(Mixture::ApplicationCommandLineArgs args);
+extern Mixture::Application* Mixture::CreateApplication(ApplicationCommandLineArgs args);  // NOLINT(readability-redundant-declaration)
 
-int Entrypoint(int argc, char** argv)
+inline int Entrypoint(const int argc, char** argv)
 {
     Opal::Log::Init();
-    
-    Mixture::Application* app = Mixture::CreateApplication({ argc, argv });
+
+    const Mixture::Application* app = Mixture::CreateApplication({.Count = argc, .Args = argv });
     app->Run();
     delete app;
 
@@ -37,7 +37,7 @@ int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmd
 
 #else
 
-int main(int argc, char** argv)
+inline int main(const int argc, char** argv)
 {
     return Entrypoint(argc, argv);
 }

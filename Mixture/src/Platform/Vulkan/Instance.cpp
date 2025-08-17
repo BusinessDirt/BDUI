@@ -7,33 +7,36 @@ namespace Mixture::Vulkan
 {
     namespace Util
     {
-        static std::vector<VkLayerProperties> GetAvailableLayers()
+        namespace
         {
-            uint32_t layerCount;
-            vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+            std::vector<VkLayerProperties> GetAvailableLayers()
+            {
+                uint32_t layerCount;
+                vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
-            std::vector<VkLayerProperties> availableLayers(layerCount);
-            vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+                std::vector<VkLayerProperties> availableLayers(layerCount);
+                vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
             
-            return availableLayers;
-        }
+                return availableLayers;
+            }
 
-        static std::vector<VkExtensionProperties> GetAvailableExtensions()
-        {
-            uint32_t extensionCount;
-            vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
+            std::vector<VkExtensionProperties> GetAvailableExtensions()
+            {
+                uint32_t extensionCount;
+                vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr);
 
-            std::vector<VkExtensionProperties> availableExtensions(extensionCount);
-            vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, availableExtensions.data());
+                std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+                vkEnumerateInstanceExtensionProperties(nullptr, &extensionCount, availableExtensions.data());
             
-            return availableExtensions;
+                return availableExtensions;
+            }
         }
     }
     
     Instance::Instance(const std::string& applicationName, const std::vector<const char*>& requiredLayers, const std::vector<const char*>& requiredExtensions)
     {
-        std::vector<VkLayerProperties> availableLayers = Util::GetAvailableLayers();
-        std::vector<VkExtensionProperties> availableExtensions = Util::GetAvailableExtensions();
+        const std::vector<VkLayerProperties> availableLayers = Util::GetAvailableLayers();
+        const std::vector<VkExtensionProperties> availableExtensions = Util::GetAvailableExtensions();
         
         // Print Layer Information
         Util::PrintDebugAvailability(availableLayers, requiredLayers, [](const VkLayerProperties& layer) { return layer.layerName; }, "Layers");
@@ -73,7 +76,8 @@ namespace Mixture::Vulkan
         createInfo.pNext = &debugMessengerCreateInfo;
 
         // Create Vulkan Instance
-        VK_ASSERT(vkCreateInstance(&createInfo, nullptr, &m_Instance), "Failed to create Vulkan instance!");
+        VK_ASSERT(vkCreateInstance(&createInfo, nullptr, &m_Instance),
+                  "Failed to create Vulkan instance!")
     }
 
     Instance::~Instance()

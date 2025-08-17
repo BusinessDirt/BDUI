@@ -10,10 +10,10 @@ namespace Mixture::Vulkan
 {
     Device::Device(const std::vector<const char*>& requiredLayers, const std::vector<const char*>& requiredExtensions)
     {
-        const QueueFamilyIndices& indices = Context::Get().PhysicalDevice().GetQueueFamilyIndices();
+        const auto& [Graphics, Present] = Context::Get().PhysicalDevice().GetQueueFamilyIndices();
         
         std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
-        std::set<uint32_t> uniqueQueueFamilies = { indices.Graphics.value(), indices.Present.value() };
+        std::set uniqueQueueFamilies = { Graphics.value(), Present.value() };
 
         float queuePriority = 1.0f;
         for (uint32_t queueFamily : uniqueQueueFamilies) 
@@ -39,11 +39,11 @@ namespace Mixture::Vulkan
         createInfo.enabledExtensionCount = static_cast<uint32_t>(requiredExtensions.size());
         createInfo.ppEnabledExtensionNames = requiredExtensions.data();
         
-        VK_ASSERT(vkCreateDevice(Context::Get().PhysicalDevice().GetHandle(), &createInfo, nullptr, &m_Device), "Failed to create logical device!");
+        VK_ASSERT(vkCreateDevice(Context::Get().PhysicalDevice().GetHandle(), &createInfo, nullptr, &m_Device), "Failed to create logical device!")
         
         // retrieve queues
-        vkGetDeviceQueue(m_Device, indices.Graphics.value(), 0, &m_GraphicsQueue);
-        vkGetDeviceQueue(m_Device, indices.Present.value(), 0, &m_PresentQueue);
+        vkGetDeviceQueue(m_Device, Graphics.value(), 0, &m_GraphicsQueue);
+        vkGetDeviceQueue(m_Device, Present.value(), 0, &m_PresentQueue);
     }
 
     Device::~Device()
@@ -55,9 +55,9 @@ namespace Mixture::Vulkan
         }
     }
 
-    VkFormat Device::FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) const
+    VkFormat Device::FindSupportedFormat(const std::vector<VkFormat>& candidates, const VkImageTiling tiling, const VkFormatFeatureFlags features)
     {
-        for (VkFormat format : candidates)
+        for (const VkFormat format : candidates)
         {
             VkFormatProperties props;
             vkGetPhysicalDeviceFormatProperties(Context::Get().PhysicalDevice().GetHandle(), format, &props);
@@ -66,7 +66,8 @@ namespace Mixture::Vulkan
             {
                 return format;
             }
-            else if (tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features)
+
+            if (tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features)
             {
                 return format;
             }
@@ -75,13 +76,13 @@ namespace Mixture::Vulkan
         return VK_FORMAT_UNDEFINED;
     }
 
-    uint32_t Device::FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties) const
+    uint32_t Device::FindMemoryType(const uint32_t typeFilter, const VkMemoryPropertyFlags properties)
     {
         VkPhysicalDeviceMemoryProperties memProperties;
         vkGetPhysicalDeviceMemoryProperties(Context::Get().PhysicalDevice().GetHandle(), &memProperties);
         for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++)
         {
-            if ((typeFilter & (1 << i)) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties)
+            if (typeFilter & 1 << i && (memProperties.memoryTypes[i].propertyFlags & properties) == properties)
             {
                 return i;
             }
@@ -91,10 +92,10 @@ namespace Mixture::Vulkan
         return 0;
     }
 
-    void Device::CreateImageWithInfo(const VkImageCreateInfo& imageInfo, VkMemoryPropertyFlags properties,
+    void Device::CreateImageWithInfo(const VkImageCreateInfo& imageInfo, const VkMemoryPropertyFlags properties,
         VkImage& image, VkDeviceMemory& imageMemory) const
     {
-        VK_ASSERT(vkCreateImage(m_Device, &imageInfo, nullptr, &image), "Failed to create VkImage!");
+        VK_ASSERT(vkCreateImage(m_Device, &imageInfo, nullptr, &image), "Failed to create VkImage!")
 
         VkMemoryRequirements memRequirements;
         vkGetImageMemoryRequirements(m_Device, image, &memRequirements);
@@ -104,7 +105,7 @@ namespace Mixture::Vulkan
         allocInfo.allocationSize = memRequirements.size;
         allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, properties);
 
-        VK_ASSERT(vkAllocateMemory(m_Device, &allocInfo, nullptr, &imageMemory), "Failed to allocate VkImageMemory!");
-        VK_ASSERT(vkBindImageMemory(m_Device, image, imageMemory, 0), "Failed to bind VkImageMemory!");
+        VK_ASSERT(vkAllocateMemory(m_Device, &allocInfo, nullptr, &imageMemory), "Failed to allocate VkImageMemory!")
+        VK_ASSERT(vkBindImageMemory(m_Device, image, imageMemory, 0), "Failed to bind VkImageMemory!")
     }
-};
+}

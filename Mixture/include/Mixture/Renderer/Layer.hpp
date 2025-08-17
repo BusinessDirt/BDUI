@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Mixture/Core/Base.hpp"
 #include "Mixture/Events/Event.hpp"
 #include "Mixture/Renderer/RendererInfo.hpp"
 
@@ -9,7 +8,9 @@ namespace Mixture
     class Layer
     {
     public:
-        Layer(const std::string& name = "Layer") : m_DebugName(name) {}
+        OPAL_NON_COPIABLE(Layer);
+        
+        explicit Layer(std::string name = "Layer") : m_DebugName(std::move(name)) {}
         virtual ~Layer() = default;
 
         virtual void OnAttach() = 0;
@@ -21,7 +22,7 @@ namespace Mixture
         
         virtual void OnEvent(Event& event) = 0;
 
-        const std::string& GetName() const { return m_DebugName; }
+        OPAL_NODISCARD const std::string& GetName() const { return m_DebugName; }
 
     protected:
         std::string m_DebugName;

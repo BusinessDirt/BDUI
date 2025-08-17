@@ -9,22 +9,25 @@ namespace Mixture::Vulkan
 {
 	namespace Util
 	{
-		VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, const VkImageTiling tiling, const VkFormatFeatureFlags features)
+		namespace
 		{
-			for (auto format : candidates)
+			VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, const VkImageTiling tiling, const VkFormatFeatureFlags features)
 			{
-				VkFormatProperties props;
-				vkGetPhysicalDeviceFormatProperties(Context::Get().PhysicalDevice().GetHandle(), format, &props);
+				for (const auto format : candidates)
+				{
+					VkFormatProperties props;
+					vkGetPhysicalDeviceFormatProperties(Context::Get().PhysicalDevice().GetHandle(), format, &props);
 
-				if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features) 
-					return format;
+					if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features) 
+						return format;
 
-				if (tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features)
-					return format;
+					if (tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features)
+						return format;
+				}
+
+				OPAL_CORE_ERROR("Failed to find supported format!");
+				return VK_FORMAT_UNDEFINED;
 			}
-
-			OPAL_CORE_ERROR("Failed to find supported format!");
-			return VK_FORMAT_UNDEFINED;
 		}
 	}
 

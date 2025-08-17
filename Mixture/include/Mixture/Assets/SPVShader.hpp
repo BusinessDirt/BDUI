@@ -6,13 +6,13 @@
 
 namespace Mixture
 {
-	enum ShaderStage
+	enum ShaderStage : uint8_t
 	{
-		SHADER_STAGE_VERTEX = 0x00000001,
-		SHADER_STAGE_FRAGMENT = 0x00000010
+		ShaderStageVertex = 0x00000001,
+		ShaderStageFragment = 0x00000010
 	};
 
-	struct SPVShader
+	struct SpvShader
 	{
 		VkPushConstantRange PushConstant{};
         std::unordered_map<uint32_t, std::vector<VkDescriptorSetLayoutBinding>> DescriptorSetLayoutBindings;

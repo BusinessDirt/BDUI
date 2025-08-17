@@ -15,18 +15,19 @@ namespace Mixture::Vulkan
      *
      * @return VkResult of the buffer mapping call
      */
-    VkDeviceSize Buffer::GetAlignment(VkDeviceSize instanceSize, VkDeviceSize minOffsetAlignment)
+    VkDeviceSize Buffer::GetAlignment(const VkDeviceSize instanceSize, const VkDeviceSize minOffsetAlignment)
     {
-        if (minOffsetAlignment > 0) return (instanceSize + minOffsetAlignment - 1) & ~(minOffsetAlignment - 1);
+        if (minOffsetAlignment > 0) return instanceSize + minOffsetAlignment - 1 & ~(minOffsetAlignment - 1);
         return instanceSize;
     }
 
-    Buffer::Buffer(VkDeviceSize instanceSize, uint32_t instanceCount, VkBufferUsageFlags usageFlags, VkMemoryPropertyFlags memoryPropertyFlags, VkDeviceSize minOffsetAlignment)
-        : m_InstanceSize{ instanceSize }, m_InstanceCount{ instanceCount }, m_UsageFlags{ usageFlags }, m_MemoryPropertyFlags{ memoryPropertyFlags }
+    Buffer::Buffer(const VkDeviceSize instanceSize, const uint32_t instanceCount, const VkBufferUsageFlags usageFlags,
+                   const VkMemoryPropertyFlags memoryPropertyFlags, const VkDeviceSize minOffsetAlignment)
+        : m_InstanceCount{ instanceCount }, m_InstanceSize{ instanceSize }, m_UsageFlags{ usageFlags }, m_MemoryPropertyFlags{ memoryPropertyFlags }
     {
         m_AlignmentSize = GetAlignment(m_InstanceSize, minOffsetAlignment);
         m_BufferSize = m_AlignmentSize * m_InstanceCount;
-        Buffer::Create(m_BufferSize, m_UsageFlags, m_MemoryPropertyFlags, m_Buffer, m_Memory);
+        Create(m_BufferSize, m_UsageFlags, m_MemoryPropertyFlags, m_Buffer, m_Memory);
     }
 
     Buffer::~Buffer()
@@ -45,9 +46,9 @@ namespace Mixture::Vulkan
      *
      * @return VkResult of the buffer mapping call
      */
-    VkResult Buffer::Map(VkDeviceSize size, VkDeviceSize offset)
+    VkResult Buffer::Map(const VkDeviceSize size, const VkDeviceSize offset)
     {
-        OPAL_CORE_ASSERT(m_Buffer && m_Memory, "Called map on buffer before create");
+        OPAL_CORE_ASSERT(m_Buffer && m_Memory, "Called map on buffer before create")
         return vkMapMemory(Context::Get().Device().GetHandle(), m_Memory, offset, size, 0, &m_Mapped);
     }
 
@@ -74,9 +75,9 @@ namespace Mixture::Vulkan
      * @param offset (Optional) Byte offset from beginning of mapped region
      *
      */
-    void Buffer::WriteToBuffer(void* data, VkDeviceSize size, VkDeviceSize offset)
+    void Buffer::WriteToBuffer(const void* data, const VkDeviceSize size, const VkDeviceSize offset) const
     {
-        OPAL_CORE_ASSERT(m_Mapped, "Cannot copy to unmapped buffer");
+        OPAL_CORE_ASSERT(m_Mapped, "Cannot copy to unmapped buffer")
 
         if (size == VK_WHOLE_SIZE)
         {
@@ -84,7 +85,7 @@ namespace Mixture::Vulkan
         }
         else
         {
-            char* memOffset = (char*)m_Mapped;
+            auto memOffset = static_cast<char*>(m_Mapped);
             memOffset += offset;
             memcpy(memOffset, data, size);
         }
@@ -101,7 +102,7 @@ namespace Mixture::Vulkan
      *
      * @return VkResult of the flush call
      */
-    VkResult Buffer::Flush(VkDeviceSize size, VkDeviceSize offset)
+    VkResult Buffer::Flush(const VkDeviceSize size, const VkDeviceSize offset) const
     {
         VkMappedMemoryRange m_MappedRange = {};
         m_MappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
@@ -122,7 +123,7 @@ namespace Mixture::Vulkan
      *
      * @return VkResult of the invalidate call
      */
-    VkResult Buffer::Invalidate(VkDeviceSize size, VkDeviceSize offset)
+    VkResult Buffer::Invalidate(const VkDeviceSize size, const VkDeviceSize offset) const
     {
         VkMappedMemoryRange m_MappedRange = {};
         m_MappedRange.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
@@ -140,7 +141,7 @@ namespace Mixture::Vulkan
      *
      * @return VkDescriptorBufferInfo of specified offset and range
      */
-    VkDescriptorBufferInfo Buffer::GetDescriptorInfo(VkDeviceSize size, VkDeviceSize offset)
+    VkDescriptorBufferInfo Buffer::GetDescriptorInfo(const VkDeviceSize size, const VkDeviceSize offset) const
     {
         return VkDescriptorBufferInfo{ m_Buffer, offset, size, };
     }
@@ -152,7 +153,7 @@ namespace Mixture::Vulkan
      * @param index Used in offset calculation
      *
      */
-    void Buffer::WriteToIndex(void* data, int index)
+    void Buffer::WriteToIndex(const void* data, const int index) const
     {
         WriteToBuffer(data, m_InstanceSize, index * m_AlignmentSize);
     }
@@ -163,7 +164,7 @@ namespace Mixture::Vulkan
      * @param index Used in offset calculation
      *
      */
-    VkResult Buffer::FlushIndex(int index)
+    VkResult Buffer::FlushIndex(const int index) const
     {
         return Flush(m_AlignmentSize, index * m_AlignmentSize);
     }
@@ -175,7 +176,7 @@ namespace Mixture::Vulkan
      *
      * @return VkDescriptorBufferInfo for instance at index
      */
-    VkDescriptorBufferInfo Buffer::GetDescriptorInfoForIndex(int index)
+    VkDescriptorBufferInfo Buffer::GetDescriptorInfoForIndex(const int index) const
     {
         return GetDescriptorInfo(m_AlignmentSize, index * m_AlignmentSize);
     }
@@ -189,12 +190,12 @@ namespace Mixture::Vulkan
      *
      * @return VkResult of the invalidate call
      */
-    VkResult Buffer::InvalidateIndex(int index)
+    VkResult Buffer::InvalidateIndex(const int index) const
     {
         return Invalidate(m_AlignmentSize, index * m_AlignmentSize);
     }
 
-    void Buffer::Create(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
+    void Buffer::Create(const VkDeviceSize size, const VkBufferUsageFlags usage, const VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
     {
         VkBufferCreateInfo bufferInfo{};
         bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -202,7 +203,7 @@ namespace Mixture::Vulkan
         bufferInfo.usage = usage;
         bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-        VK_ASSERT(vkCreateBuffer(Context::Get().Device().GetHandle(), &bufferInfo, nullptr, &buffer), "Failed to create VkBuffer");
+        VK_ASSERT(vkCreateBuffer(Context::Get().Device().GetHandle(), &bufferInfo, nullptr, &buffer), "Failed to create VkBuffer")
 
         VkMemoryRequirements memRequirements;
         vkGetBufferMemoryRequirements(Context::Get().Device().GetHandle(), buffer, &memRequirements);
@@ -210,19 +211,19 @@ namespace Mixture::Vulkan
         VkMemoryAllocateInfo allocInfo{};
         allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         allocInfo.allocationSize = memRequirements.size;
-        allocInfo.memoryTypeIndex = Context::Get().Device().FindMemoryType(memRequirements.memoryTypeBits, properties);
+        allocInfo.memoryTypeIndex = Device::FindMemoryType(memRequirements.memoryTypeBits, properties);
 
-        VK_ASSERT(vkAllocateMemory(Context::Get().Device().GetHandle(), &allocInfo, nullptr, &bufferMemory), "Failed to allocate buffer memory");
+        VK_ASSERT(vkAllocateMemory(Context::Get().Device().GetHandle(), &allocInfo, nullptr, &bufferMemory), "Failed to allocate buffer memory")
 
         vkBindBufferMemory(Context::Get().Device().GetHandle(), buffer, bufferMemory, 0);
     }
 
-    void Buffer::Copy(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size, VkCommandBuffer commandBuffer)
+    void Buffer::Copy(const VkBuffer srcBuffer, const VkBuffer dstBuffer, const VkDeviceSize size, VkCommandBuffer commandBuffer)
     {
-        bool invalidCommandBuffer = commandBuffer == VK_NULL_HANDLE;
+        const bool invalidCommandBuffer = commandBuffer == VK_NULL_HANDLE;
         if (invalidCommandBuffer) commandBuffer = SingleTimeCommand::Begin();
         
-        VkBufferCopy copyRegion{};
+        VkBufferCopy copyRegion;
         copyRegion.srcOffset = 0;  // Optional
         copyRegion.dstOffset = 0;  // Optional
         copyRegion.size = size;

@@ -7,10 +7,12 @@ namespace Mixture
 	class AssetManager
 	{
 	public:
+		OPAL_NON_COPIABLE(AssetManager);
+		
 		AssetManager();
 		~AssetManager() = default;
 
-		std::filesystem::path GetShaderPath() const;
+		OPAL_NODISCARD std::filesystem::path GetShaderPath() const;
 
 	private:
 		std::filesystem::path m_AssetsPath;

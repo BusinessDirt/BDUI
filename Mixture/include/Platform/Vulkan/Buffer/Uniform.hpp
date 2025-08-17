@@ -8,10 +8,12 @@ namespace Mixture::Vulkan
     class UniformBuffer
     {
     public:
-        UniformBuffer(uint32_t instanceSize, uint32_t instanceCount = 1);
+        OPAL_NON_COPIABLE(UniformBuffer);
+        
+        explicit UniformBuffer(size_t instanceSize, uint32_t instanceCount = 1);
         ~UniformBuffer();
 
-        void SetData(void* data, uint32_t index = 0) const;
+        void SetData(const void* data, uint32_t index = 0) const;
         const VkDescriptorBufferInfo* GetDescriptorInfo(uint32_t index = 0);
 
     private:

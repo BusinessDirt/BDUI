@@ -3,7 +3,7 @@
 
 namespace Mixture::Vulkan::ToString
 {
-    std::string_view Format(VkFormat format)
+    std::string_view Format(const VkFormat format)
     {
         switch (format)
         {
@@ -261,7 +261,7 @@ namespace Mixture::Vulkan::ToString
         }
     }
 
-    std::string_view ShaderFormat(VkFormat format)
+    std::string_view ShaderFormat(const VkFormat format)
     {
         switch (format)
         {
@@ -277,7 +277,7 @@ namespace Mixture::Vulkan::ToString
         }
     }
 
-    std::string_view ColorSpace(VkColorSpaceKHR colorSpace)
+    std::string_view ColorSpace(const VkColorSpaceKHR colorSpace)
     {
         switch (colorSpace)
         {
@@ -301,7 +301,7 @@ namespace Mixture::Vulkan::ToString
         }
     }
 
-    std::string_view PresentMode(VkPresentModeKHR presentMode)
+    std::string_view PresentMode(const VkPresentModeKHR presentMode)
     {
         switch (presentMode)
         {
@@ -315,7 +315,7 @@ namespace Mixture::Vulkan::ToString
         }
     }
 
-    std::string_view PhysicalDeviceType(VkPhysicalDeviceType physicalDeviceType)
+    std::string_view PhysicalDeviceType(const VkPhysicalDeviceType physicalDeviceType)
     {
         switch (physicalDeviceType)
         {
@@ -328,7 +328,7 @@ namespace Mixture::Vulkan::ToString
         }
     }
 
-    std::string_view DescriptorType(VkDescriptorType descriptorType)
+    std::string_view DescriptorType(const VkDescriptorType descriptorType)
     {
         switch (descriptorType)
         {
@@ -339,7 +339,7 @@ namespace Mixture::Vulkan::ToString
         }
     }
 
-    std::string Version(uint32_t version)
+    std::string Version(const uint32_t version)
     {
         return fmt::format("{}.{}.{}", VK_VERSION_MAJOR(version), VK_VERSION_MINOR(version), VK_VERSION_PATCH(version));
     }
