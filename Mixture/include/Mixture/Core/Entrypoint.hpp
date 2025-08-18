@@ -37,7 +37,7 @@ int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hInstPrev, PSTR cmdline, int cmd
 
 #else
 
-inline int main(const int argc, char** argv)
+int main(const int argc, char** argv)
 {
     return Entrypoint(argc, argv);
 }

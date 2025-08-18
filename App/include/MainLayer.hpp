@@ -27,7 +27,7 @@ namespace Mixture
         
     private:
         Scope<Vulkan::GraphicsPipeline> m_GraphicsPipeline;
-        Scope<Vulkan::VertexBuffer> m_VertexBuffer;
+        Scope<Vulkan::VertexBuffer<Vertex>> m_VertexBuffer;
         Scope<Vulkan::IndexBuffer> m_IndexBuffer;
         
         Scope<Vulkan::UniformBuffer> m_UniformBuffer;

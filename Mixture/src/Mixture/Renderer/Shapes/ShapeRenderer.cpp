@@ -25,7 +25,7 @@ namespace Mixture
     void ShapeRenderer::Initialize()
     {
         m_Pipeline = CreateScope<Vulkan::GraphicsPipeline>(SHADER_NAME);
-        m_VertexBuffer = CreateScope<Vulkan::VertexBuffer>();
+        m_VertexBuffer = CreateScope<Vulkan::VertexBuffer<Vertex>>();
         m_IndexBuffer = CreateScope<Vulkan::IndexBuffer>();
     }
 

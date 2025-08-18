@@ -18,7 +18,7 @@ namespace Mixture
         };
         
         m_GraphicsPipeline = CreateScope<Vulkan::GraphicsPipeline>("MixtureBuiltin.Object");
-        m_VertexBuffer = CreateScope<Vulkan::VertexBuffer>(vertices);
+        m_VertexBuffer = CreateScope<Vulkan::VertexBuffer<Vertex>>(vertices);
         m_IndexBuffer = CreateScope<Vulkan::IndexBuffer>(indices);
         
         m_UniformBufferObject = {};

@@ -36,7 +36,7 @@ namespace Mixture
         ShapeRendererPushConstant m_PushConstant = {};
         
         Scope<Vulkan::GraphicsPipeline> m_Pipeline;
-        Scope<Vulkan::VertexBuffer> m_VertexBuffer;
+        Scope<Vulkan::VertexBuffer<Vertex>> m_VertexBuffer;
         Scope<Vulkan::IndexBuffer> m_IndexBuffer;
 
         std::vector<Scope<IShape>> m_Shapes;
